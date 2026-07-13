@@ -1,0 +1,13 @@
+# Paths always taken from the `openobserve` branch during an upstream sync.
+# One path per line; directories apply recursively. '#' starts a comment.
+
+# Fork identity / legal
+LICENSE
+NOTICE
+README.md
+
+# CI + docs are fork-owned.
+.github
+
+# Sync + rebrand tooling (includes the functional patch series).
+scripts/openobserve

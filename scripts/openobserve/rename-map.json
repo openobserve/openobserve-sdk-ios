@@ -1,0 +1,47 @@
+{
+  "comment": "Ordered rebrand rules for the openobserve-sdk-ios fork (base: UPSTREAM_BASE = dd-sdk-ios 3.11.0, matching the version the RN bridge pins in DatadogSDKReactNative.podspec). Like the Android fork and unlike the RN fork there is NO ours-vs-upstream ambiguity: the whole tree IS the SDK, so Datadog identifiers are renamed uniformly. Two mechanics: (1) topLevelPrefix path renames move the product dirs + podspec files (DatadogCore/ -> OpenObserveCore/, DatadogCore.podspec -> OpenObserveCore.podspec); (2) content rules rewrite text (imports, Package.swift names, bundle ids, _dd). .xcodeproj/.xcworkspace are dev-only and SKIPPED (they'd break on rename; regenerate if needed). Third-party deps (PLCrashReporter, etc.) are not Datadog-prefixed and left alone.",
+  "pathRenames": [
+    {
+      "topLevelPrefix": "Datadog",
+      "to": "OpenObserve",
+      "skip": [".xcworkspace", ".xcodeproj"],
+      "why": "top-level product dirs (DatadogCore, DatadogRUM, DatadogLogs, DatadogTrace, DatadogInternal, DatadogCrashReporting, DatadogSessionReplay, DatadogWebViewTracking, DatadogFlags, DatadogProfiling, umbrella Datadog) AND the matching *.podspec files. git mv each top-level entry; nested content follows."
+    }
+  ],
+  "rules": [
+    {
+      "literal": "DataDog/dd-sdk-ios",
+      "to": "openobserve/openobserve-sdk-ios",
+      "why": "repo URLs in podspecs/Package.swift/docs (before the dd-sdk-ios rule)"
+    },
+    {
+      "literal": "dd-sdk-ios",
+      "to": "openobserve-sdk-ios",
+      "why": "repo slug in other refs"
+    },
+    {
+      "literal": "com.datadoghq",
+      "to": "io.openobserve",
+      "why": "bundle ids / reverse-DNS module ids in Info.plists + podspecs (59 files)"
+    },
+    {
+      "regex": "\\bDatadog([A-Z][A-Za-z0-9]*)",
+      "to": "OpenObserve$1",
+      "why": "product/module/type names: DatadogCore, DatadogRUM, DatadogSite, DatadogInternal, etc. — Swift `import`s, Package.swift library/target/dependency names, -Swift.h header refs. Word-boundary guarded; longer names win before the bare-Datadog rule."
+    },
+    {
+      "regex": "\\bDatadog\\b",
+      "to": "OpenObserve",
+      "why": "bare 'Datadog' — the umbrella Package.swift library name + any standalone references (after the Datadog<Suffix> rule)"
+    },
+    {
+      "regex": "\\b_dd\\b",
+      "to": "_oo",
+      "why": "internal telemetry namespace field (matches the schema fork)"
+    }
+  ],
+  "openQuestions": {
+    "Q1_casing": "OpenObserveRUM (long form) chosen — must match the RN codemod's deferredRules and the Podfile the RN fork will reference.",
+    "Q4_module_scope": "The RN bridge (3.5.3) DatadogSDKReactNative.podspec pins DatadogCore/Logs/Trace/RUM/CrashReporting/Flags + DatadogWebViewTracking at 3.11.0 — includes Trace/Flags/WebViewTracking which doc 03 wanted to exclude. Same call as Android Q4: fork what the bridge needs; disable the features at the JS layer, don't remove native products."
+  }
+}
