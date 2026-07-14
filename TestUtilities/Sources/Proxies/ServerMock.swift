@@ -1,12 +1,12 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import XCTest
 import ObjectiveC
-import DatadogInternal
+import OpenObserveInternal
 
 /// An utility header, added to each request by the `ServerMock` and removed while intercepting through `ServerMockProtocol`.
 /// It transmits an unique identifier of the `URLSession` instance obtained from `ServerMock`. It is used for consistency check
@@ -200,7 +200,7 @@ public class ServerMock {
         self.skipIsMainThreadCheck = skipIsMainThreadCheck
         precondition(skipIsMainThreadCheck || Thread.isMainThread, "`ServerMock` should be initialized on the main thread.")
         precondition(ServerMock.activeInstance == nil, "Only one active instance of `ServerMock` is allowed at a time.")
-        self.queue = DispatchQueue(label: "com.datadoghq.ServerMock-\(urlSessionUUID.uuidString)")
+        self.queue = DispatchQueue(label: "io.openobserve.ServerMock-\(urlSessionUUID.uuidString)")
 
         ServerMock.activeInstance = self
     }

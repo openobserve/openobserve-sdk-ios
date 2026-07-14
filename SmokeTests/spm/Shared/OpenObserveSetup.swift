@@ -1,0 +1,39 @@
+/*
+* Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+* This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+* Copyright 2019-Present OpenObserve, Inc.
+*/
+
+import OpenObserveCore
+import OpenObserveLogs
+import OpenObserveTrace
+import OpenObserveCrashReporting
+
+@MainActor
+enum OpenObserveSetup {
+    static var logger: LoggerProtocol?
+    static func initialize() {
+        OpenObserve.initialize(
+            with: OpenObserve.Configuration(clientToken: "abc", env: "tests"),
+            trackingConsent: .granted
+        )
+
+        Logs.enable()
+
+        CrashReporting.enable()
+
+        logger = Logger.create(
+            with: Logger.Configuration(
+                remoteSampleRate: 0,
+                consoleLogFormat: .short
+            )
+        )
+
+        // Trace APIs must be visible:
+        Trace.enable()
+
+        logger?.info("It works")
+        let span = Tracer.shared().startSpan(operationName: "this too")
+        span.finish()
+    }
+}

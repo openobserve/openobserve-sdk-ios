@@ -1,4 +1,4 @@
-# AI Agents Guide for dd-sdk-ios
+# AI Agents Guide for openobserve-sdk-ios
 
 > This file is a **map**, not an encyclopedia. It provides the entry point and pointers to deeper documentation. Start here, then follow the links relevant to your task.
 
@@ -26,7 +26,7 @@ docs/
 ├── DEVELOPMENT.md       ← Recipes for adding features/commands/providers,
 │                          RFC process, build & test quick reference
 ├── TESTING.md           ← Test conventions, mock infrastructure (.mockAny(),
-│                          .mockRandom(), .mockWith()), DatadogCoreProxy usage
+│                          .mockRandom(), .mockWith()), OpenObserveCoreProxy usage
 ├── KNOWN_CONCERNS.md    ← Fragile areas requiring extra caution
 ├── SWIZZLING.md         ← Mandatory swizzling patterns and real incidents
 ├── LLM_FEATURE_DOCS_GUIDELINES.md  ← How to update *_FEATURE.md files
@@ -34,8 +34,8 @@ docs/
 └── session_replay_performance.md   ← Session Replay performance benchmarks
 
 Feature-specific docs (in each module directory):
-├── DatadogRUM/RUM_FEATURE.md
-└── DatadogSessionReplay/SESSION_REPLAY_FEATURE.md
+├── OpenObserveRUM/RUM_FEATURE.md
+└── OpenObserveSessionReplay/SESSION_REPLAY_FEATURE.md
 ```
 
 ## Where to Look First
@@ -48,16 +48,16 @@ Feature-specific docs (in each module directory):
 | Check naming, lint, commit format | `docs/CONVENTIONS.md` |
 | Touch swizzling code | `docs/SWIZZLING.md` |
 | Modify a fragile area | `docs/KNOWN_CONCERNS.md` |
-| Work on RUM specifically | `DatadogRUM/RUM_FEATURE.md` |
-| Work on Session Replay specifically | `DatadogSessionReplay/SESSION_REPLAY_FEATURE.md` |
+| Work on RUM specifically | `OpenObserveRUM/RUM_FEATURE.md` |
+| Work on Session Replay specifically | `OpenObserveSessionReplay/SESSION_REPLAY_FEATURE.md` |
 | Update a `*_FEATURE.md` file | `docs/LLM_FEATURE_DOCS_GUIDELINES.md` |
 
 ## Critical Rules (always apply)
 
 - **Never crash customer apps.** Use NOP implementations when the SDK is not initialized.
-- **Feature modules must not import each other.** Only `DatadogCore` orchestrates.
-- **Always search for usages across the entire codebase** before considering a change complete — update call sites in `DatadogCore`, `DatadogInternal`, encoders, ObjC bridges, and `.pbxproj`.
-- **Do NOT modify generated files** (RUM and Session Replay models in `DatadogInternal/Sources/Models/`).
+- **Feature modules must not import each other.** Only `OpenObserveCore` orchestrates.
+- **Always search for usages across the entire codebase** before considering a change complete — update call sites in `OpenObserveCore`, `OpenObserveInternal`, encoders, ObjC bridges, and `.pbxproj`.
+- **Do NOT modify generated files** (RUM and Session Replay models in `OpenObserveInternal/Sources/Models/`).
 - **Do NOT add new dependencies** without explicit approval.
 - **Do NOT change networking formats or endpoints.**
 - **Do NOT introduce new public API** without RFC review.

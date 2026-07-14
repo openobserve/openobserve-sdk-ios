@@ -1,12 +1,12 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-2020 Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-2020 OpenObserve, Inc.
  */
 
 import XCTest
-import DatadogInternal
-@testable import DatadogRUM
+import OpenObserveInternal
+@testable import OpenObserveRUM
 
 extension AppStateInfo: RandomMockable, AnyMockable {
     public static func mockAny() -> AppStateInfo {
@@ -78,7 +78,7 @@ public final class WatchdogTerminationReporterMock: WatchdogTerminationReporting
         self.didSend = didSend
     }
 
-    public func send(date: Date?, state: DatadogRUM.AppStateInfo, viewEvent: DatadogInternal.RUMViewEvent) {
+    public func send(date: Date?, state: OpenObserveRUM.AppStateInfo, viewEvent: OpenObserveInternal.RUMViewEvent) {
         sendParams = SendParams(date: date, state: state, viewEvent: viewEvent)
         didSend.fulfill()
     }
@@ -122,13 +122,13 @@ extension AppStateManager: RandomMockable {
 }
 
 extension Sysctl: RandomMockable {
-    public static func mockRandom() -> DatadogInternal.Sysctl {
+    public static func mockRandom() -> OpenObserveInternal.Sysctl {
         return .init()
     }
 }
 
 extension RUMDataStore: RandomMockable {
-    public static func mockRandom() -> DatadogRUM.RUMDataStore {
+    public static func mockRandom() -> OpenObserveRUM.RUMDataStore {
         return .init(featureScope: FeatureScopeMock())
     }
 }
@@ -139,7 +139,7 @@ extension WatchdogTerminationMonitor: RandomMockable {
         return .init(
             appStateManager: .mockRandom(),
             checker: .mockRandom(),
-            storage: NOPDatadogCore().storage,
+            storage: NOPOpenObserveCore().storage,
             feature: FeatureScopeMock(),
             reporter: WatchdogTerminationReporter.mockRandom()
         )
@@ -148,7 +148,7 @@ extension WatchdogTerminationMonitor: RandomMockable {
 #endif
 
 extension LaunchReport: RandomMockable {
-    public static func mockRandom() -> DatadogInternal.LaunchReport {
+    public static func mockRandom() -> OpenObserveInternal.LaunchReport {
         return .init(didCrash: .mockRandom())
     }
 }

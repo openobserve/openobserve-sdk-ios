@@ -6,14 +6,14 @@
 - Use `TestUtilities` for mocks and helpers
 - Do not test Apple frameworks
 - Do not test purely generated code
-- Do not mock DatadogCore incorrectly (use provided helpers)
+- Do not mock OpenObserveCore incorrectly (use provided helpers)
 - No `sleep()` in unit tests — use expectations or synchronous test queues
 
 ## Mock Infrastructure
 
 | Convention | Usage | Example |
 |------------|-------|---------|
-| `.mockAny()` | Deterministic default — use when specific value doesn't matter | `DatadogContext.mockAny()` |
+| `.mockAny()` | Deterministic default — use when specific value doesn't matter | `OpenObserveContext.mockAny()` |
 | `.mockRandom()` | Randomized value — use for fuzz/property testing | `String.mockRandom()` |
 | `.mockWith(...)` | Customizable mock with named parameters for specific fields | `.mockWith(service: "test")` |
 
@@ -21,17 +21,17 @@
 
 | Type | Purpose | Location |
 |------|---------|----------|
-| `DatadogCoreProxy` | In-memory SDK instance that intercepts all events for assertions | `TestUtilities/Sources/Proxies/DatadogCoreProxy.swift` |
+| `OpenObserveCoreProxy` | In-memory SDK instance that intercepts all events for assertions | `TestUtilities/Sources/Proxies/OpenObserveCoreProxy.swift` |
 | `ServerMock` | HTTP mock server for network tests | `TestUtilities/Sources/Proxies/ServerMock.swift` |
-| `HTTPClientMock` | Mock HTTP client | `TestUtilities/Sources/Mocks/DatadogCore/` |
-| `PassthroughCoreMock` | Lightweight core mock that passes events through | `TestUtilities/Sources/Mocks/DatadogInternal/` |
-| `FeatureScopeMock` | Mock feature scope for isolated testing | `TestUtilities/Sources/Mocks/DatadogInternal/` |
+| `HTTPClientMock` | Mock HTTP client | `TestUtilities/Sources/Mocks/OpenObserveCore/` |
+| `PassthroughCoreMock` | Lightweight core mock that passes events through | `TestUtilities/Sources/Mocks/OpenObserveInternal/` |
+| `FeatureScopeMock` | Mock feature scope for isolated testing | `TestUtilities/Sources/Mocks/OpenObserveInternal/` |
 | `RUMSessionMatcher` | Groups RUM events by session, validates consistency | `TestUtilities/Sources/Matchers/` |
 
-## DatadogCoreProxy Usage Pattern
+## OpenObserveCoreProxy Usage Pattern
 
 ```swift
-let core = DatadogCoreProxy(context: .mockWith(service: "test-service"))
+let core = OpenObserveCoreProxy(context: .mockWith(service: "test-service"))
 defer { core.flushAndTearDown() }  // MUST be in defer
 
 RUM.enable(with: config, in: core)

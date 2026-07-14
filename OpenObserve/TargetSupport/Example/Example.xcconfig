@@ -1,0 +1,5 @@
+// Add common settings from OpenObserve.xcconfig
+#include "../xcconfigs/OpenObserve.xcconfig"
+
+// Add OpenObserveSDKTesting instrumentation (if available in current environment)
+#include? "../xcconfigs/OpenObserveSDKTesting.local.xcconfig"

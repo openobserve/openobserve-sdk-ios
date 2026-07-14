@@ -1,16 +1,16 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
 #if !os(watchOS)
 import UIKit
 #endif
-import DatadogInternal
+import OpenObserveInternal
 
-@testable import DatadogRUM
+@testable import OpenObserveRUM
 
 extension RUM.Configuration: AnyMockable, RandomMockable {
     public static func mockAny() -> RUM.Configuration {
@@ -1267,7 +1267,7 @@ extension RUMSessionScope {
         parent: RUMContextProvider = RUMContextProviderMock(),
         startTime: Date = .mockAny(),
         startPrecondition: RUMSessionPrecondition? = .userAppLaunch,
-        context: DatadogContext = .mockAny(),
+        context: OpenObserveContext = .mockAny(),
         dependencies: RUMScopeDependencies = .mockAny(),
         applicationState: RUMApplicationState = .mockAny(),
         hasReplay: Bool? = .mockAny()
@@ -1969,7 +1969,7 @@ public class SwiftUIRUMActionsPredicateMock: SwiftUIRUMActionsPredicate {
         self.result = result
     }
 
-    public func rumAction(with componentName: String) -> DatadogRUM.RUMAction? {
+    public func rumAction(with componentName: String) -> OpenObserveRUM.RUMAction? {
         return resultByName[componentName] ?? result
     }
 }

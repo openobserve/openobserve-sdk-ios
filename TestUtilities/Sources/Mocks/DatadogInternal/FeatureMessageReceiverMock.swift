@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 public struct FeatureMessageReceiverMock: FeatureMessageReceiver {
     public typealias ReceiverClosure = (FeatureMessage) -> Void
@@ -24,7 +24,7 @@ public struct FeatureMessageReceiverMock: FeatureMessageReceiver {
         self.receiver = receiver
     }
 
-    public func receive(message: FeatureMessage, from core: DatadogCoreProtocol) -> Bool {
+    public func receive(message: FeatureMessage, from core: OpenObserveCoreProtocol) -> Bool {
         messages.append(message)
         receiver?(message)
         return true

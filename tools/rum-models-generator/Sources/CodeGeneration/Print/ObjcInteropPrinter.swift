@@ -1,7 +1,7 @@
 /*
 * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-* This product includes software developed at Datadog (https://www.datadoghq.com/).
-* Copyright 2019-Present Datadog, Inc.
+* This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+* Copyright 2019-Present OpenObserve, Inc.
 */
 
 import Foundation
@@ -631,7 +631,7 @@ public class ObjcInteropPrinter: BasePrinter, CodePrinter {
             // However our SDK bridges `[String: Any]` attributes passed in Objective-C API to their `[String: Encodable]` representation
             // in underlying Swift SDK. This is done with `AnyEncodable` type erasure. To return these attributes back
             // to the user, `AnyEncodable` must be unpacked to its original `Any` value. This is done in `.dd.objCAttributes` extension
-            // defined in `DatadogInternal` module. Here we just emit its invocation:
+            // defined in `OpenObserveInternal` module. Here we just emit its invocation:
             return optionality + ".dd.objCAttributes"
         case let objcStruct as ObjcInteropNestedClass:
             let transitiveType = objcStruct.parentProperty as? ObjcInteropPropertyWrapperForTransitiveType

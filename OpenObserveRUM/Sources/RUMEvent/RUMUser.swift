@@ -1,0 +1,36 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+import Foundation
+import OpenObserveInternal
+
+extension RUMUser {
+    init?(context: OpenObserveContext) {
+        guard let userInfo = context.userInfo else {
+            return nil
+        }
+
+        if userInfo.id == nil
+            && userInfo.anonymousId == nil
+            && userInfo.name == nil
+            && userInfo.email == nil
+            && userInfo.extraInfo.isEmpty {
+            return nil
+        }
+
+        self.init(userInfo: userInfo)
+    }
+
+    init(userInfo: UserInfo) {
+        self.init(
+            anonymousId: userInfo.anonymousId,
+            email: userInfo.email,
+            id: userInfo.id,
+            name: userInfo.name,
+            usrInfo: userInfo.extraInfo
+        )
+    }
+}

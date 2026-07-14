@@ -1,10 +1,10 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
-import DatadogInternal
+import OpenObserveInternal
 import HTTPServerMock
 import TestUtilities
 import XCTest
@@ -196,7 +196,7 @@ class RUMResourceActiveSpanAugmentationTests: IntegrationTests, RUMCommonAsserts
     private func getDecisionMaker(from request: Request) -> SamplingMechanismType? {
         let tags = getRequestTags(request)
 
-        guard let value = tags["_dd.p.dm"]?.replacingOccurrences(of: "-", with: "") else {
+        guard let value = tags["_oo.p.dm"]?.replacingOccurrences(of: "-", with: "") else {
             return nil
         }
 

@@ -1,15 +1,15 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import UIKit
-import DatadogCore
-import DatadogLogs
-import DatadogTrace
-import DatadogRUM
-import DatadogCrashReporting
+import OpenObserveCore
+import OpenObserveLogs
+import OpenObserveTrace
+import OpenObserveRUM
+import OpenObserveCrashReporting
 
 var logger: LoggerProtocol?
 var rumMonitor: RUMMonitorProtocol { RUMMonitor.shared() }
@@ -18,8 +18,8 @@ protocol AppConfiguration {
     /// The tracking consent value applied when initializing the SDK.
     var initialTrackingConsent: TrackingConsent { get }
 
-    /// Datadog SDK configuration for given app configuration.
-    func sdkConfiguration() -> Datadog.Configuration
+    /// OpenObserve SDK configuration for given app configuration.
+    func sdkConfiguration() -> OpenObserve.Configuration
 
     /// Returns the initial Storyboard to launch the app in this configuration.
     func initialStoryboard() -> UIStoryboard?
@@ -28,7 +28,7 @@ protocol AppConfiguration {
     var testScenario: TestScenario? { get }
 }
 
-/// The configuration used when launching the Example app for Datadog SDK integration tests (⌘+U).
+/// The configuration used when launching the Example app for OpenObserve SDK integration tests (⌘+U).
 struct UITestsAppConfiguration: AppConfiguration {
     let testScenario: TestScenario? = Environment.testScenarioClassName()
         .flatMap { className in initializeTestScenario(with: className) }
@@ -50,8 +50,8 @@ struct UITestsAppConfiguration: AppConfiguration {
         return testScenario!.initialTrackingConsent
     }
 
-    func sdkConfiguration() -> Datadog.Configuration {
-        var configuration = Datadog.Configuration(
+    func sdkConfiguration() -> OpenObserve.Configuration {
+        var configuration = OpenObserve.Configuration(
             clientToken: "ui-tests-client-token",
             env: "integration",
             service: "ui-tests-service-name",
@@ -75,8 +75,8 @@ struct UITestsAppConfiguration: AppConfiguration {
 
 extension AppConfiguration {
     func initializeSDK() {
-        // Initialize Datadog SDK
-        Datadog.initialize(
+        // Initialize OpenObserve SDK
+        OpenObserve.initialize(
             with: appConfiguration.sdkConfiguration(),
             trackingConsent: appConfiguration.initialTrackingConsent
         )
@@ -84,7 +84,7 @@ extension AppConfiguration {
         appConfiguration.testScenario?.configureFeatures()
 
         // Set user information
-        Datadog.setUserInfo(id: "abcd-1234", name: "foo", email: "foo@example.com", extraInfo: ["key-extraUserInfo": "value-extraUserInfo"])
+        OpenObserve.setUserInfo(id: "abcd-1234", name: "foo", email: "foo@example.com", extraInfo: ["key-extraUserInfo": "value-extraUserInfo"])
 
         // Create Logger
         logger = Logger.create(
@@ -104,14 +104,14 @@ extension AppConfiguration {
         #endif
 
         // Set highest verbosity level to see debugging logs from the SDK
-        Datadog.verbosityLevel = .debug
+        OpenObserve.verbosityLevel = .debug
 
         // Enable RUM Views debugging
         RUMMonitor.shared().debug = true
     }
 
     func deinitializeSDK() {
-        Datadog.stopInstance()
+        OpenObserve.stopInstance()
         logger = nil
     }
 }

@@ -6,26 +6,26 @@ include ../../tools/utils/common.mk
 ifeq ($(PLATFORM), iOS Simulator)
 SCHEME := App iOS
 CARTHAGE_PLATFORM := iOS
-EXPECTED_XCFRAMEWORKS := DatadogInternal \
-						DatadogCore \
-						DatadogLogs \
-						DatadogTrace \
-						DatadogRUM \
-						DatadogSessionReplay \
-						DatadogCrashReporting \
-						DatadogFlags \
-						DatadogWebViewTracking \
+EXPECTED_XCFRAMEWORKS := OpenObserveInternal \
+						OpenObserveCore \
+						OpenObserveLogs \
+						OpenObserveTrace \
+						OpenObserveRUM \
+						OpenObserveSessionReplay \
+						OpenObserveCrashReporting \
+						OpenObserveFlags \
+						OpenObserveWebViewTracking \
 						OpenTelemetryApi
 else ifeq ($(PLATFORM), tvOS Simulator)
 SCHEME := App tvOS
 CARTHAGE_PLATFORM := tvOS
-EXPECTED_XCFRAMEWORKS := DatadogInternal \
-						DatadogCore \
-						DatadogLogs \
-						DatadogTrace \
-						DatadogRUM \
-						DatadogCrashReporting \
-						DatadogFlags \
+EXPECTED_XCFRAMEWORKS := OpenObserveInternal \
+						OpenObserveCore \
+						OpenObserveLogs \
+						OpenObserveTrace \
+						OpenObserveRUM \
+						OpenObserveCrashReporting \
+						OpenObserveFlags \
 						OpenTelemetryApi
 endif
 

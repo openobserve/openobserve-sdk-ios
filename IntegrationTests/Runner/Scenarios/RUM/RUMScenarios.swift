@@ -1,12 +1,12 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import UIKit
-import DatadogRUM
-import DatadogCore
+import OpenObserveRUM
+import OpenObserveCore
 
 /// Scenario which starts a navigation controller. Each view controller pushed to this navigation
 /// uses the RUM manual instrumentation API to send RUM events to the server.
@@ -212,7 +212,7 @@ final class RUMNSURLSessionResourcesScenario: RUMResourcesBaseScenario, TestScen
 }
 
 /// Scenario which uses RUM manual instrumentation API to send bunch of RUM events. Each event contains some
-/// "sensitive" information which is scrubbed as configured in `Datadog.Configuration`.
+/// "sensitive" information which is scrubbed as configured in `OpenObserve.Configuration`.
 final class RUMScrubbingScenario: TestScenario {
     static var storyboardName: String = "RUMScrubbingScenario"
 
@@ -399,7 +399,7 @@ final class RUMFeatureOperationsScenario: TestScenario {
 private class SwiftUIPredicate: SwiftUIRUMViewsPredicate {
     let `default` = DefaultSwiftUIRUMViewsPredicate()
 
-    func rumView(for extractedViewName: String) -> DatadogRUM.RUMView? {
+    func rumView(for extractedViewName: String) -> OpenObserveRUM.RUMView? {
         if extractedViewName == "RUMSessionEndView" {
             return nil
         }

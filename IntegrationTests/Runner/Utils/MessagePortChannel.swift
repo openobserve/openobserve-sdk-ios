@@ -1,17 +1,17 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
 
 /// Establishes a communications channel from UITests runner to the app under tests (allows sending messages
-/// from `DatadogIntegrationTests` to `Example` app).
+/// from `OpenObserveIntegrationTests` to `Example` app).
 ///
 /// Ref.: https://developer.apple.com/documentation/corefoundation/cfmessageport-rs2
 ///
-/// Note: this class is used by two targets: `DatadogIntegrationTests` (sender) and `Example` (receiver).
+/// Note: this class is used by two targets: `OpenObserveIntegrationTests` (sender) and `Example` (receiver).
 internal class MessagePortChannel {
     private static let portName = "DDExampleAppPort" as CFString
 

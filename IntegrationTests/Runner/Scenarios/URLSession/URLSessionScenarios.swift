@@ -1,13 +1,13 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogCore
-import DatadogTrace
-import DatadogRUM
+import OpenObserveCore
+import OpenObserveTrace
+import OpenObserveRUM
 
 /// Base scenario for `URLSession` and `NSURLSession` instrumentation.  It makes
 /// both Swift and Objective-C tests share the same endpoints and SDK configuration.
@@ -71,9 +71,9 @@ class URLSessionBaseScenario: NSObject {
                 return request
             }()
         } else {
-            customGETResourceURL = URL(string: "https://status.datadoghq.com")!
+            customGETResourceURL = URL(string: "https://status.openobserve.ai")!
             customPOSTRequest = {
-                var request = URLRequest(url: URL(string: "https://status.datadoghq.com/bad/path")!)
+                var request = URLRequest(url: URL(string: "https://status.openobserve.ai/bad/path")!)
                 request.httpMethod = "POST"
                 request.addValue("dataTaskWithRequest", forHTTPHeaderField: "creation-method")
                 return request

@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 /// Implemented by types allowed to represent span attribute `.*` value in JSON.
 protocol AllowedSpanAttributeValue {}
@@ -116,7 +116,7 @@ public class SpanMatcher {
 
         public func isRootSpan()       throws -> Int { try matcher.metric(forKeyPath: "metrics._top_level") }
         public func samplingPriority() throws -> Int { try matcher.metric(forKeyPath: "metrics._sampling_priority_v1") }
-        public func samplingRate() throws -> Double { try matcher.metric(forKeyPath: "metrics._dd.agent_psr") }
+        public func samplingRate() throws -> Double { try matcher.metric(forKeyPath: "metrics._oo.agent_psr") }
     }
 
     // MARK: - Meta matching
@@ -126,8 +126,8 @@ public class SpanMatcher {
     public struct Meta {
         fileprivate let matcher: SpanMatcher
 
-        public func tid()                  throws -> String { try matcher.meta(forKeyPath: "meta._dd.p.tid") }
-        public func source()               throws -> String { try matcher.meta(forKeyPath: "meta._dd.source") }
+        public func tid()                  throws -> String { try matcher.meta(forKeyPath: "meta._oo.p.tid") }
+        public func source()               throws -> String { try matcher.meta(forKeyPath: "meta._oo.source") }
         public func applicationVersion()   throws -> String { try matcher.meta(forKeyPath: "meta.version") }
         public func tracerVersion()        throws -> String { try matcher.meta(forKeyPath: "meta.tracer.version") }
 
@@ -151,7 +151,7 @@ public class SpanMatcher {
         public func mobileNetworkCarrierRadioTechnology() throws -> String { try matcher.meta(forKeyPath: "meta.network.client.sim_carrier.technology") }
         public func mobileNetworkCarrierAllowsVoIP()      throws -> String { try matcher.meta(forKeyPath: "meta.network.client.sim_carrier.allows_voip") }
 
-        public func samplingDecisionMechanism() throws -> String { try matcher.meta(forKeyPath: "meta._dd.p.dm") }
+        public func samplingDecisionMechanism() throws -> String { try matcher.meta(forKeyPath: "meta._oo.p.dm") }
 
         public func custom(keyPath: String) throws -> String { try matcher.meta(forKeyPath: keyPath) }
     }

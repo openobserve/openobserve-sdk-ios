@@ -1,14 +1,14 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import UIKit
 
-import DatadogInternal
-import DatadogCore
-import DatadogBenchmarks
+import OpenObserveInternal
+import OpenObserveCore
+import OpenObserveBenchmarks
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -71,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         if run != .baseline {
-            // instrument the application with Datadog SDK
+            // instrument the application with OpenObserve SDK
             // when not in baseline run
             scenario.instrument(with: applicationInfo)
         }
@@ -85,8 +85,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// It is important to stop current instruments before starting a new run.
     private func stop() {
         vitals = nil // stop collecting vitals
-        Datadog.stopInstance() // stop runner instrumentation
-        DatadogInternal.bench = (NOPBench(), NOPBench()) // stop profiling the sdk
+        OpenObserve.stopInstance() // stop runner instrumentation
+        OpenObserveInternal.bench = (NOPBench(), NOPBench()) // stop profiling the sdk
         window?.rootViewController = UIViewController()
     }
 
@@ -146,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             )
         )
 
-        DatadogInternal.bench = (profiler, meter) // Inject profiler and meter to collect telemetry
+        OpenObserveInternal.bench = (profiler, meter) // Inject profiler and meter to collect telemetry
     }
 }
 

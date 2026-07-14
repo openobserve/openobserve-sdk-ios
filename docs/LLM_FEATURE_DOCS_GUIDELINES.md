@@ -1,6 +1,6 @@
 # LLM Guidelines for Feature Documentation Updates
 
-This document provides guidelines for LLMs updating feature documentation files (`*_FEATURE.md`) in the Datadog iOS SDK repository.
+This document provides guidelines for LLMs updating feature documentation files (`*_FEATURE.md`) in the OpenObserve iOS SDK repository.
 
 ## Purpose of Feature Documentation Files
 
@@ -15,11 +15,11 @@ These files serve as **LLM-optimized entry points** to the codebase. They are NO
 Each feature module contains a `*_FEATURE.md` file at its root:
 
 ```
-DatadogRUM/RUM_FEATURE.md
-DatadogSessionReplay/SESSION_REPLAY_FEATURE.md
-DatadogTrace/TRACE_FEATURE.md          # (future)
-DatadogLogs/LOGS_FEATURE.md            # (future)
-DatadogWebViewTracking/WEBVIEW_FEATURE.md  # (future)
+OpenObserveRUM/RUM_FEATURE.md
+OpenObserveSessionReplay/SESSION_REPLAY_FEATURE.md
+OpenObserveTrace/TRACE_FEATURE.md          # (future)
+OpenObserveLogs/LOGS_FEATURE.md            # (future)
+OpenObserveWebViewTracking/WEBVIEW_FEATURE.md  # (future)
 ```
 
 Each feature documentation file contains a **"Key Files"** section listing all relevant source files for that feature. Use this section as the source of truth for which files to read during updates.

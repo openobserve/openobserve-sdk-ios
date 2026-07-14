@@ -65,8 +65,8 @@ make clean archive export ARTIFACTS_PATH="$ARTIFACTS_PATH"
 if [ "$DRY_RUN" = "1" ] || [ "$DRY_RUN" = "true" ]; then
     echo_warn "Running in DRY RUN mode. Skipping 'make upload'."
 else
-    export DATADOG_API_KEY=$(get_secret $DD_IOS_SECRET__MI_S8S_API_KEY)
-    export DATADOG_APP_KEY=$(get_secret $DD_IOS_SECRET__MI_S8S_APP_KEY)
+    export OPENOBSERVE_API_KEY=$(get_secret $DD_IOS_SECRET__MI_S8S_API_KEY)
+    export OPENOBSERVE_APP_KEY=$(get_secret $DD_IOS_SECRET__MI_S8S_APP_KEY)
     export S8S_APPLICATION_ID=$(get_secret $DD_IOS_SECRET__BENCHMARK_S8S_APPLICATION_ID)
     make upload ARTIFACTS_PATH="$ARTIFACTS_PATH"
 fi

@@ -1,14 +1,14 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  *
- * Provides Datadog specific Assertions in tests.
+ * Provides OpenObserve specific Assertions in tests.
  * The functions pattern is based on https://github.com/apple/swift-corelibs-xctest
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 import XCTest
 
 public enum DDAssertError: Error {

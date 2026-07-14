@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import XCTest
@@ -63,7 +63,7 @@ public class LogMatcher: JSONDataMatcher {
         public static let errorFingerprint = "error.fingerprint"
 
         // MARK: - Dd info
-        static let dd = "_dd"
+        static let dd = "_oo"
         static let ddDevice = "device"
         static let ddDeviceArchitecture = "architecture"
     }

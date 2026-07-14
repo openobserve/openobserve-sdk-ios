@@ -25,19 +25,19 @@ define_arg "device" "" "Specifies the simulator device for running tests, e.g. '
 check_for_help "$@"
 parse_args "$@"
 
-WORKSPACE="Datadog.xcworkspace"
+WORKSPACE="OpenObserve.xcworkspace"
 DESTINATION="platform=$platform,name=$device,OS=$os"
 SCHEME=$scheme
 
-# Enables Datadog Test Visibility to trace tests execution
-# Ref.: https://docs.datadoghq.com/tests/setup/swift/
+# Enables OpenObserve Test Visibility to trace tests execution
+# Ref.: https://openobserve.ai/docs/tests/setup/swift/
 setup_test_visibility() {
     export DD_TEST_RUNNER=1
 
     # Base:
     export DD_API_KEY=$(get_secret $DD_IOS_SECRET__TEST_VISIBILITY_API_KEY)
     export DD_ENV=$([[ "$CI" = "true" ]] && echo "ci" || echo "local")
-    export DD_SERVICE=dd-sdk-ios
+    export DD_SERVICE=openobserve-sdk-ios
     export SRCROOT="$\(SRCROOT\)"
 
     # Auto-instrumentation:
@@ -55,7 +55,7 @@ setup_test_visibility() {
     # Git metadata:
     # - While `dd-sdk-swift-testing` can read Git metadata from `.git` folder, following info must be overwritten
     # due to our GH → GitLab mirroring configuration (otherwise it will point to GitLab mirror not GH repo).
-    export DD_GIT_REPOSITORY_URL="git@github.com:DataDog/dd-sdk-ios.git"
+    export DD_GIT_REPOSITORY_URL="git@github.com:openobserve/openobserve-sdk-ios.git"
 
     echo_info "CI Test Visibility setup:"
     echo "▸ DD_TEST_RUNNER=$DD_TEST_RUNNER"

@@ -3,7 +3,7 @@
 # 3.11.0 / 12-05-2026
 
 - [IMPROVEMENT] Add support for `maui` source for cross-platform RUM events from .NET MAUI applications. See [#2891][]
-- [FEATURE] Add client state management to `DatadogFlags` module. See [#2719][]
+- [FEATURE] Add client state management to `OpenObserveFlags` module. See [#2719][]
 - [IMPROVEMENT] Skip malformed RUM attributes individually instead of dropping the entire event, and log clear error messages. See [#2844][]
 - [FIX] Propagate native `anonymous_id` to WebView RUM and Log events. See [#2847][]
 - [IMPROVEMENT] Add device properties `isLowRam`, `logicalCpuCount`, `totalRam` to the `LogEvent` Objective-C API. See [#2854][]
@@ -30,7 +30,7 @@
 - [IMPROVEMENT] Trace now uses deterministic sampling for custom spans, based on the RUM session ID when available. See [#2794][]
 - [FIX] Fix stack overflow crash when RUM scroll tracking is used alongside third-party delegate proxy libraries (e.g. RxSwift). See [#2791][]
 - [FIX] When there is an active span, RUM session tracking uses it as the basis for the resource parent span and sampling decision. Starting in this release, if the active span is not sampled, session tracking falls back to making its own sampling decision based on the RUM session tracking sampling rate. See [#2807][]
-- [FIX] Replace `DatadogMachProfiler` unsafe build flags with the package-level `cxxLanguageStandard` parameter. See [#2773][]
+- [FIX] Replace `OpenObserveMachProfiler` unsafe build flags with the package-level `cxxLanguageStandard` parameter. See [#2773][]
 
 # 3.8.3 / 26-03-2026
 
@@ -57,13 +57,13 @@
 
 # 3.7.0 / 18-02-2026
 
-- [FEATURE] Add evaluation logging to `DatadogFlags` module. See [#2646][]
+- [FEATURE] Add evaluation logging to `OpenObserveFlags` module. See [#2646][]
 - [FEATURE] Automatic network instrumentation now tracks `URLSession` requests without requiring delegate registration. See [#2620][]
 - [FEATURE] Deprecate `URLSessionInstrumentation.enable(with:in:)` API in favor of `URLSessionInstrumentation.enableDurationBreakdown(with:in:)`. See [#2634][]
 - [FEATURE] Session Replay now captures only when the screen changes, reducing work while the app is idle. See [#2674][]
 - [IMPROVEMENT] Skip malformed Logs attributes individually instead of dropping the entire event, and log clear error messages. See [#2665][]
 - [IMPROVEMENT] Improve span attribute encoding error messages to include attribute name and context. See [#2676][]
-- [IMPROVEMENT] Expose public entities from `DatadogInternal` to prevent `DatadogInternal` imports in customer code. See [#2666][]
+- [IMPROVEMENT] Expose public entities from `OpenObserveInternal` to prevent `OpenObserveInternal` imports in customer code. See [#2666][]
 - [FIX] Propagate feature flags to RUM error and view events for crashes, fatal app hangs, and watchdog terminations. See [#2688][]
 
 # 3.6.1 / 02-02-2026
@@ -72,7 +72,7 @@
 
 # 3.6.0 / 28-01-2026
 
-- [FEATURE] Add `DatadogProfiling` module to profile app launches. See [#2654][]
+- [FEATURE] Add `OpenObserveProfiling` module to profile app launches. See [#2654][]
 - [IMPROVEMENT] Add `DDLogEventUserInfo.anonymousId` property in ObjC API. See [#2640][]
 - [FEATURE] Support manually keeping or dropping a trace. See [#2639][]
 
@@ -86,16 +86,16 @@
 - [FEATURE] Add public API to report time to full display (TTFD). See [#2522][]
 - [IMPROVEMENT] Remove `application_start` action from `ApplicationLaunch`. See [#2533][]
 - [FEATURE] Track Slow Frames (view hitches) by default. See [#2631][]
-- [IMPROVEMENT] Upgrade `DatadogTrace` to OpenTelemetryApi 2.3.0. See [#2614][]
+- [IMPROVEMENT] Upgrade `OpenObserveTrace` to OpenTelemetryApi 2.3.0. See [#2614][]
 - [IMPROVEMENT] RUM auto-instrumentation now supports Alerts, Confirmation Dialogs and Action Sheets. See [#2612][]
-- [IMPROVEMENT] Replace `PLCrashReporter` by `KSCrash` as `DatadogCrashReporting plugin. See [#2633][]
+- [IMPROVEMENT] Replace `PLCrashReporter` by `KSCrash` as `OpenObserveCrashReporting plugin. See [#2633][]
 
 # 3.4.0 / 10-12-2025
 
-- [FEATURE] Add support for configuring a custom version parameter in `DatadogConfiguration`. See [#2585][] (Thanks [@blimmer][])
+- [FEATURE] Add support for configuring a custom version parameter in `OpenObserveConfiguration`. See [#2585][] (Thanks [@blimmer][])
 - [FEATURE] Add support for SwiftUI vector image assets in Session Replay. See [#2599][]
 - [IMPROVEMENT] Provide XCFramework without arm64e slice for Xcode 26+ compatibility. See [#2576][]
-- [IMPROVEMENT] Refactor public extensions on common types in `DatadogInternal` to use the `.dd` namespace pattern, preventing namespace collisions with customer code. See [#2587][]
+- [IMPROVEMENT] Refactor public extensions on common types in `OpenObserveInternal` to use the `.dd` namespace pattern, preventing namespace collisions with customer code. See [#2587][]
 - [FIX] Add service and `sdk_version` tags to log requests. See [#2598][]
 
 # 3.3.0 / 17-11-2025
@@ -107,7 +107,7 @@
 # 3.2.0 / 30-10-2025
 
 - [FIX] Fix Logger race condition. See [#2514][]
-- [FEATURE] Add `DatadogFlags` module for feature flag evaluation and management. See [#2532][]
+- [FEATURE] Add `OpenObserveFlags` module for feature flag evaluation and management. See [#2532][]
 - [FEATURE] Send data for GraphQL requests in Resource Events. See [#2501][]
 - [FIX] Fix OTel parent spans with multiple sequential child spans. See [#2530][] (Thanks [@jbluntz][])
 - [FIX] Fix typos in internal accessibility implementation. See [#2538][] (Thanks [@tdr-alays][])
@@ -131,7 +131,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 - [IMPROVEMENT] Enforce head-based sampling on Trace by default. See [#2288][]
 - [IMPROVEMENT] Sample traces according to `session.id`. See [#2364][]
 - [IMPROVEMENT] Migrate all Obj-c interfaces to corresponding modules. See [#2286][] [#2295][] 
-- [IMPROVEMENT] Remove `DatadogObjc` module. See [#2298][]
+- [IMPROVEMENT] Remove `OpenObserveObjc` module. See [#2298][]
 - [IMPROVEMENT] Remove Alamofire extension. See [#2309][]
 - [IMPROVEMENT] Improve Memory vital collected using `phys_footprint`. See [#2310][] 
 - [IMPROVEMENT] Align attribute propagation mechanism. See [#2291][] [#2305][]
@@ -156,7 +156,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 # 2.29.0 / 18-06-2025
 
 - [FEATURE] Add SwiftUI auto-tracking for views and actions. See [#2237][] [#2315][]
-- [FEATURE] Add support for AP2 Datacenter. You can configure it setting `DatadogSite.ap2` on `Datadog.Configuration.site`. See [#2343][]
+- [FEATURE] Add support for AP2 Datacenter. You can configure it setting `OpenObserveSite.ap2` on `OpenObserve.Configuration.site`. See [#2343][]
 - [FEATURE] Add account information configuration. The account information propagates to Logs, RUM, Traces, Crash and Error Reporting. See [#2225][]
 
 # 2.28.1 / 29-05-2025
@@ -171,7 +171,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 # 2.27.0 / 06-05-2025
 
 - [FEATURE] Propagate RUM session ID in request headers. See [#2201][]
-- [FIX] Fix access level for `DatadogPrivate` imports. See [#2268][]
+- [FIX] Fix access level for `OpenObservePrivate` imports. See [#2268][]
 
 # 2.26.0 / 10-04-2025
 
@@ -180,19 +180,19 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 # 2.25.0 / 03-04-2025
 
 - [FEATURE] Calculate Hang rate and Hitch rate in RUM. See [#2234][]
-- [FIX] Fixed Swift 6.0.2 compatibility issue with `DatadogCrashReporting` framework. See [#2251][]
+- [FIX] Fixed Swift 6.0.2 compatibility issue with `OpenObserveCrashReporting` framework. See [#2251][]
 - [IMPROVEMENT] Refine errors printed from `clearAllData()`. See [#2240][]
 - [IMPROVEMENT] Simplify host sanitizer logic. See [#2223][]
 - [FIX] Fix view drop in SwiftUI modal navigation. See [#2236][]
 
 # 2.24.1 / 31-03-2025
 
-- [FIX] Do not enforce dynamic linking for OpenTelemetryApi in `DatadogTrace`. See [#2244][]
+- [FIX] Do not enforce dynamic linking for OpenTelemetryApi in `OpenObserveTrace`. See [#2244][]
 
 # 2.24.0 / 06-03-2025
 
 - [FEATURE] Adds anonymous identifier configuration for RUM Sessions linking. See [#2172][]
-- [FEATURE] Update `DatadogTrace` to OpenTelemetryApi 1.13.0. See [#2217][]
+- [FEATURE] Update `OpenObserveTrace` to OpenTelemetryApi 1.13.0. See [#2217][]
 - [FIX] Session Replay: Fix captured displayed image frame computation when `UIImageView.contentMode` is `scaleAspectFill`. See [#2200][]
 - [IMPROVEMENT] Updates `setUserInfo` to require `id` parameter. See [#2195][]
 
@@ -210,7 +210,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 # 2.22.0 / 02-01-2025
 
-- [IMPROVEMENT] Add Datadog Configuration `backgroundTasksEnabled` ObjC API. See [#2148][]
+- [IMPROVEMENT] Add OpenObserve Configuration `backgroundTasksEnabled` ObjC API. See [#2148][]
 - [FIX] Prevent Session Replay to create two full snapshots in a row. See [#2154][]
 
 # 2.21.0 / 11-12-2024
@@ -262,7 +262,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 # 2.15.0 / 25-07-2024
 
-- [FEATURE] Enable DatadogCore, DatadogLogs and DatadogTrace to compile on watchOS platform. See [#1918][] (Thanks [@jfiser-paylocity][]) [#1946][]
+- [FEATURE] Enable OpenObserveCore, OpenObserveLogs and OpenObserveTrace to compile on watchOS platform. See [#1918][] (Thanks [@jfiser-paylocity][]) [#1946][]
 - [IMPROVEMENT] Ability to clear feature data storage using `clearAllData` API. See [#1940][]
 - [IMPROVEMENT] Send memory warning as RUM error. See [#1955][]
 - [IMPROVEMENT] Decorate network span kind as `client`. See [#1963][]
@@ -298,15 +298,15 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 # 2.12.0 / 03-06-2024
 
 - [IMPROVEMENT] Crash errors now include up-to-date global RUM attributes. See [#1834][]
-- [FEATURE] `DatadogTrace` now supports OpenTelemetry. See [#1828][]
+- [FEATURE] `OpenObserveTrace` now supports OpenTelemetry. See [#1828][]
 - [FIX] Fix crash on accessing request.allHTTPHeaderFields. See [#1843][]
 - [FEATURE] Support for trace context injection configuration to allow selective injection. See [#1835][]
-- [FEATURE] `DatadogWebViewTracking` is now available for Obj-C. See [#1854][]
+- [FEATURE] `OpenObserveWebViewTracking` is now available for Obj-C. See [#1854][]
 - [FEATURE] RUM "stop session", "get session ID" and "evaluate feature flag" APIs are now available for Obj-C. See [#1853][]
 
 # 2.11.0 / 08-05-2024
 
-- [FEATURE] `DatadogTrace` now supports head-based sampling. See [#1794][]
+- [FEATURE] `OpenObserveTrace` now supports head-based sampling. See [#1794][]
 - [FEATURE] Support WebView recording in Session Replay. See [#1776][]
 - [IMPROVEMENT] Add `isInitialized` and `stopInstance` methods to ObjC API. See [#1800][]
 - [IMPROVEMENT] Add `addUserExtraInfo` method to ObjC API. See [#1799][]
@@ -356,7 +356,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 - [FEATURE] Allow stopping a core instance. See [#1541][]
 - [FEATURE] Link crashes sent as Log events to RUM session. See [#1645][]
 - [IMPROVEMENT] Add extra HTTP codes to the list of retryable status codes. See [#1639][]
-- [FEATURE] Add privacy manifest to `DatadogCore`. See [#1644][]
+- [FEATURE] Add privacy manifest to `OpenObserveCore`. See [#1644][]
 
 # 2.6.0 / 09-01-2024
 - [FEATURE] Add `currentSessionID(completion:)` accessor to access the current session ID.
@@ -374,7 +374,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 - [BUGFIX] Optimize Session Replay diffing algorithm. See [#1524][]
 - [FEATURE] Add network instrumentation for async/await URLSession APIs. See [#1394][]
-- [FEATURE] Change default tracing headers for first party hosts to use both Datadog headers and W3C `tracecontext` headers. See [#1529][]
+- [FEATURE] Change default tracing headers for first party hosts to use both OpenObserve headers and W3C `tracecontext` headers. See [#1529][]
 - [FEATURE] Add tracestate headers when using W3C tracecontext. See [#1536][]
 - [BUGFIX] Fix RUM ViewController leaks. See [#1533][]
 
@@ -393,7 +393,7 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 # 2.2.1 / 13-09-2023
 
-- [BUGFIX] Add default RUM views and actions predicates to DatadogObjc . See [#1464][].
+- [BUGFIX] Add default RUM views and actions predicates to OpenObserveObjc . See [#1464][].
 
 # 2.2.0 / 12-09-2023
 
@@ -402,15 +402,15 @@ Release `3.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 # 2.1.2 / 29-08-2023
 
-- [BUGFIX] Do not embed DatadogInternal while building Trace and RUM xcframeworks. See [#1444][].
+- [BUGFIX] Do not embed OpenObserveInternal while building Trace and RUM xcframeworks. See [#1444][].
 
 # 2.1.1 / 22-08-2023
 
-- [BUGFIX] `DatadogObjc` not fully available in `2.1.0`. See [#1428][].
+- [BUGFIX] `OpenObserveObjc` not fully available in `2.1.0`. See [#1428][].
 
 # 2.1.0 / 18-08-2023
 
-- [BUGFIX] Manual trace injection APIs are not available in DatadogTrace. See [#1415][].
+- [BUGFIX] Manual trace injection APIs are not available in OpenObserveTrace. See [#1415][].
 - [BUGFIX] Fix session replay uploads to AP1 site. See [#1418][].
 - [BUGFIX] Allow instantiating custom instance of the SDK after default one. See [#1413][].
 - [BUGFIX] Do not propagate attributes from Errors and LongTasks to Views.
@@ -433,7 +433,7 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 # 1.21.0 / 27-06-2023
 - [BUGFIX] Fix TracingUUID string format. See [#1311][] (Thanks [@changm4n][])
-- [BUGFIX] Rename _Datadog_Private to DatadogPrivate. See [#1331] (Thanks [@alexfanatics][])
+- [BUGFIX] Rename _OpenObserve_Private to OpenObservePrivate. See [#1331] (Thanks [@alexfanatics][])
 - [IMPROVEMENT] Add context to crash when there's an active view. See [#1315][]
 
 
@@ -562,8 +562,8 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 - [FEATURE] RUM: Track slow UI renders with RUM Long Tasks. See [#567][]
 - [FEATURE] RUM: Add API to notify RUM session start: `.onRUMSessionStart(_: (String, Bool) -> Void)`. See [#590][]
 - [FEATURE] Logs: Add logs scrubbing API: `.setLogEventMapper(_: (LogEvent) -> LogEvent)`. See [#640][]
-- [FEATURE] Add `Datadog.isInitialized` API. See [#566][]
-- [FEATURE] Add API for clearing out all SDK data: `Datadog.clearAllData()`. See [#644][]
+- [FEATURE] Add `OpenObserve.isInitialized` API. See [#566][]
+- [FEATURE] Add API for clearing out all SDK data: `OpenObserve.clearAllData()`. See [#644][]
 - [FEATURE] Add support for `us5` site. See [#576][]
 - [FEATURE] Support `URLSession` proxy configuration with `.connectionProxyDictionary`. See [#582][]
 - [IMPROVEMENT] Compress HTTP body in SDK uploads. See [#626][]
@@ -591,7 +591,7 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 ### Changes
 
 - [BUGFIX] RUM: Fix `DDRUMView` API visibility for Objective-C. See [#583][]
-- [FEATURE] Crash Reporting: Add `DatadogCrashReporting`
+- [FEATURE] Crash Reporting: Add `OpenObserveCrashReporting`
 - [FEATURE] RUM: Add Mobile Vitals. See [#493][] [#514][] [#522][] [#495][]
 - [FEATURE] RUM: Add option for renaming instrumented actions. See [#539][]
 - [FEATURE] RUM: Add option for tracking events when app is in background. See [#504][] [#537][]
@@ -640,9 +640,9 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 - [BUGFIX] Fix baggage items propagation issue for `Span`. See [#365][] (Thanks [@philtre][])
 - [FEATURE] Add set of scrubbing APIs for redacting and dropping particular RUM Events. See [#367][]
-- [FEATURE] Add support for GDPR compliance with new `Datadog.set(trackingConsent:)` API. See [#335][]
+- [FEATURE] Add support for GDPR compliance with new `OpenObserve.set(trackingConsent:)` API. See [#335][]
 - [FEATURE] Add `Global.rum.addTiming(name:)` API for marking custom tming events in RUM Views. See [#323][]
-- [FEATURE] Add support for Alamofire networking with `DatadogAlamofireExtension`. See [#340][]
+- [FEATURE] Add support for Alamofire networking with `OpenObserveAlamofireExtension`. See [#340][]
 - [FEATURE] Add configuration of data upload frequency and paylaod size with `.set(batchSize:)` and `.set(uploadFrequency:)` APIs. See [#358][]
 - [FEATURE] Add convenient `.setError(_:)` API for setting `Error` on `Span`. See [#390][]
 - [IMPROVEMENT] Improve `DATE` accurracy (with NTP time sync) for all data send from the SDK. See [#327][]
@@ -662,7 +662,7 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 - [BUGFIX] Fix issue with data uploads when battery status is `.unknown`. See [#320][]
 - [BUGFIX] Fix compilation issue for Mac Catalyst. See [#277][] (Thanks [@Hengyu][])
 - [FEATURE] RUM: Add RUM monitoring feature (manual and auto instrumentation)
-- [FEATURE] Add single `.set(endpoint:)` API to configure all Datadog endpoints. See [#322][]
+- [FEATURE] Add single `.set(endpoint:)` API to configure all OpenObserve endpoints. See [#322][]
 - [FEATURE] Add support for GovCloud endpoints. See [#235][]
 - [FEATURE] Add support for extra user attributes. See [#315][]
 - [FEATURE] Logs: Add `error: Error` attribute to logging APIs. See [#303][] (Thanks [@sdejesusF][])
@@ -676,7 +676,7 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 ### Changes
 
-- [BUGFIX] Fix SPM compilation issue for DatadogObjC. See [#220][] (Thanks [@TsvetelinVladimirov][])
+- [BUGFIX] Fix SPM compilation issue for OpenObserveObjC. See [#220][] (Thanks [@TsvetelinVladimirov][])
 - [BUGFIX] Fix compilation issue in Xcode 11.3.1. See [#217][] (Thanks [@provTheodoreNewell][])
 
 # 1.3.0 / 08-03-2020
@@ -696,7 +696,7 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 ### Changes
 
 - [BUGFIX] Logs: Fix memory leaks in logs upload. See [#180][] (Thanks [@hyling][])
-- [BUGFIX] Fix App Store Connect validation issue for `DatadogObjC`. See [#182][] (Thanks [@hyling][])
+- [BUGFIX] Fix App Store Connect validation issue for `OpenObserveObjC`. See [#182][] (Thanks [@hyling][])
 
 # 1.2.2 / 06-12-2020
 
@@ -725,7 +725,7 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 ### Changes
 
-- [BUGFIX] Fix "Missing required module 'Datadog_Private'" Carthage error. See [#80][]
+- [BUGFIX] Fix "Missing required module 'OpenObserve_Private'" Carthage error. See [#80][]
 - [IMPROVEMENT] Logs: Sync logs time with server. See [#65][]
 
 # 1.0.2 / 04-08-2020
@@ -748,402 +748,402 @@ Release `2.0` introduces breaking changes. Follow the [Migration Guide](MIGRATIO
 
 <!--- The following link definition list is generated by PimpMyChangelog --->
 
-[#64]: https://github.com/DataDog/dd-sdk-ios/pull/64
-[#65]: https://github.com/DataDog/dd-sdk-ios/pull/65
-[#73]: https://github.com/DataDog/dd-sdk-ios/pull/73
-[#80]: https://github.com/DataDog/dd-sdk-ios/pull/80
-[#82]: https://github.com/DataDog/dd-sdk-ios/pull/82
-[#84]: https://github.com/DataDog/dd-sdk-ios/pull/84
-[#96]: https://github.com/DataDog/dd-sdk-ios/pull/96
-[#102]: https://github.com/DataDog/dd-sdk-ios/pull/102
-[#110]: https://github.com/DataDog/dd-sdk-ios/pull/110
-[#111]: https://github.com/DataDog/dd-sdk-ios/pull/111
-[#129]: https://github.com/DataDog/dd-sdk-ios/pull/129
-[#133]: https://github.com/DataDog/dd-sdk-ios/pull/133
-[#180]: https://github.com/DataDog/dd-sdk-ios/pull/180
-[#182]: https://github.com/DataDog/dd-sdk-ios/pull/182
-[#185]: https://github.com/DataDog/dd-sdk-ios/pull/185
-[#187]: https://github.com/DataDog/dd-sdk-ios/pull/187
-[#217]: https://github.com/DataDog/dd-sdk-ios/pull/217
-[#220]: https://github.com/DataDog/dd-sdk-ios/pull/220
-[#235]: https://github.com/DataDog/dd-sdk-ios/pull/235
-[#236]: https://github.com/DataDog/dd-sdk-ios/pull/236
-[#246]: https://github.com/DataDog/dd-sdk-ios/pull/246
-[#249]: https://github.com/DataDog/dd-sdk-ios/pull/249
-[#262]: https://github.com/DataDog/dd-sdk-ios/pull/262
-[#277]: https://github.com/DataDog/dd-sdk-ios/pull/277
-[#303]: https://github.com/DataDog/dd-sdk-ios/pull/303
-[#315]: https://github.com/DataDog/dd-sdk-ios/pull/315
-[#317]: https://github.com/DataDog/dd-sdk-ios/pull/317
-[#318]: https://github.com/DataDog/dd-sdk-ios/pull/318
-[#320]: https://github.com/DataDog/dd-sdk-ios/pull/320
-[#322]: https://github.com/DataDog/dd-sdk-ios/pull/322
-[#323]: https://github.com/DataDog/dd-sdk-ios/pull/323
-[#327]: https://github.com/DataDog/dd-sdk-ios/pull/327
-[#335]: https://github.com/DataDog/dd-sdk-ios/pull/335
-[#340]: https://github.com/DataDog/dd-sdk-ios/pull/340
-[#358]: https://github.com/DataDog/dd-sdk-ios/pull/358
-[#365]: https://github.com/DataDog/dd-sdk-ios/pull/365
-[#367]: https://github.com/DataDog/dd-sdk-ios/pull/367
-[#370]: https://github.com/DataDog/dd-sdk-ios/pull/370
-[#381]: https://github.com/DataDog/dd-sdk-ios/pull/381
-[#390]: https://github.com/DataDog/dd-sdk-ios/pull/390
-[#415]: https://github.com/DataDog/dd-sdk-ios/pull/415
-[#419]: https://github.com/DataDog/dd-sdk-ios/pull/419
-[#421]: https://github.com/DataDog/dd-sdk-ios/pull/421
-[#423]: https://github.com/DataDog/dd-sdk-ios/pull/423
-[#431]: https://github.com/DataDog/dd-sdk-ios/pull/431
-[#436]: https://github.com/DataDog/dd-sdk-ios/pull/436
-[#439]: https://github.com/DataDog/dd-sdk-ios/pull/439
-[#444]: https://github.com/DataDog/dd-sdk-ios/pull/444
-[#447]: https://github.com/DataDog/dd-sdk-ios/pull/447
-[#450]: https://github.com/DataDog/dd-sdk-ios/pull/450
-[#451]: https://github.com/DataDog/dd-sdk-ios/pull/451
-[#473]: https://github.com/DataDog/dd-sdk-ios/pull/473
-[#474]: https://github.com/DataDog/dd-sdk-ios/pull/474
-[#479]: https://github.com/DataDog/dd-sdk-ios/pull/479
-[#481]: https://github.com/DataDog/dd-sdk-ios/pull/481
-[#483]: https://github.com/DataDog/dd-sdk-ios/pull/483
-[#493]: https://github.com/DataDog/dd-sdk-ios/pull/493
-[#495]: https://github.com/DataDog/dd-sdk-ios/pull/495
-[#504]: https://github.com/DataDog/dd-sdk-ios/pull/504
-[#509]: https://github.com/DataDog/dd-sdk-ios/pull/509
-[#514]: https://github.com/DataDog/dd-sdk-ios/pull/514
-[#522]: https://github.com/DataDog/dd-sdk-ios/pull/522
-[#523]: https://github.com/DataDog/dd-sdk-ios/pull/523
-[#524]: https://github.com/DataDog/dd-sdk-ios/pull/524
-[#525]: https://github.com/DataDog/dd-sdk-ios/pull/525
-[#531]: https://github.com/DataDog/dd-sdk-ios/pull/531
-[#534]: https://github.com/DataDog/dd-sdk-ios/pull/534
-[#535]: https://github.com/DataDog/dd-sdk-ios/pull/535
-[#537]: https://github.com/DataDog/dd-sdk-ios/pull/537
-[#539]: https://github.com/DataDog/dd-sdk-ios/pull/539
-[#545]: https://github.com/DataDog/dd-sdk-ios/pull/545
-[#547]: https://github.com/DataDog/dd-sdk-ios/pull/547
-[#562]: https://github.com/DataDog/dd-sdk-ios/pull/562
-[#563]: https://github.com/DataDog/dd-sdk-ios/pull/563
-[#566]: https://github.com/DataDog/dd-sdk-ios/pull/566
-[#567]: https://github.com/DataDog/dd-sdk-ios/pull/567
-[#569]: https://github.com/DataDog/dd-sdk-ios/pull/569
-[#575]: https://github.com/DataDog/dd-sdk-ios/pull/575
-[#576]: https://github.com/DataDog/dd-sdk-ios/pull/576
-[#582]: https://github.com/DataDog/dd-sdk-ios/pull/582
-[#583]: https://github.com/DataDog/dd-sdk-ios/pull/583
-[#590]: https://github.com/DataDog/dd-sdk-ios/pull/590
-[#605]: https://github.com/DataDog/dd-sdk-ios/pull/605
-[#608]: https://github.com/DataDog/dd-sdk-ios/pull/608
-[#609]: https://github.com/DataDog/dd-sdk-ios/pull/609
-[#613]: https://github.com/DataDog/dd-sdk-ios/pull/613
-[#615]: https://github.com/DataDog/dd-sdk-ios/pull/615
-[#619]: https://github.com/DataDog/dd-sdk-ios/pull/619
-[#623]: https://github.com/DataDog/dd-sdk-ios/pull/623
-[#626]: https://github.com/DataDog/dd-sdk-ios/pull/626
-[#627]: https://github.com/DataDog/dd-sdk-ios/pull/627
-[#640]: https://github.com/DataDog/dd-sdk-ios/pull/640
-[#641]: https://github.com/DataDog/dd-sdk-ios/pull/641
-[#644]: https://github.com/DataDog/dd-sdk-ios/pull/644
-[#654]: https://github.com/DataDog/dd-sdk-ios/pull/654
-[#655]: https://github.com/DataDog/dd-sdk-ios/pull/655
-[#676]: https://github.com/DataDog/dd-sdk-ios/pull/676
-[#679]: https://github.com/DataDog/dd-sdk-ios/pull/679
-[#680]: https://github.com/DataDog/dd-sdk-ios/pull/680
-[#692]: https://github.com/DataDog/dd-sdk-ios/pull/692
-[#699]: https://github.com/DataDog/dd-sdk-ios/pull/699
-[#702]: https://github.com/DataDog/dd-sdk-ios/pull/702
-[#708]: https://github.com/DataDog/dd-sdk-ios/pull/708
-[#712]: https://github.com/DataDog/dd-sdk-ios/pull/712
-[#715]: https://github.com/DataDog/dd-sdk-ios/pull/715
-[#724]: https://github.com/DataDog/dd-sdk-ios/pull/724
-[#725]: https://github.com/DataDog/dd-sdk-ios/pull/725
-[#728]: https://github.com/DataDog/dd-sdk-ios/pull/728
-[#729]: https://github.com/DataDog/dd-sdk-ios/pull/729
-[#761]: https://github.com/DataDog/dd-sdk-ios/pull/761
-[#789]: https://github.com/DataDog/dd-sdk-ios/pull/789
-[#793]: https://github.com/DataDog/dd-sdk-ios/pull/793
-[#794]: https://github.com/DataDog/dd-sdk-ios/pull/794
-[#795]: https://github.com/DataDog/dd-sdk-ios/pull/795
-[#797]: https://github.com/DataDog/dd-sdk-ios/pull/797
-[#815]: https://github.com/DataDog/dd-sdk-ios/pull/815
-[#830]: https://github.com/DataDog/dd-sdk-ios/pull/830
-[#832]: https://github.com/DataDog/dd-sdk-ios/pull/832
-[#837]: https://github.com/DataDog/dd-sdk-ios/pull/837
-[#851]: https://github.com/DataDog/dd-sdk-ios/pull/851
-[#867]: https://github.com/DataDog/dd-sdk-ios/pull/867
-[#876]: https://github.com/DataDog/dd-sdk-ios/pull/876
-[#888]: https://github.com/DataDog/dd-sdk-ios/pull/888
-[#894]: https://github.com/DataDog/dd-sdk-ios/pull/894
-[#949]: https://github.com/DataDog/dd-sdk-ios/pull/949
-[#950]: https://github.com/DataDog/dd-sdk-ios/pull/950
-[#964]: https://github.com/DataDog/dd-sdk-ios/pull/964
-[#973]: https://github.com/DataDog/dd-sdk-ios/pull/973
-[#997]: https://github.com/DataDog/dd-sdk-ios/pull/997
-[#1007]: https://github.com/DataDog/dd-sdk-ios/pull/1007
-[#1013]: https://github.com/DataDog/dd-sdk-ios/pull/1013
-[#1029]: https://github.com/DataDog/dd-sdk-ios/pull/1029
-[#1031]: https://github.com/DataDog/dd-sdk-ios/pull/1031
-[#1043]: https://github.com/DataDog/dd-sdk-ios/pull/1043
-[#1045]: https://github.com/DataDog/dd-sdk-ios/pull/1045
-[#1051]: https://github.com/DataDog/dd-sdk-ios/pull/1051
-[#1057]: https://github.com/DataDog/dd-sdk-ios/pull/1057
-[#1061]: https://github.com/DataDog/dd-sdk-ios/pull/1061
-[#1071]: https://github.com/DataDog/dd-sdk-ios/pull/1071
-[#1089]: https://github.com/DataDog/dd-sdk-ios/pull/1089
-[#1145]: https://github.com/DataDog/dd-sdk-ios/pull/1145
-[#1160]: https://github.com/DataDog/dd-sdk-ios/pull/1160
-[#1177]: https://github.com/DataDog/dd-sdk-ios/pull/1177
-[#1188]: https://github.com/DataDog/dd-sdk-ios/pull/1188
-[#1209]: https://github.com/DataDog/dd-sdk-ios/pull/1209
-[#1216]: https://github.com/DataDog/dd-sdk-ios/pull/1216
-[#1219]: https://github.com/DataDog/dd-sdk-ios/pull/1219
-[#1220]: https://github.com/DataDog/dd-sdk-ios/pull/1220
-[#1247]: https://github.com/DataDog/dd-sdk-ios/pull/1247
-[#1250]: https://github.com/DataDog/dd-sdk-ios/pull/1250
-[#1259]: https://github.com/DataDog/dd-sdk-ios/pull/1259
-[#1264]: https://github.com/DataDog/dd-sdk-ios/pull/1264
-[#1272]: https://github.com/DataDog/dd-sdk-ios/pull/1272
-[#1311]: https://github.com/DataDog/dd-sdk-ios/pull/1311
-[#1315]: https://github.com/DataDog/dd-sdk-ios/pull/1315
-[#1328]: https://github.com/DataDog/dd-sdk-ios/pull/1328
-[#1331]: https://github.com/DataDog/dd-sdk-ios/pull/1331
-[#1355]: https://github.com/DataDog/dd-sdk-ios/pull/1355
-[#1394]: https://github.com/DataDog/dd-sdk-ios/pull/1394
-[#1410]: https://github.com/DataDog/dd-sdk-ios/pull/1410
-[#1412]: https://github.com/DataDog/dd-sdk-ios/pull/1412
-[#1413]: https://github.com/DataDog/dd-sdk-ios/pull/1413
-[#1415]: https://github.com/DataDog/dd-sdk-ios/pull/1415
-[#1418]: https://github.com/DataDog/dd-sdk-ios/pull/1418
-[#1419]: https://github.com/DataDog/dd-sdk-ios/pull/1419
-[#1428]: https://github.com/DataDog/dd-sdk-ios/pull/1428
-[#1444]: https://github.com/DataDog/dd-sdk-ios/pull/1444
-[#1464]: https://github.com/DataDog/dd-sdk-ios/pull/1464
-[#1465]: https://github.com/DataDog/dd-sdk-ios/pull/1465
-[#1488]: https://github.com/DataDog/dd-sdk-ios/pull/1488
-[#1493]: https://github.com/DataDog/dd-sdk-ios/pull/1493
-[#1498]: https://github.com/DataDog/dd-sdk-ios/pull/1498
-[#1502]: https://github.com/DataDog/dd-sdk-ios/pull/1502
-[#1515]: https://github.com/DataDog/dd-sdk-ios/pull/1515
-[#1524]: https://github.com/DataDog/dd-sdk-ios/pull/1524
-[#1529]: https://github.com/DataDog/dd-sdk-ios/pull/1529
-[#1531]: https://github.com/DataDog/dd-sdk-ios/pull/1531
-[#1533]: https://github.com/DataDog/dd-sdk-ios/pull/1533
-[#1536]: https://github.com/DataDog/dd-sdk-ios/pull/1536
-[#1541]: https://github.com/DataDog/dd-sdk-ios/pull/1541
-[#1592]: https://github.com/DataDog/dd-sdk-ios/pull/1592
-[#1594]: https://github.com/DataDog/dd-sdk-ios/pull/1594
-[#1596]: https://github.com/DataDog/dd-sdk-ios/pull/1596
-[#1597]: https://github.com/DataDog/dd-sdk-ios/pull/1597
-[#1609]: https://github.com/DataDog/dd-sdk-ios/pull/1609
-[#1615]: https://github.com/DataDog/dd-sdk-ios/pull/1615
-[#1637]: https://github.com/DataDog/dd-sdk-ios/pull/1637
-[#1639]: https://github.com/DataDog/dd-sdk-ios/pull/1639
-[#1645]: https://github.com/DataDog/dd-sdk-ios/pull/1645
-[#1627]: https://github.com/DataDog/dd-sdk-ios/pull/1627
-[#1644]: https://github.com/DataDog/dd-sdk-ios/pull/1644
-[#1656]: https://github.com/DataDog/dd-sdk-ios/pull/1656
-[#1666]: https://github.com/DataDog/dd-sdk-ios/pull/1666
-[#1672]: https://github.com/DataDog/dd-sdk-ios/pull/1672
-[#1685]: https://github.com/DataDog/dd-sdk-ios/pull/1685
-[#1696]: https://github.com/DataDog/dd-sdk-ios/pull/1696
-[#1697]: https://github.com/DataDog/dd-sdk-ios/pull/1697
-[#1707]: https://github.com/DataDog/dd-sdk-ios/pull/1707
-[#1711]: https://github.com/DataDog/dd-sdk-ios/pull/1711
-[#1721]: https://github.com/DataDog/dd-sdk-ios/pull/1721
-[#1722]: https://github.com/DataDog/dd-sdk-ios/pull/1722
-[#1724]: https://github.com/DataDog/dd-sdk-ios/pull/1724
-[#1741]: https://github.com/DataDog/dd-sdk-ios/pull/1741
-[#1742]: https://github.com/DataDog/dd-sdk-ios/pull/1742
-[#1746]: https://github.com/DataDog/dd-sdk-ios/pull/1746
-[#1747]: https://github.com/DataDog/dd-sdk-ios/pull/1747
-[#1763]: https://github.com/DataDog/dd-sdk-ios/pull/1763
-[#1767]: https://github.com/DataDog/dd-sdk-ios/pull/1767
-[#1774]: https://github.com/DataDog/dd-sdk-ios/pull/1774
-[#1776]: https://github.com/DataDog/dd-sdk-ios/pull/1776
-[#1794]: https://github.com/DataDog/dd-sdk-ios/pull/1794
-[#1798]: https://github.com/DataDog/dd-sdk-ios/pull/1798
-[#1803]: https://github.com/DataDog/dd-sdk-ios/pull/1803
-[#1807]: https://github.com/DataDog/dd-sdk-ios/pull/1807
-[#1828]: https://github.com/DataDog/dd-sdk-ios/pull/1828
-[#1834]: https://github.com/DataDog/dd-sdk-ios/pull/1834
-[#1835]: https://github.com/DataDog/dd-sdk-ios/pull/1835
-[#1843]: https://github.com/DataDog/dd-sdk-ios/pull/1843
-[#1853]: https://github.com/DataDog/dd-sdk-ios/pull/1853
-[#1854]: https://github.com/DataDog/dd-sdk-ios/pull/1854
-[#1886]: https://github.com/DataDog/dd-sdk-ios/pull/1886
-[#1888]: https://github.com/DataDog/dd-sdk-ios/pull/1888
-[#1889]: https://github.com/DataDog/dd-sdk-ios/pull/1889
-[#1891]: https://github.com/DataDog/dd-sdk-ios/pull/1891
-[#1898]: https://github.com/DataDog/dd-sdk-ios/pull/1898
-[#1906]: https://github.com/DataDog/dd-sdk-ios/pull/1906
-[#1908]: https://github.com/DataDog/dd-sdk-ios/pull/1908
-[#1911]: https://github.com/DataDog/dd-sdk-ios/pull/1911
-[#1912]: https://github.com/DataDog/dd-sdk-ios/pull/1912
-[#1916]: https://github.com/DataDog/dd-sdk-ios/pull/1916
-[#1917]: https://github.com/DataDog/dd-sdk-ios/pull/1917
-[#1918]: https://github.com/DataDog/dd-sdk-ios/pull/1918
-[#1925]: https://github.com/DataDog/dd-sdk-ios/pull/1925
-[#1930]: https://github.com/DataDog/dd-sdk-ios/pull/1930
-[#1934]: https://github.com/DataDog/dd-sdk-ios/pull/1934
-[#1938]: https://github.com/DataDog/dd-sdk-ios/pull/1938
-[#1940]: https://github.com/DataDog/dd-sdk-ios/pull/1940
-[#1946]: https://github.com/DataDog/dd-sdk-ios/pull/1946
-[#1947]: https://github.com/DataDog/dd-sdk-ios/pull/1947
-[#1948]: https://github.com/DataDog/dd-sdk-ios/pull/1948
-[#1955]: https://github.com/DataDog/dd-sdk-ios/pull/1955
-[#1963]: https://github.com/DataDog/dd-sdk-ios/pull/1963
-[#1966]: https://github.com/DataDog/dd-sdk-ios/pull/1966
-[#1967]: https://github.com/DataDog/dd-sdk-ios/pull/1967
-[#1968]: https://github.com/DataDog/dd-sdk-ios/pull/1968
-[#1973]: https://github.com/DataDog/dd-sdk-ios/pull/1973
-[#1986]: https://github.com/DataDog/dd-sdk-ios/pull/1986
-[#1988]: https://github.com/DataDog/dd-sdk-ios/pull/1988
-[#1991]: https://github.com/DataDog/dd-sdk-ios/pull/1991
-[#1998]: https://github.com/DataDog/dd-sdk-ios/pull/1998
-[#2000]: https://github.com/DataDog/dd-sdk-ios/pull/2000
-[#2005]: https://github.com/DataDog/dd-sdk-ios/pull/2005
-[#2008]: https://github.com/DataDog/dd-sdk-ios/pull/2008
-[#2026]: https://github.com/DataDog/dd-sdk-ios/pull/2026
-[#2040]: https://github.com/DataDog/dd-sdk-ios/pull/2040
-[#2043]: https://github.com/DataDog/dd-sdk-ios/pull/2043
-[#2050]: https://github.com/DataDog/dd-sdk-ios/pull/2050
-[#2063]: https://github.com/DataDog/dd-sdk-ios/pull/2063
-[#2073]: https://github.com/DataDog/dd-sdk-ios/pull/2073
-[#2083]: https://github.com/DataDog/dd-sdk-ios/pull/2083
-[#2088]: https://github.com/DataDog/dd-sdk-ios/pull/2088
-[#2092]: https://github.com/DataDog/dd-sdk-ios/pull/2092
-[#2099]: https://github.com/DataDog/dd-sdk-ios/pull/2099
-[#2104]: https://github.com/DataDog/dd-sdk-ios/pull/2104
-[#2113]: https://github.com/DataDog/dd-sdk-ios/pull/2113
-[#2114]: https://github.com/DataDog/dd-sdk-ios/pull/2114
-[#2116]: https://github.com/DataDog/dd-sdk-ios/pull/2116
-[#2120]: https://github.com/DataDog/dd-sdk-ios/pull/2120
-[#2125]: https://github.com/DataDog/dd-sdk-ios/pull/2125
-[#2126]: https://github.com/DataDog/dd-sdk-ios/pull/2126
-[#2148]: https://github.com/DataDog/dd-sdk-ios/pull/2148
-[#2153]: https://github.com/DataDog/dd-sdk-ios/pull/2153
-[#2154]: https://github.com/DataDog/dd-sdk-ios/pull/2154
-[#2169]: https://github.com/DataDog/dd-sdk-ios/pull/2169
-[#2170]: https://github.com/DataDog/dd-sdk-ios/pull/2170
-[#2172]: https://github.com/DataDog/dd-sdk-ios/pull/2172
-[#2177]: https://github.com/DataDog/dd-sdk-ios/pull/2177
-[#2182]: https://github.com/DataDog/dd-sdk-ios/pull/2182
-[#2195]: https://github.com/DataDog/dd-sdk-ios/pull/2195
-[#2217]: https://github.com/DataDog/dd-sdk-ios/pull/2217
-[#2200]: https://github.com/DataDog/dd-sdk-ios/pull/2200
-[#2201]: https://github.com/DataDog/dd-sdk-ios/pull/2201
-[#2223]: https://github.com/DataDog/dd-sdk-ios/pull/2223
-[#2225]: https://github.com/DataDog/dd-sdk-ios/pull/2225
-[#2234]: https://github.com/DataDog/dd-sdk-ios/pull/2234
-[#2236]: https://github.com/DataDog/dd-sdk-ios/pull/2236
-[#2237]: https://github.com/DataDog/dd-sdk-ios/pull/2237
-[#2240]: https://github.com/DataDog/dd-sdk-ios/pull/2240
-[#2244]: https://github.com/DataDog/dd-sdk-ios/pull/2244
-[#2251]: https://github.com/DataDog/dd-sdk-ios/pull/2251
-[#2260]: https://github.com/DataDog/dd-sdk-ios/pull/2260
-[#2268]: https://github.com/DataDog/dd-sdk-ios/pull/2268
-[#2286]: https://github.com/DataDog/dd-sdk-ios/pull/2286
-[#2288]: https://github.com/DataDog/dd-sdk-ios/pull/2288
-[#2291]: https://github.com/DataDog/dd-sdk-ios/pull/2291
-[#2295]: https://github.com/DataDog/dd-sdk-ios/pull/2295
-[#2298]: https://github.com/DataDog/dd-sdk-ios/pull/2298
-[#2302]: https://github.com/DataDog/dd-sdk-ios/pull/2302
-[#2304]: https://github.com/DataDog/dd-sdk-ios/pull/2304
-[#2305]: https://github.com/DataDog/dd-sdk-ios/pull/2305
-[#2309]: https://github.com/DataDog/dd-sdk-ios/pull/2309
-[#2310]: https://github.com/DataDog/dd-sdk-ios/pull/2310
-[#2315]: https://github.com/DataDog/dd-sdk-ios/pull/2315
-[#2316]: https://github.com/DataDog/dd-sdk-ios/pull/2316
-[#2322]: https://github.com/DataDog/dd-sdk-ios/pull/2322
-[#2326]: https://github.com/DataDog/dd-sdk-ios/pull/2326
-[#2327]: https://github.com/DataDog/dd-sdk-ios/pull/2327
-[#2333]: https://github.com/DataDog/dd-sdk-ios/pull/2333
-[#2341]: https://github.com/DataDog/dd-sdk-ios/pull/2341
-[#2343]: https://github.com/DataDog/dd-sdk-ios/pull/2343
-[#2344]: https://github.com/DataDog/dd-sdk-ios/pull/2344
-[#2348]: https://github.com/DataDog/dd-sdk-ios/pull/2348
-[#2351]: https://github.com/DataDog/dd-sdk-ios/pull/2351
-[#2354]: https://github.com/DataDog/dd-sdk-ios/pull/2354
-[#2355]: https://github.com/DataDog/dd-sdk-ios/pull/2355
-[#2359]: https://github.com/DataDog/dd-sdk-ios/pull/2359
-[#2360]: https://github.com/DataDog/dd-sdk-ios/pull/2360
-[#2364]: https://github.com/DataDog/dd-sdk-ios/pull/2364
-[#2369]: https://github.com/DataDog/dd-sdk-ios/pull/2369
-[#2370]: https://github.com/DataDog/dd-sdk-ios/pull/2370
-[#2395]: https://github.com/DataDog/dd-sdk-ios/pull/2395
-[#2405]: https://github.com/DataDog/dd-sdk-ios/pull/2405
-[#2410]: https://github.com/DataDog/dd-sdk-ios/pull/2410
-[#2442]: https://github.com/DataDog/dd-sdk-ios/pull/2442
-[#2455]: https://github.com/DataDog/dd-sdk-ios/pull/2455
-[#2463]: https://github.com/DataDog/dd-sdk-ios/pull/2463
-[#2410]: https://github.com/DataDog/dd-sdk-ios/pull/2410
-[#2436]: https://github.com/DataDog/dd-sdk-ios/pull/2436
-[#2464]: https://github.com/DataDog/dd-sdk-ios/pull/2464
-[#2469]: https://github.com/DataDog/dd-sdk-ios/pull/2469
-[#2473]: https://github.com/DataDog/dd-sdk-ios/pull/2473
-[#2474]: https://github.com/DataDog/dd-sdk-ios/pull/2474
-[#2501]: https://github.com/DataDog/dd-sdk-ios/pull/2501
-[#2514]: https://github.com/DataDog/dd-sdk-ios/pull/2514
-[#2517]: https://github.com/DataDog/dd-sdk-ios/pull/2517
-[#2522]: https://github.com/DataDog/dd-sdk-ios/pull/2522
-[#2530]: https://github.com/DataDog/dd-sdk-ios/pull/2530
-[#2532]: https://github.com/DataDog/dd-sdk-ios/pull/2532
-[#2533]: https://github.com/DataDog/dd-sdk-ios/pull/2533
-[#2538]: https://github.com/DataDog/dd-sdk-ios/pull/2538
-[#2552]: https://github.com/DataDog/dd-sdk-ios/pull/2552
-[#2566]: https://github.com/DataDog/dd-sdk-ios/pull/2566
-[#2576]: https://github.com/DataDog/dd-sdk-ios/pull/2576
-[#2585]: https://github.com/DataDog/dd-sdk-ios/pull/2585
-[#2587]: https://github.com/DataDog/dd-sdk-ios/pull/2587
-[#2598]: https://github.com/DataDog/dd-sdk-ios/pull/2598
-[#2599]: https://github.com/DataDog/dd-sdk-ios/pull/2599
-[#2612]: https://github.com/DataDog/dd-sdk-ios/pull/2612
-[#2614]: https://github.com/DataDog/dd-sdk-ios/pull/2614
-[#2620]: https://github.com/DataDog/dd-sdk-ios/pull/2620
-[#2631]: https://github.com/DataDog/dd-sdk-ios/pull/2631
-[#2633]: https://github.com/DataDog/dd-sdk-ios/pull/2633
-[#2634]: https://github.com/DataDog/dd-sdk-ios/pull/2634
-[#2639]: https://github.com/DataDog/dd-sdk-ios/pull/2639
-[#2640]: https://github.com/DataDog/dd-sdk-ios/pull/2640
-[#2646]: https://github.com/DataDog/dd-sdk-ios/pull/2646
-[#2647]: https://github.com/DataDog/dd-sdk-ios/pull/2647
-[#2654]: https://github.com/DataDog/dd-sdk-ios/pull/2654
-[#2661]: https://github.com/DataDog/dd-sdk-ios/pull/2661
-[#2665]: https://github.com/DataDog/dd-sdk-ios/pull/2665
-[#2665]: https://github.com/DataDog/dd-sdk-ios/pull/2666
-[#2674]: https://github.com/DataDog/dd-sdk-ios/pull/2674
-[#2676]: https://github.com/DataDog/dd-sdk-ios/pull/2676
-[#2688]: https://github.com/DataDog/dd-sdk-ios/pull/2688
-[#2697]: https://github.com/DataDog/dd-sdk-ios/pull/2697
-[#2699]: https://github.com/DataDog/dd-sdk-ios/pull/2699
-[#2705]: https://github.com/DataDog/dd-sdk-ios/pull/2705
-[#2710]: https://github.com/DataDog/dd-sdk-ios/pull/2710
-[#2717]: https://github.com/DataDog/dd-sdk-ios/pull/2717
-[#2721]: https://github.com/DataDog/dd-sdk-ios/pull/2721
-[#2726]: https://github.com/DataDog/dd-sdk-ios/pull/2726
-[#2759]: https://github.com/DataDog/dd-sdk-ios/pull/2759
-[#2761]: https://github.com/DataDog/dd-sdk-ios/pull/2761
-[#2740]: https://github.com/DataDog/dd-sdk-ios/pull/2740
-[#2750]: https://github.com/DataDog/dd-sdk-ios/pull/2750
-[#2714]: https://github.com/DataDog/dd-sdk-ios/pull/2714
-[#2751]: https://github.com/DataDog/dd-sdk-ios/pull/2751
-[#2773]: https://github.com/DataDog/dd-sdk-ios/pull/2773
-[#2776]: https://github.com/DataDog/dd-sdk-ios/pull/2776
-[#2791]: https://github.com/DataDog/dd-sdk-ios/pull/2791
-[#2719]: https://github.com/DataDog/dd-sdk-ios/pull/2719
-[#2794]: https://github.com/DataDog/dd-sdk-ios/pull/2794
-[#2802]: https://github.com/DataDog/dd-sdk-ios/pull/2802
-[#2807]: https://github.com/DataDog/dd-sdk-ios/pull/2807
-[#2840]: https://github.com/DataDog/dd-sdk-ios/pull/2840
-[#2817]: https://github.com/DataDog/dd-sdk-ios/pull/2817
-[#2827]: https://github.com/DataDog/dd-sdk-ios/pull/2827
-[#2829]: https://github.com/DataDog/dd-sdk-ios/pull/2829
-[#2844]: https://github.com/DataDog/dd-sdk-ios/pull/2844
-[#2847]: https://github.com/DataDog/dd-sdk-ios/pull/2847
-[#2854]: https://github.com/DataDog/dd-sdk-ios/pull/2854
-[#2845]: https://github.com/DataDog/dd-sdk-ios/pull/2845
-[#2855]: https://github.com/DataDog/dd-sdk-ios/pull/2855
-[#2856]: https://github.com/DataDog/dd-sdk-ios/pull/2856
-[#2866]: https://github.com/DataDog/dd-sdk-ios/pull/2866
-[#2891]: https://github.com/DataDog/dd-sdk-ios/pull/2891
+[#64]: https://github.com/openobserve/openobserve-sdk-ios/pull/64
+[#65]: https://github.com/openobserve/openobserve-sdk-ios/pull/65
+[#73]: https://github.com/openobserve/openobserve-sdk-ios/pull/73
+[#80]: https://github.com/openobserve/openobserve-sdk-ios/pull/80
+[#82]: https://github.com/openobserve/openobserve-sdk-ios/pull/82
+[#84]: https://github.com/openobserve/openobserve-sdk-ios/pull/84
+[#96]: https://github.com/openobserve/openobserve-sdk-ios/pull/96
+[#102]: https://github.com/openobserve/openobserve-sdk-ios/pull/102
+[#110]: https://github.com/openobserve/openobserve-sdk-ios/pull/110
+[#111]: https://github.com/openobserve/openobserve-sdk-ios/pull/111
+[#129]: https://github.com/openobserve/openobserve-sdk-ios/pull/129
+[#133]: https://github.com/openobserve/openobserve-sdk-ios/pull/133
+[#180]: https://github.com/openobserve/openobserve-sdk-ios/pull/180
+[#182]: https://github.com/openobserve/openobserve-sdk-ios/pull/182
+[#185]: https://github.com/openobserve/openobserve-sdk-ios/pull/185
+[#187]: https://github.com/openobserve/openobserve-sdk-ios/pull/187
+[#217]: https://github.com/openobserve/openobserve-sdk-ios/pull/217
+[#220]: https://github.com/openobserve/openobserve-sdk-ios/pull/220
+[#235]: https://github.com/openobserve/openobserve-sdk-ios/pull/235
+[#236]: https://github.com/openobserve/openobserve-sdk-ios/pull/236
+[#246]: https://github.com/openobserve/openobserve-sdk-ios/pull/246
+[#249]: https://github.com/openobserve/openobserve-sdk-ios/pull/249
+[#262]: https://github.com/openobserve/openobserve-sdk-ios/pull/262
+[#277]: https://github.com/openobserve/openobserve-sdk-ios/pull/277
+[#303]: https://github.com/openobserve/openobserve-sdk-ios/pull/303
+[#315]: https://github.com/openobserve/openobserve-sdk-ios/pull/315
+[#317]: https://github.com/openobserve/openobserve-sdk-ios/pull/317
+[#318]: https://github.com/openobserve/openobserve-sdk-ios/pull/318
+[#320]: https://github.com/openobserve/openobserve-sdk-ios/pull/320
+[#322]: https://github.com/openobserve/openobserve-sdk-ios/pull/322
+[#323]: https://github.com/openobserve/openobserve-sdk-ios/pull/323
+[#327]: https://github.com/openobserve/openobserve-sdk-ios/pull/327
+[#335]: https://github.com/openobserve/openobserve-sdk-ios/pull/335
+[#340]: https://github.com/openobserve/openobserve-sdk-ios/pull/340
+[#358]: https://github.com/openobserve/openobserve-sdk-ios/pull/358
+[#365]: https://github.com/openobserve/openobserve-sdk-ios/pull/365
+[#367]: https://github.com/openobserve/openobserve-sdk-ios/pull/367
+[#370]: https://github.com/openobserve/openobserve-sdk-ios/pull/370
+[#381]: https://github.com/openobserve/openobserve-sdk-ios/pull/381
+[#390]: https://github.com/openobserve/openobserve-sdk-ios/pull/390
+[#415]: https://github.com/openobserve/openobserve-sdk-ios/pull/415
+[#419]: https://github.com/openobserve/openobserve-sdk-ios/pull/419
+[#421]: https://github.com/openobserve/openobserve-sdk-ios/pull/421
+[#423]: https://github.com/openobserve/openobserve-sdk-ios/pull/423
+[#431]: https://github.com/openobserve/openobserve-sdk-ios/pull/431
+[#436]: https://github.com/openobserve/openobserve-sdk-ios/pull/436
+[#439]: https://github.com/openobserve/openobserve-sdk-ios/pull/439
+[#444]: https://github.com/openobserve/openobserve-sdk-ios/pull/444
+[#447]: https://github.com/openobserve/openobserve-sdk-ios/pull/447
+[#450]: https://github.com/openobserve/openobserve-sdk-ios/pull/450
+[#451]: https://github.com/openobserve/openobserve-sdk-ios/pull/451
+[#473]: https://github.com/openobserve/openobserve-sdk-ios/pull/473
+[#474]: https://github.com/openobserve/openobserve-sdk-ios/pull/474
+[#479]: https://github.com/openobserve/openobserve-sdk-ios/pull/479
+[#481]: https://github.com/openobserve/openobserve-sdk-ios/pull/481
+[#483]: https://github.com/openobserve/openobserve-sdk-ios/pull/483
+[#493]: https://github.com/openobserve/openobserve-sdk-ios/pull/493
+[#495]: https://github.com/openobserve/openobserve-sdk-ios/pull/495
+[#504]: https://github.com/openobserve/openobserve-sdk-ios/pull/504
+[#509]: https://github.com/openobserve/openobserve-sdk-ios/pull/509
+[#514]: https://github.com/openobserve/openobserve-sdk-ios/pull/514
+[#522]: https://github.com/openobserve/openobserve-sdk-ios/pull/522
+[#523]: https://github.com/openobserve/openobserve-sdk-ios/pull/523
+[#524]: https://github.com/openobserve/openobserve-sdk-ios/pull/524
+[#525]: https://github.com/openobserve/openobserve-sdk-ios/pull/525
+[#531]: https://github.com/openobserve/openobserve-sdk-ios/pull/531
+[#534]: https://github.com/openobserve/openobserve-sdk-ios/pull/534
+[#535]: https://github.com/openobserve/openobserve-sdk-ios/pull/535
+[#537]: https://github.com/openobserve/openobserve-sdk-ios/pull/537
+[#539]: https://github.com/openobserve/openobserve-sdk-ios/pull/539
+[#545]: https://github.com/openobserve/openobserve-sdk-ios/pull/545
+[#547]: https://github.com/openobserve/openobserve-sdk-ios/pull/547
+[#562]: https://github.com/openobserve/openobserve-sdk-ios/pull/562
+[#563]: https://github.com/openobserve/openobserve-sdk-ios/pull/563
+[#566]: https://github.com/openobserve/openobserve-sdk-ios/pull/566
+[#567]: https://github.com/openobserve/openobserve-sdk-ios/pull/567
+[#569]: https://github.com/openobserve/openobserve-sdk-ios/pull/569
+[#575]: https://github.com/openobserve/openobserve-sdk-ios/pull/575
+[#576]: https://github.com/openobserve/openobserve-sdk-ios/pull/576
+[#582]: https://github.com/openobserve/openobserve-sdk-ios/pull/582
+[#583]: https://github.com/openobserve/openobserve-sdk-ios/pull/583
+[#590]: https://github.com/openobserve/openobserve-sdk-ios/pull/590
+[#605]: https://github.com/openobserve/openobserve-sdk-ios/pull/605
+[#608]: https://github.com/openobserve/openobserve-sdk-ios/pull/608
+[#609]: https://github.com/openobserve/openobserve-sdk-ios/pull/609
+[#613]: https://github.com/openobserve/openobserve-sdk-ios/pull/613
+[#615]: https://github.com/openobserve/openobserve-sdk-ios/pull/615
+[#619]: https://github.com/openobserve/openobserve-sdk-ios/pull/619
+[#623]: https://github.com/openobserve/openobserve-sdk-ios/pull/623
+[#626]: https://github.com/openobserve/openobserve-sdk-ios/pull/626
+[#627]: https://github.com/openobserve/openobserve-sdk-ios/pull/627
+[#640]: https://github.com/openobserve/openobserve-sdk-ios/pull/640
+[#641]: https://github.com/openobserve/openobserve-sdk-ios/pull/641
+[#644]: https://github.com/openobserve/openobserve-sdk-ios/pull/644
+[#654]: https://github.com/openobserve/openobserve-sdk-ios/pull/654
+[#655]: https://github.com/openobserve/openobserve-sdk-ios/pull/655
+[#676]: https://github.com/openobserve/openobserve-sdk-ios/pull/676
+[#679]: https://github.com/openobserve/openobserve-sdk-ios/pull/679
+[#680]: https://github.com/openobserve/openobserve-sdk-ios/pull/680
+[#692]: https://github.com/openobserve/openobserve-sdk-ios/pull/692
+[#699]: https://github.com/openobserve/openobserve-sdk-ios/pull/699
+[#702]: https://github.com/openobserve/openobserve-sdk-ios/pull/702
+[#708]: https://github.com/openobserve/openobserve-sdk-ios/pull/708
+[#712]: https://github.com/openobserve/openobserve-sdk-ios/pull/712
+[#715]: https://github.com/openobserve/openobserve-sdk-ios/pull/715
+[#724]: https://github.com/openobserve/openobserve-sdk-ios/pull/724
+[#725]: https://github.com/openobserve/openobserve-sdk-ios/pull/725
+[#728]: https://github.com/openobserve/openobserve-sdk-ios/pull/728
+[#729]: https://github.com/openobserve/openobserve-sdk-ios/pull/729
+[#761]: https://github.com/openobserve/openobserve-sdk-ios/pull/761
+[#789]: https://github.com/openobserve/openobserve-sdk-ios/pull/789
+[#793]: https://github.com/openobserve/openobserve-sdk-ios/pull/793
+[#794]: https://github.com/openobserve/openobserve-sdk-ios/pull/794
+[#795]: https://github.com/openobserve/openobserve-sdk-ios/pull/795
+[#797]: https://github.com/openobserve/openobserve-sdk-ios/pull/797
+[#815]: https://github.com/openobserve/openobserve-sdk-ios/pull/815
+[#830]: https://github.com/openobserve/openobserve-sdk-ios/pull/830
+[#832]: https://github.com/openobserve/openobserve-sdk-ios/pull/832
+[#837]: https://github.com/openobserve/openobserve-sdk-ios/pull/837
+[#851]: https://github.com/openobserve/openobserve-sdk-ios/pull/851
+[#867]: https://github.com/openobserve/openobserve-sdk-ios/pull/867
+[#876]: https://github.com/openobserve/openobserve-sdk-ios/pull/876
+[#888]: https://github.com/openobserve/openobserve-sdk-ios/pull/888
+[#894]: https://github.com/openobserve/openobserve-sdk-ios/pull/894
+[#949]: https://github.com/openobserve/openobserve-sdk-ios/pull/949
+[#950]: https://github.com/openobserve/openobserve-sdk-ios/pull/950
+[#964]: https://github.com/openobserve/openobserve-sdk-ios/pull/964
+[#973]: https://github.com/openobserve/openobserve-sdk-ios/pull/973
+[#997]: https://github.com/openobserve/openobserve-sdk-ios/pull/997
+[#1007]: https://github.com/openobserve/openobserve-sdk-ios/pull/1007
+[#1013]: https://github.com/openobserve/openobserve-sdk-ios/pull/1013
+[#1029]: https://github.com/openobserve/openobserve-sdk-ios/pull/1029
+[#1031]: https://github.com/openobserve/openobserve-sdk-ios/pull/1031
+[#1043]: https://github.com/openobserve/openobserve-sdk-ios/pull/1043
+[#1045]: https://github.com/openobserve/openobserve-sdk-ios/pull/1045
+[#1051]: https://github.com/openobserve/openobserve-sdk-ios/pull/1051
+[#1057]: https://github.com/openobserve/openobserve-sdk-ios/pull/1057
+[#1061]: https://github.com/openobserve/openobserve-sdk-ios/pull/1061
+[#1071]: https://github.com/openobserve/openobserve-sdk-ios/pull/1071
+[#1089]: https://github.com/openobserve/openobserve-sdk-ios/pull/1089
+[#1145]: https://github.com/openobserve/openobserve-sdk-ios/pull/1145
+[#1160]: https://github.com/openobserve/openobserve-sdk-ios/pull/1160
+[#1177]: https://github.com/openobserve/openobserve-sdk-ios/pull/1177
+[#1188]: https://github.com/openobserve/openobserve-sdk-ios/pull/1188
+[#1209]: https://github.com/openobserve/openobserve-sdk-ios/pull/1209
+[#1216]: https://github.com/openobserve/openobserve-sdk-ios/pull/1216
+[#1219]: https://github.com/openobserve/openobserve-sdk-ios/pull/1219
+[#1220]: https://github.com/openobserve/openobserve-sdk-ios/pull/1220
+[#1247]: https://github.com/openobserve/openobserve-sdk-ios/pull/1247
+[#1250]: https://github.com/openobserve/openobserve-sdk-ios/pull/1250
+[#1259]: https://github.com/openobserve/openobserve-sdk-ios/pull/1259
+[#1264]: https://github.com/openobserve/openobserve-sdk-ios/pull/1264
+[#1272]: https://github.com/openobserve/openobserve-sdk-ios/pull/1272
+[#1311]: https://github.com/openobserve/openobserve-sdk-ios/pull/1311
+[#1315]: https://github.com/openobserve/openobserve-sdk-ios/pull/1315
+[#1328]: https://github.com/openobserve/openobserve-sdk-ios/pull/1328
+[#1331]: https://github.com/openobserve/openobserve-sdk-ios/pull/1331
+[#1355]: https://github.com/openobserve/openobserve-sdk-ios/pull/1355
+[#1394]: https://github.com/openobserve/openobserve-sdk-ios/pull/1394
+[#1410]: https://github.com/openobserve/openobserve-sdk-ios/pull/1410
+[#1412]: https://github.com/openobserve/openobserve-sdk-ios/pull/1412
+[#1413]: https://github.com/openobserve/openobserve-sdk-ios/pull/1413
+[#1415]: https://github.com/openobserve/openobserve-sdk-ios/pull/1415
+[#1418]: https://github.com/openobserve/openobserve-sdk-ios/pull/1418
+[#1419]: https://github.com/openobserve/openobserve-sdk-ios/pull/1419
+[#1428]: https://github.com/openobserve/openobserve-sdk-ios/pull/1428
+[#1444]: https://github.com/openobserve/openobserve-sdk-ios/pull/1444
+[#1464]: https://github.com/openobserve/openobserve-sdk-ios/pull/1464
+[#1465]: https://github.com/openobserve/openobserve-sdk-ios/pull/1465
+[#1488]: https://github.com/openobserve/openobserve-sdk-ios/pull/1488
+[#1493]: https://github.com/openobserve/openobserve-sdk-ios/pull/1493
+[#1498]: https://github.com/openobserve/openobserve-sdk-ios/pull/1498
+[#1502]: https://github.com/openobserve/openobserve-sdk-ios/pull/1502
+[#1515]: https://github.com/openobserve/openobserve-sdk-ios/pull/1515
+[#1524]: https://github.com/openobserve/openobserve-sdk-ios/pull/1524
+[#1529]: https://github.com/openobserve/openobserve-sdk-ios/pull/1529
+[#1531]: https://github.com/openobserve/openobserve-sdk-ios/pull/1531
+[#1533]: https://github.com/openobserve/openobserve-sdk-ios/pull/1533
+[#1536]: https://github.com/openobserve/openobserve-sdk-ios/pull/1536
+[#1541]: https://github.com/openobserve/openobserve-sdk-ios/pull/1541
+[#1592]: https://github.com/openobserve/openobserve-sdk-ios/pull/1592
+[#1594]: https://github.com/openobserve/openobserve-sdk-ios/pull/1594
+[#1596]: https://github.com/openobserve/openobserve-sdk-ios/pull/1596
+[#1597]: https://github.com/openobserve/openobserve-sdk-ios/pull/1597
+[#1609]: https://github.com/openobserve/openobserve-sdk-ios/pull/1609
+[#1615]: https://github.com/openobserve/openobserve-sdk-ios/pull/1615
+[#1637]: https://github.com/openobserve/openobserve-sdk-ios/pull/1637
+[#1639]: https://github.com/openobserve/openobserve-sdk-ios/pull/1639
+[#1645]: https://github.com/openobserve/openobserve-sdk-ios/pull/1645
+[#1627]: https://github.com/openobserve/openobserve-sdk-ios/pull/1627
+[#1644]: https://github.com/openobserve/openobserve-sdk-ios/pull/1644
+[#1656]: https://github.com/openobserve/openobserve-sdk-ios/pull/1656
+[#1666]: https://github.com/openobserve/openobserve-sdk-ios/pull/1666
+[#1672]: https://github.com/openobserve/openobserve-sdk-ios/pull/1672
+[#1685]: https://github.com/openobserve/openobserve-sdk-ios/pull/1685
+[#1696]: https://github.com/openobserve/openobserve-sdk-ios/pull/1696
+[#1697]: https://github.com/openobserve/openobserve-sdk-ios/pull/1697
+[#1707]: https://github.com/openobserve/openobserve-sdk-ios/pull/1707
+[#1711]: https://github.com/openobserve/openobserve-sdk-ios/pull/1711
+[#1721]: https://github.com/openobserve/openobserve-sdk-ios/pull/1721
+[#1722]: https://github.com/openobserve/openobserve-sdk-ios/pull/1722
+[#1724]: https://github.com/openobserve/openobserve-sdk-ios/pull/1724
+[#1741]: https://github.com/openobserve/openobserve-sdk-ios/pull/1741
+[#1742]: https://github.com/openobserve/openobserve-sdk-ios/pull/1742
+[#1746]: https://github.com/openobserve/openobserve-sdk-ios/pull/1746
+[#1747]: https://github.com/openobserve/openobserve-sdk-ios/pull/1747
+[#1763]: https://github.com/openobserve/openobserve-sdk-ios/pull/1763
+[#1767]: https://github.com/openobserve/openobserve-sdk-ios/pull/1767
+[#1774]: https://github.com/openobserve/openobserve-sdk-ios/pull/1774
+[#1776]: https://github.com/openobserve/openobserve-sdk-ios/pull/1776
+[#1794]: https://github.com/openobserve/openobserve-sdk-ios/pull/1794
+[#1798]: https://github.com/openobserve/openobserve-sdk-ios/pull/1798
+[#1803]: https://github.com/openobserve/openobserve-sdk-ios/pull/1803
+[#1807]: https://github.com/openobserve/openobserve-sdk-ios/pull/1807
+[#1828]: https://github.com/openobserve/openobserve-sdk-ios/pull/1828
+[#1834]: https://github.com/openobserve/openobserve-sdk-ios/pull/1834
+[#1835]: https://github.com/openobserve/openobserve-sdk-ios/pull/1835
+[#1843]: https://github.com/openobserve/openobserve-sdk-ios/pull/1843
+[#1853]: https://github.com/openobserve/openobserve-sdk-ios/pull/1853
+[#1854]: https://github.com/openobserve/openobserve-sdk-ios/pull/1854
+[#1886]: https://github.com/openobserve/openobserve-sdk-ios/pull/1886
+[#1888]: https://github.com/openobserve/openobserve-sdk-ios/pull/1888
+[#1889]: https://github.com/openobserve/openobserve-sdk-ios/pull/1889
+[#1891]: https://github.com/openobserve/openobserve-sdk-ios/pull/1891
+[#1898]: https://github.com/openobserve/openobserve-sdk-ios/pull/1898
+[#1906]: https://github.com/openobserve/openobserve-sdk-ios/pull/1906
+[#1908]: https://github.com/openobserve/openobserve-sdk-ios/pull/1908
+[#1911]: https://github.com/openobserve/openobserve-sdk-ios/pull/1911
+[#1912]: https://github.com/openobserve/openobserve-sdk-ios/pull/1912
+[#1916]: https://github.com/openobserve/openobserve-sdk-ios/pull/1916
+[#1917]: https://github.com/openobserve/openobserve-sdk-ios/pull/1917
+[#1918]: https://github.com/openobserve/openobserve-sdk-ios/pull/1918
+[#1925]: https://github.com/openobserve/openobserve-sdk-ios/pull/1925
+[#1930]: https://github.com/openobserve/openobserve-sdk-ios/pull/1930
+[#1934]: https://github.com/openobserve/openobserve-sdk-ios/pull/1934
+[#1938]: https://github.com/openobserve/openobserve-sdk-ios/pull/1938
+[#1940]: https://github.com/openobserve/openobserve-sdk-ios/pull/1940
+[#1946]: https://github.com/openobserve/openobserve-sdk-ios/pull/1946
+[#1947]: https://github.com/openobserve/openobserve-sdk-ios/pull/1947
+[#1948]: https://github.com/openobserve/openobserve-sdk-ios/pull/1948
+[#1955]: https://github.com/openobserve/openobserve-sdk-ios/pull/1955
+[#1963]: https://github.com/openobserve/openobserve-sdk-ios/pull/1963
+[#1966]: https://github.com/openobserve/openobserve-sdk-ios/pull/1966
+[#1967]: https://github.com/openobserve/openobserve-sdk-ios/pull/1967
+[#1968]: https://github.com/openobserve/openobserve-sdk-ios/pull/1968
+[#1973]: https://github.com/openobserve/openobserve-sdk-ios/pull/1973
+[#1986]: https://github.com/openobserve/openobserve-sdk-ios/pull/1986
+[#1988]: https://github.com/openobserve/openobserve-sdk-ios/pull/1988
+[#1991]: https://github.com/openobserve/openobserve-sdk-ios/pull/1991
+[#1998]: https://github.com/openobserve/openobserve-sdk-ios/pull/1998
+[#2000]: https://github.com/openobserve/openobserve-sdk-ios/pull/2000
+[#2005]: https://github.com/openobserve/openobserve-sdk-ios/pull/2005
+[#2008]: https://github.com/openobserve/openobserve-sdk-ios/pull/2008
+[#2026]: https://github.com/openobserve/openobserve-sdk-ios/pull/2026
+[#2040]: https://github.com/openobserve/openobserve-sdk-ios/pull/2040
+[#2043]: https://github.com/openobserve/openobserve-sdk-ios/pull/2043
+[#2050]: https://github.com/openobserve/openobserve-sdk-ios/pull/2050
+[#2063]: https://github.com/openobserve/openobserve-sdk-ios/pull/2063
+[#2073]: https://github.com/openobserve/openobserve-sdk-ios/pull/2073
+[#2083]: https://github.com/openobserve/openobserve-sdk-ios/pull/2083
+[#2088]: https://github.com/openobserve/openobserve-sdk-ios/pull/2088
+[#2092]: https://github.com/openobserve/openobserve-sdk-ios/pull/2092
+[#2099]: https://github.com/openobserve/openobserve-sdk-ios/pull/2099
+[#2104]: https://github.com/openobserve/openobserve-sdk-ios/pull/2104
+[#2113]: https://github.com/openobserve/openobserve-sdk-ios/pull/2113
+[#2114]: https://github.com/openobserve/openobserve-sdk-ios/pull/2114
+[#2116]: https://github.com/openobserve/openobserve-sdk-ios/pull/2116
+[#2120]: https://github.com/openobserve/openobserve-sdk-ios/pull/2120
+[#2125]: https://github.com/openobserve/openobserve-sdk-ios/pull/2125
+[#2126]: https://github.com/openobserve/openobserve-sdk-ios/pull/2126
+[#2148]: https://github.com/openobserve/openobserve-sdk-ios/pull/2148
+[#2153]: https://github.com/openobserve/openobserve-sdk-ios/pull/2153
+[#2154]: https://github.com/openobserve/openobserve-sdk-ios/pull/2154
+[#2169]: https://github.com/openobserve/openobserve-sdk-ios/pull/2169
+[#2170]: https://github.com/openobserve/openobserve-sdk-ios/pull/2170
+[#2172]: https://github.com/openobserve/openobserve-sdk-ios/pull/2172
+[#2177]: https://github.com/openobserve/openobserve-sdk-ios/pull/2177
+[#2182]: https://github.com/openobserve/openobserve-sdk-ios/pull/2182
+[#2195]: https://github.com/openobserve/openobserve-sdk-ios/pull/2195
+[#2217]: https://github.com/openobserve/openobserve-sdk-ios/pull/2217
+[#2200]: https://github.com/openobserve/openobserve-sdk-ios/pull/2200
+[#2201]: https://github.com/openobserve/openobserve-sdk-ios/pull/2201
+[#2223]: https://github.com/openobserve/openobserve-sdk-ios/pull/2223
+[#2225]: https://github.com/openobserve/openobserve-sdk-ios/pull/2225
+[#2234]: https://github.com/openobserve/openobserve-sdk-ios/pull/2234
+[#2236]: https://github.com/openobserve/openobserve-sdk-ios/pull/2236
+[#2237]: https://github.com/openobserve/openobserve-sdk-ios/pull/2237
+[#2240]: https://github.com/openobserve/openobserve-sdk-ios/pull/2240
+[#2244]: https://github.com/openobserve/openobserve-sdk-ios/pull/2244
+[#2251]: https://github.com/openobserve/openobserve-sdk-ios/pull/2251
+[#2260]: https://github.com/openobserve/openobserve-sdk-ios/pull/2260
+[#2268]: https://github.com/openobserve/openobserve-sdk-ios/pull/2268
+[#2286]: https://github.com/openobserve/openobserve-sdk-ios/pull/2286
+[#2288]: https://github.com/openobserve/openobserve-sdk-ios/pull/2288
+[#2291]: https://github.com/openobserve/openobserve-sdk-ios/pull/2291
+[#2295]: https://github.com/openobserve/openobserve-sdk-ios/pull/2295
+[#2298]: https://github.com/openobserve/openobserve-sdk-ios/pull/2298
+[#2302]: https://github.com/openobserve/openobserve-sdk-ios/pull/2302
+[#2304]: https://github.com/openobserve/openobserve-sdk-ios/pull/2304
+[#2305]: https://github.com/openobserve/openobserve-sdk-ios/pull/2305
+[#2309]: https://github.com/openobserve/openobserve-sdk-ios/pull/2309
+[#2310]: https://github.com/openobserve/openobserve-sdk-ios/pull/2310
+[#2315]: https://github.com/openobserve/openobserve-sdk-ios/pull/2315
+[#2316]: https://github.com/openobserve/openobserve-sdk-ios/pull/2316
+[#2322]: https://github.com/openobserve/openobserve-sdk-ios/pull/2322
+[#2326]: https://github.com/openobserve/openobserve-sdk-ios/pull/2326
+[#2327]: https://github.com/openobserve/openobserve-sdk-ios/pull/2327
+[#2333]: https://github.com/openobserve/openobserve-sdk-ios/pull/2333
+[#2341]: https://github.com/openobserve/openobserve-sdk-ios/pull/2341
+[#2343]: https://github.com/openobserve/openobserve-sdk-ios/pull/2343
+[#2344]: https://github.com/openobserve/openobserve-sdk-ios/pull/2344
+[#2348]: https://github.com/openobserve/openobserve-sdk-ios/pull/2348
+[#2351]: https://github.com/openobserve/openobserve-sdk-ios/pull/2351
+[#2354]: https://github.com/openobserve/openobserve-sdk-ios/pull/2354
+[#2355]: https://github.com/openobserve/openobserve-sdk-ios/pull/2355
+[#2359]: https://github.com/openobserve/openobserve-sdk-ios/pull/2359
+[#2360]: https://github.com/openobserve/openobserve-sdk-ios/pull/2360
+[#2364]: https://github.com/openobserve/openobserve-sdk-ios/pull/2364
+[#2369]: https://github.com/openobserve/openobserve-sdk-ios/pull/2369
+[#2370]: https://github.com/openobserve/openobserve-sdk-ios/pull/2370
+[#2395]: https://github.com/openobserve/openobserve-sdk-ios/pull/2395
+[#2405]: https://github.com/openobserve/openobserve-sdk-ios/pull/2405
+[#2410]: https://github.com/openobserve/openobserve-sdk-ios/pull/2410
+[#2442]: https://github.com/openobserve/openobserve-sdk-ios/pull/2442
+[#2455]: https://github.com/openobserve/openobserve-sdk-ios/pull/2455
+[#2463]: https://github.com/openobserve/openobserve-sdk-ios/pull/2463
+[#2410]: https://github.com/openobserve/openobserve-sdk-ios/pull/2410
+[#2436]: https://github.com/openobserve/openobserve-sdk-ios/pull/2436
+[#2464]: https://github.com/openobserve/openobserve-sdk-ios/pull/2464
+[#2469]: https://github.com/openobserve/openobserve-sdk-ios/pull/2469
+[#2473]: https://github.com/openobserve/openobserve-sdk-ios/pull/2473
+[#2474]: https://github.com/openobserve/openobserve-sdk-ios/pull/2474
+[#2501]: https://github.com/openobserve/openobserve-sdk-ios/pull/2501
+[#2514]: https://github.com/openobserve/openobserve-sdk-ios/pull/2514
+[#2517]: https://github.com/openobserve/openobserve-sdk-ios/pull/2517
+[#2522]: https://github.com/openobserve/openobserve-sdk-ios/pull/2522
+[#2530]: https://github.com/openobserve/openobserve-sdk-ios/pull/2530
+[#2532]: https://github.com/openobserve/openobserve-sdk-ios/pull/2532
+[#2533]: https://github.com/openobserve/openobserve-sdk-ios/pull/2533
+[#2538]: https://github.com/openobserve/openobserve-sdk-ios/pull/2538
+[#2552]: https://github.com/openobserve/openobserve-sdk-ios/pull/2552
+[#2566]: https://github.com/openobserve/openobserve-sdk-ios/pull/2566
+[#2576]: https://github.com/openobserve/openobserve-sdk-ios/pull/2576
+[#2585]: https://github.com/openobserve/openobserve-sdk-ios/pull/2585
+[#2587]: https://github.com/openobserve/openobserve-sdk-ios/pull/2587
+[#2598]: https://github.com/openobserve/openobserve-sdk-ios/pull/2598
+[#2599]: https://github.com/openobserve/openobserve-sdk-ios/pull/2599
+[#2612]: https://github.com/openobserve/openobserve-sdk-ios/pull/2612
+[#2614]: https://github.com/openobserve/openobserve-sdk-ios/pull/2614
+[#2620]: https://github.com/openobserve/openobserve-sdk-ios/pull/2620
+[#2631]: https://github.com/openobserve/openobserve-sdk-ios/pull/2631
+[#2633]: https://github.com/openobserve/openobserve-sdk-ios/pull/2633
+[#2634]: https://github.com/openobserve/openobserve-sdk-ios/pull/2634
+[#2639]: https://github.com/openobserve/openobserve-sdk-ios/pull/2639
+[#2640]: https://github.com/openobserve/openobserve-sdk-ios/pull/2640
+[#2646]: https://github.com/openobserve/openobserve-sdk-ios/pull/2646
+[#2647]: https://github.com/openobserve/openobserve-sdk-ios/pull/2647
+[#2654]: https://github.com/openobserve/openobserve-sdk-ios/pull/2654
+[#2661]: https://github.com/openobserve/openobserve-sdk-ios/pull/2661
+[#2665]: https://github.com/openobserve/openobserve-sdk-ios/pull/2665
+[#2665]: https://github.com/openobserve/openobserve-sdk-ios/pull/2666
+[#2674]: https://github.com/openobserve/openobserve-sdk-ios/pull/2674
+[#2676]: https://github.com/openobserve/openobserve-sdk-ios/pull/2676
+[#2688]: https://github.com/openobserve/openobserve-sdk-ios/pull/2688
+[#2697]: https://github.com/openobserve/openobserve-sdk-ios/pull/2697
+[#2699]: https://github.com/openobserve/openobserve-sdk-ios/pull/2699
+[#2705]: https://github.com/openobserve/openobserve-sdk-ios/pull/2705
+[#2710]: https://github.com/openobserve/openobserve-sdk-ios/pull/2710
+[#2717]: https://github.com/openobserve/openobserve-sdk-ios/pull/2717
+[#2721]: https://github.com/openobserve/openobserve-sdk-ios/pull/2721
+[#2726]: https://github.com/openobserve/openobserve-sdk-ios/pull/2726
+[#2759]: https://github.com/openobserve/openobserve-sdk-ios/pull/2759
+[#2761]: https://github.com/openobserve/openobserve-sdk-ios/pull/2761
+[#2740]: https://github.com/openobserve/openobserve-sdk-ios/pull/2740
+[#2750]: https://github.com/openobserve/openobserve-sdk-ios/pull/2750
+[#2714]: https://github.com/openobserve/openobserve-sdk-ios/pull/2714
+[#2751]: https://github.com/openobserve/openobserve-sdk-ios/pull/2751
+[#2773]: https://github.com/openobserve/openobserve-sdk-ios/pull/2773
+[#2776]: https://github.com/openobserve/openobserve-sdk-ios/pull/2776
+[#2791]: https://github.com/openobserve/openobserve-sdk-ios/pull/2791
+[#2719]: https://github.com/openobserve/openobserve-sdk-ios/pull/2719
+[#2794]: https://github.com/openobserve/openobserve-sdk-ios/pull/2794
+[#2802]: https://github.com/openobserve/openobserve-sdk-ios/pull/2802
+[#2807]: https://github.com/openobserve/openobserve-sdk-ios/pull/2807
+[#2840]: https://github.com/openobserve/openobserve-sdk-ios/pull/2840
+[#2817]: https://github.com/openobserve/openobserve-sdk-ios/pull/2817
+[#2827]: https://github.com/openobserve/openobserve-sdk-ios/pull/2827
+[#2829]: https://github.com/openobserve/openobserve-sdk-ios/pull/2829
+[#2844]: https://github.com/openobserve/openobserve-sdk-ios/pull/2844
+[#2847]: https://github.com/openobserve/openobserve-sdk-ios/pull/2847
+[#2854]: https://github.com/openobserve/openobserve-sdk-ios/pull/2854
+[#2845]: https://github.com/openobserve/openobserve-sdk-ios/pull/2845
+[#2855]: https://github.com/openobserve/openobserve-sdk-ios/pull/2855
+[#2856]: https://github.com/openobserve/openobserve-sdk-ios/pull/2856
+[#2866]: https://github.com/openobserve/openobserve-sdk-ios/pull/2866
+[#2891]: https://github.com/openobserve/openobserve-sdk-ios/pull/2891
 
 [@00fa9a]: https://github.com/00FA9A
 [@britton-earnin]: https://github.com/Britton-Earnin

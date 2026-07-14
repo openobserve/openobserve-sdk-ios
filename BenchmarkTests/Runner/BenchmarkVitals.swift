@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogBenchmarks
+import OpenObserveBenchmarks
 import OpenTelemetryApi
 import OpenTelemetrySdk
 
@@ -17,7 +17,7 @@ internal final class Vitals {
 
     private lazy var meter: MeterSdk = provider.get(name: "vitals")
 
-    let queue = DispatchQueue(label: "com.datadoghq.benchmarks.vitals", target: .global(qos: .utility))
+    let queue = DispatchQueue(label: "io.openobserve.benchmarks.vitals", target: .global(qos: .utility))
 
     init(provider: MeterProviderSdk) {
         self.provider = provider

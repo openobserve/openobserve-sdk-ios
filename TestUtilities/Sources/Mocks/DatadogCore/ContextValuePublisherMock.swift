@@ -1,15 +1,15 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-@testable import DatadogCore
+@testable import OpenObserveCore
 
 public class ContextValuePublisherMock<Value>: ContextValuePublisher {
     private let queue = DispatchQueue(
-        label: "com.datadoghq.context-value-publisher-mock"
+        label: "io.openobserve.context-value-publisher-mock"
     )
 
     public let initialValue: Value

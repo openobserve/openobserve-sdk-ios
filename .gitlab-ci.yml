@@ -50,7 +50,7 @@ default:
     - if: '$CI_COMMIT_BRANCH' # when on other branch with following changes compared to develop
       changes:
         paths:
-          - "Datadog*/**/*"
+          - "OpenObserve*/**/*"
           - "IntegrationTests/**/*"
           - "SmokeTests/**/*"
           - "TestUtilities/**/*"
@@ -405,7 +405,7 @@ Dogfood (Shopist):
     - ./tools/runner-setup.sh --ssh
     - DRY_RUN=0 make dogfood-shopist
 
-Dogfood (Datadog app):
+Dogfood (OpenObserve app):
   stage: dogfood
   rules:
     - if: '$CI_COMMIT_BRANCH == $DOGFOODING_BRANCH'
@@ -493,47 +493,47 @@ Publish CP podspecs (internal):
 Publish CP podspec (Core):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogCore.podspec"
+    PODSPEC_NAME: "OpenObserveCore.podspec"
 
 Publish CP podspec (Logs):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogLogs.podspec"
+    PODSPEC_NAME: "OpenObserveLogs.podspec"
 
 Publish CP podspec (Trace):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogTrace.podspec"
+    PODSPEC_NAME: "OpenObserveTrace.podspec"
 
 Publish CP podspec (RUM):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogRUM.podspec"
+    PODSPEC_NAME: "OpenObserveRUM.podspec"
 
 Publish CP podspec (SessionReplay):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogSessionReplay.podspec"
+    PODSPEC_NAME: "OpenObserveSessionReplay.podspec"
 
 Publish CP podspec (CrashReporting):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogCrashReporting.podspec"
+    PODSPEC_NAME: "OpenObserveCrashReporting.podspec"
 
 Publish CP podspec (WebViewTracking):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogWebViewTracking.podspec"
+    PODSPEC_NAME: "OpenObserveWebViewTracking.podspec"
 
 Publish CP podspec (Flags):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogFlags.podspec"
+    PODSPEC_NAME: "OpenObserveFlags.podspec"
 
 Publish CP podspec (Profiling):
   extends: .publish-dependent-podspec
   variables:
-    PODSPEC_NAME: "DatadogProfiling.podspec"
+    PODSPEC_NAME: "OpenObserveProfiling.podspec"
 
 # ┌────────────────┐
 # │ Notifications: │

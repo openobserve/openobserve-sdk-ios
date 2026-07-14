@@ -34,16 +34,16 @@ parse_args "$@"
 REPO_ROOT=$(realpath .)
 
 SNAPSHOTS_CLI_PATH="$REPO_ROOT/tools/sr-snapshots"
-SNAPSHOTS_DIR="$REPO_ROOT/DatadogSessionReplay/SRSnapshotTests/SRSnapshotTests/_snapshots_"
+SNAPSHOTS_DIR="$REPO_ROOT/OpenObserveSessionReplay/SRSnapshotTests/SRSnapshotTests/_snapshots_"
 SNAPSHOTS_REPO_PATH="$REPO_ROOT/../dd-mobile-session-replay-snapshots"
 
 TEST_SCHEME="SRSnapshotTests"
-TEST_WORKSPACE="$REPO_ROOT/DatadogSessionReplay/SRSnapshotTests/SRSnapshotTests.xcworkspace"
+TEST_WORKSPACE="$REPO_ROOT/OpenObserveSessionReplay/SRSnapshotTests/SRSnapshotTests.xcworkspace"
 TEST_ARTIFACTS_PATH="$REPO_ROOT/$artifacts_path/sr-snapshot-tests"
 
 # On CI, get GitHub token for accessing snapshots repository
 if [ "$CI" = "true" ]; then
-    export GH_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/dd-mobile-session-replay-snapshots --policy dd-sdk-ios)
+    export GH_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/dd-mobile-session-replay-snapshots --policy openobserve-sdk-ios)
     # Set up trap to always revoke token on script exit (success, failure, or interruption)
     trap 'dd-octo-sts --disable-tracing revoke --token $GH_TOKEN' EXIT
 fi
@@ -75,7 +75,7 @@ test_snapshots() {
     rm -rf "$TEST_ARTIFACTS_PATH"
     mkdir -p "$TEST_ARTIFACTS_PATH"
 
-    export DD_TEST_UTILITIES_ENABLED=1 # it is used in `dd-sdk-ios/Package.swift` to enable `TestUtilities` module
+    export DD_TEST_UTILITIES_ENABLED=1 # it is used in `openobserve-sdk-ios/Package.swift` to enable `TestUtilities` module
     xcodebuild -version
     xcodebuild -workspace "$TEST_WORKSPACE" -destination "$destination" -scheme "$TEST_SCHEME" -resultBundlePath "$TEST_ARTIFACTS_PATH/$TEST_SCHEME.xcresult" test | xcbeautify
 }

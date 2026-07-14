@@ -1,0 +1,90 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if os(iOS)
+import Foundation
+import OpenObserveInternal
+
+internal struct RecordingComponents {
+    let recordingCoordinator: any RecordingController
+    let messageReceiver: any FeatureMessageReceiver
+
+    init(
+        core: OpenObserveCoreProtocol,
+        configuration: SessionReplay.Configuration
+    ) throws {
+        if #available(iOS 13.0, tvOS 13.0, *), configuration.featureFlags[.layerTreeRecording] {
+            // TODO: PANA-6884 Implement layer tree recording pipeline
+            struct LayerTreeRecordingNotImplemented: Error {}
+            throw LayerTreeRecordingNotImplemented()
+        }
+
+        self = try .viewTreeRecordingComponents(core: core, configuration: configuration)
+    }
+
+    private init(
+        recordingCoordinator: any RecordingController,
+        messageReceiver: any FeatureMessageReceiver
+    ) {
+        self.recordingCoordinator = recordingCoordinator
+        self.messageReceiver = messageReceiver
+    }
+
+    private static func viewTreeRecordingComponents(
+        core: OpenObserveCoreProtocol,
+        configuration: SessionReplay.Configuration
+    ) throws -> Self {
+        let processorsQueue = BackgroundAsyncQueue(label: "io.openobserve.session-replay.processors", qos: .utility)
+        // The telemetry queue targets the processors queue with a lower qos.
+        let telemetryQueue = BackgroundAsyncQueue(label: "io.openobserve.session-replay.telemetry", qos: .background, target: processorsQueue)
+
+        let telemetry = SessionReplayTelemetry(
+            telemetry: core.telemetry,
+            queue: telemetryQueue
+        )
+
+        let resourceProcessor = ResourceProcessor(
+            queue: processorsQueue,
+            resourcesWriter: ResourcesWriter(scope: core.scope(for: ResourcesFeature.self))
+        )
+
+        let snapshotProcessor = SnapshotProcessor(
+            queue: processorsQueue,
+            recordWriter: RecordWriter(core: core),
+            resourceProcessor: resourceProcessor,
+            srContextPublisher: SRContextPublisher(core: core),
+            telemetry: telemetry
+        )
+
+        let recorder = try Recorder(
+            snapshotProcessor: snapshotProcessor,
+            additionalNodeRecorders: configuration._additionalNodeRecorders,
+            core: core,
+            featureFlags: configuration.featureFlags
+        )
+
+        let scheduler = ScreenChangeScheduler(minimumInterval: 0.1, telemetry: telemetry)
+        let contextReceiver = RUMContextReceiver()
+        let recordingCoordinator = RecordingCoordinator(
+            scheduler: scheduler,
+            textAndInputPrivacy: configuration.textAndInputPrivacyLevel,
+            imagePrivacy: configuration.imagePrivacyLevel,
+            touchPrivacy: configuration.touchPrivacyLevel,
+            rumContextObserver: contextReceiver,
+            srContextPublisher: SRContextPublisher(core: core),
+            recorder: recorder,
+            replaySampleRate: configuration.debugSDK ? 100 : configuration.replaySampleRate,
+            telemetry: telemetry,
+            startRecordingImmediately: configuration.startRecordingImmediately
+        )
+
+        return .init(
+            recordingCoordinator: recordingCoordinator,
+            messageReceiver: contextReceiver
+        )
+    }
+}
+#endif

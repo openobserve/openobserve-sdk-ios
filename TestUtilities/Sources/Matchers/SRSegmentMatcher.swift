@@ -1,19 +1,19 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
 
 /// Matcher for asserting known values of Session Replay Segment.
 ///
-/// See: ``DatadogSessionReplay.SRSegment`` to understand how underlying data is encoded.
+/// See: ``OpenObserveSessionReplay.SRSegment`` to understand how underlying data is encoded.
 public class SRSegmentMatcher: JSONObjectMatcher {
     /// Enumerates SR record types.
     /// Raw values correspond to record types defined in SR JSON schema.
     ///
-    /// See: ``DatadogSessionReplay.SRRecord``
+    /// See: ``OpenObserveSessionReplay.SRRecord``
     public enum RecordType: Int {
         case fullSnapshotRecord = 10
         case incrementalSnapshotRecord = 11
@@ -81,7 +81,7 @@ public class SRSegmentMatcher: JSONObjectMatcher {
 
 /// Matcher for asserting known values of Session Replay "full snapshot" record.
 ///
-/// See: ``DatadogSessionReplay.SRFullSnapshotRecord`` to understand how underlying data is encoded.
+/// See: ``OpenObserveSessionReplay.SRFullSnapshotRecord`` to understand how underlying data is encoded.
 public class SRFullSnapshotRecordMatcher: JSONObjectMatcher {
     public init(jsonObject: [String: Any]) {
         super.init(object: jsonObject)
@@ -95,7 +95,7 @@ public class SRFullSnapshotRecordMatcher: JSONObjectMatcher {
 
 /// Matcher for asserting known values of Session Replay "incremental snapshot" record.
 ///
-/// See: ``DatadogSessionReplay.SRIncrementalSnapshotRecord`` to understand how underlying data is encoded.
+/// See: ``OpenObserveSessionReplay.SRIncrementalSnapshotRecord`` to understand how underlying data is encoded.
 public class SRIncrementalSnapshotRecordMatcher: JSONObjectMatcher {
     public init(jsonObject: [String: Any]) {
         super.init(object: jsonObject)
@@ -104,7 +104,7 @@ public class SRIncrementalSnapshotRecordMatcher: JSONObjectMatcher {
     /// Enumerates data types in incremental snapshot.
     /// Raw values correspond to types defined in SR JSON schema.
     ///
-    /// See: ``DatadogSessionReplay.SRIncrementalSnapshotRecord.Data``
+    /// See: ``OpenObserveSessionReplay.SRIncrementalSnapshotRecord.Data``
     public enum IncrementalDataType: Int {
         case mutationData = 0
         case touchData = 2

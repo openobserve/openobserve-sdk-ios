@@ -7,7 +7,7 @@ let internalSwiftSettings: [SwiftSetting] = ProcessInfo.processInfo.environment[
     [.define("DD_BENCHMARK")] : []
 
 let package = Package(
-    name: "Datadog",
+    name: "OpenObserve",
     platforms: [
         .iOS(.v12),
         .tvOS(.v12),
@@ -17,40 +17,40 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "DatadogCore",
-            targets: ["DatadogCore"]
+            name: "OpenObserveCore",
+            targets: ["OpenObserveCore"]
         ),
         .library(
-            name: "DatadogLogs",
-            targets: ["DatadogLogs"]
+            name: "OpenObserveLogs",
+            targets: ["OpenObserveLogs"]
         ),
         .library(
-            name: "DatadogTrace",
-            targets: ["DatadogTrace"]
+            name: "OpenObserveTrace",
+            targets: ["OpenObserveTrace"]
         ),
         .library(
-            name: "DatadogRUM",
-            targets: ["DatadogRUM"]
+            name: "OpenObserveRUM",
+            targets: ["OpenObserveRUM"]
         ),
         .library(
-            name: "DatadogSessionReplay",
-            targets: ["DatadogSessionReplay"]
+            name: "OpenObserveSessionReplay",
+            targets: ["OpenObserveSessionReplay"]
         ),
         .library(
-            name: "DatadogCrashReporting",
-            targets: ["DatadogCrashReporting"]
+            name: "OpenObserveCrashReporting",
+            targets: ["OpenObserveCrashReporting"]
         ),
         .library(
-            name: "DatadogWebViewTracking",
-            targets: ["DatadogWebViewTracking"]
+            name: "OpenObserveWebViewTracking",
+            targets: ["OpenObserveWebViewTracking"]
         ),
         .library(
-            name: "DatadogFlags",
-            targets: ["DatadogFlags"]
+            name: "OpenObserveFlags",
+            targets: ["OpenObserveFlags"]
         ),
         .library(
-            name: "DatadogProfiling",
-            targets: ["DatadogProfiling"]
+            name: "OpenObserveProfiling",
+            targets: ["OpenObserveProfiling"]
         ),
     ],
     dependencies: [
@@ -59,12 +59,12 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "DatadogCore",
+            name: "OpenObserveCore",
             dependencies: [
-                .target(name: "DatadogInternal"),
-                .target(name: "DatadogPrivate"),
+                .target(name: "OpenObserveInternal"),
+                .target(name: "OpenObservePrivate"),
             ],
-            path: "DatadogCore",
+            path: "OpenObserveCore",
             sources: ["Sources"],
             resources: [
                 .copy("Resources/PrivacyInfo.xcprivacy")
@@ -72,139 +72,139 @@ let package = Package(
             swiftSettings: [.define("SPM_BUILD")] + internalSwiftSettings
         ),
         .target(
-            name: "DatadogPrivate",
-            path: "DatadogCore/Private"
+            name: "OpenObservePrivate",
+            path: "OpenObserveCore/Private"
         ),
 
         .target(
-            name: "DatadogInternal",
-            path: "DatadogInternal/Sources",
+            name: "OpenObserveInternal",
+            path: "OpenObserveInternal/Sources",
             swiftSettings: internalSwiftSettings
         ),
         .testTarget(
-            name: "DatadogInternalTests",
+            name: "OpenObserveInternalTests",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogInternal/Tests"
+            path: "OpenObserveInternal/Tests"
         ),
 
         .target(
-            name: "DatadogLogs",
+            name: "OpenObserveLogs",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
             ],
-            path: "DatadogLogs/Sources"
+            path: "OpenObserveLogs/Sources"
         ),
         .testTarget(
-            name: "DatadogLogsTests",
+            name: "OpenObserveLogsTests",
             dependencies: [
-                .target(name: "DatadogLogs"),
+                .target(name: "OpenObserveLogs"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogLogs/Tests"
+            path: "OpenObserveLogs/Tests"
         ),
 
         .target(
-            name: "DatadogTrace",
+            name: "OpenObserveTrace",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
                 .product(name: "OpenTelemetryApi", package: "opentelemetry-swift-core")
             ],
-            path: "DatadogTrace/Sources"
+            path: "OpenObserveTrace/Sources"
         ),
         .testTarget(
-            name: "DatadogTraceTests",
+            name: "OpenObserveTraceTests",
             dependencies: [
-                .target(name: "DatadogTrace"),
+                .target(name: "OpenObserveTrace"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogTrace/Tests"
+            path: "OpenObserveTrace/Tests"
         ),
 
         .target(
-            name: "DatadogRUM",
+            name: "OpenObserveRUM",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
             ],
-            path: "DatadogRUM",
+            path: "OpenObserveRUM",
             sources: ["Sources"],
             resources: [
                 .copy("Resources/PrivacyInfo.xcprivacy")
             ]
         ),
         .testTarget(
-            name: "DatadogRUMTests",
+            name: "OpenObserveRUMTests",
             dependencies: [
-                .target(name: "DatadogRUM"),
+                .target(name: "OpenObserveRUM"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogRUM/Tests"
+            path: "OpenObserveRUM/Tests"
         ),
 
         .target(
-            name: "DatadogCrashReporting",
+            name: "OpenObserveCrashReporting",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
                 .product(name: "Recording", package: "KSCrash"),
                 .product(name: "Filters", package: "KSCrash")
             ],
-            path: "DatadogCrashReporting",
+            path: "OpenObserveCrashReporting",
             sources: ["Sources"],
             resources: [
                 .copy("Resources/PrivacyInfo.xcprivacy")
             ]
         ),
         .testTarget(
-            name: "DatadogCrashReportingTests",
+            name: "OpenObserveCrashReportingTests",
             dependencies: [
-                .target(name: "DatadogCrashReporting"),
+                .target(name: "OpenObserveCrashReporting"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogCrashReporting/Tests"
+            path: "OpenObserveCrashReporting/Tests"
         ),
 
         .target(
-            name: "DatadogWebViewTracking",
+            name: "OpenObserveWebViewTracking",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
             ],
-            path: "DatadogWebViewTracking/Sources"
+            path: "OpenObserveWebViewTracking/Sources"
         ),
         .testTarget(
-            name: "DatadogWebViewTrackingTests",
+            name: "OpenObserveWebViewTrackingTests",
             dependencies: [
-                .target(name: "DatadogWebViewTracking"),
+                .target(name: "OpenObserveWebViewTracking"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogWebViewTracking/Tests"
+            path: "OpenObserveWebViewTracking/Tests"
         ),
 
         .target(
-            name: "DatadogSessionReplay",
-            dependencies: ["DatadogInternal"],
-            path: "DatadogSessionReplay/Sources"
+            name: "OpenObserveSessionReplay",
+            dependencies: ["OpenObserveInternal"],
+            path: "OpenObserveSessionReplay/Sources"
         ),
         .testTarget(
-            name: "DatadogSessionReplayTests",
+            name: "OpenObserveSessionReplayTests",
             dependencies: [
-                .target(name: "DatadogSessionReplay"),
+                .target(name: "OpenObserveSessionReplay"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogSessionReplay/Tests",
+            path: "OpenObserveSessionReplay/Tests",
             resources: [
                 .process("Resources/Assets.xcassets")
             ]
         ),
         
         .target(
-            name: "DatadogProfiling",
+            name: "OpenObserveProfiling",
             dependencies: [
-                .target(name: "DatadogInternal"),
-                .target(name: "DatadogMachProfiler")
+                .target(name: "OpenObserveInternal"),
+                .target(name: "OpenObserveMachProfiler")
             ],
-            path: "DatadogProfiling",
+            path: "OpenObserveProfiling",
             sources: ["Sources"],
             resources: [
                 .copy("Resources/PrivacyInfo.xcprivacy")
@@ -212,49 +212,49 @@ let package = Package(
             swiftSettings: internalSwiftSettings
         ),
         .target(
-            name: "DatadogMachProfiler",
-            path: "DatadogProfiling/Mach"
+            name: "OpenObserveMachProfiler",
+            path: "OpenObserveProfiling/Mach"
         ),
         .testTarget(
-            name: "DatadogProfilingTests",
+            name: "OpenObserveProfilingTests",
             dependencies: [
-                .target(name: "DatadogMachProfiler"),
-                .target(name: "DatadogProfiling"),
+                .target(name: "OpenObserveMachProfiler"),
+                .target(name: "OpenObserveProfiling"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogProfiling/Tests",
+            path: "OpenObserveProfiling/Tests",
             swiftSettings: [.interoperabilityMode(.Cxx)] + internalSwiftSettings
         ),
 
         .target(
-            name: "DatadogFlags",
+            name: "OpenObserveFlags",
             dependencies: [
-                .target(name: "DatadogInternal"),
+                .target(name: "OpenObserveInternal"),
             ],
-            path: "DatadogFlags/Sources"
+            path: "OpenObserveFlags/Sources"
         ),
         .testTarget(
-            name: "DatadogFlagsTests",
+            name: "OpenObserveFlagsTests",
             dependencies: [
-                .target(name: "DatadogFlags"),
+                .target(name: "OpenObserveFlags"),
                 .target(name: "TestUtilities"),
             ],
-            path: "DatadogFlags/Tests"
+            path: "OpenObserveFlags/Tests"
         ),
 
         .target(
             name: "TestUtilities",
             dependencies: [
-                .target(name: "DatadogCore"),
-                .target(name: "DatadogPrivate"),
-                .target(name: "DatadogInternal"),
-                .target(name: "DatadogLogs"),
-                .target(name: "DatadogRUM"),
-                .target(name: "DatadogSessionReplay"),
-                .target(name: "DatadogTrace"),
-                .target(name: "DatadogCrashReporting"),
-                .target(name: "DatadogWebViewTracking"),
-                .target(name: "DatadogFlags")
+                .target(name: "OpenObserveCore"),
+                .target(name: "OpenObservePrivate"),
+                .target(name: "OpenObserveInternal"),
+                .target(name: "OpenObserveLogs"),
+                .target(name: "OpenObserveRUM"),
+                .target(name: "OpenObserveSessionReplay"),
+                .target(name: "OpenObserveTrace"),
+                .target(name: "OpenObserveCrashReporting"),
+                .target(name: "OpenObserveWebViewTracking"),
+                .target(name: "OpenObserveFlags")
             ],
             path: "TestUtilities/Sources",
             swiftSettings: [.define("SPM_BUILD")] + internalSwiftSettings

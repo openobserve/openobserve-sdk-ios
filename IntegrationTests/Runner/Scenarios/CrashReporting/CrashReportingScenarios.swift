@@ -1,16 +1,16 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import UIKit
 
-import DatadogCore
-import DatadogRUM
-import DatadogCrashReporting
+import OpenObserveCore
+import OpenObserveRUM
+import OpenObserveCrashReporting
 
-/// Scenario that launches single-view app which can cause a crash and/or upload the crash report to Datadog.
+/// Scenario that launches single-view app which can cause a crash and/or upload the crash report to OpenObserve.
 /// It includes the condition determined by crash report file presence:
 /// * if the file is not there, the UI for crashing the app is presented,
 /// * if the file is there, the UI for crashing the app is presented and _"Sending crash report..."_ label is shown.

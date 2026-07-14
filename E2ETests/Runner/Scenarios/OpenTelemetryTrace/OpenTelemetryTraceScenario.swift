@@ -1,20 +1,20 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
 import UIKit
-import DatadogTrace
-import DatadogCore
+import OpenObserveTrace
+import OpenObserveCore
 import OpenTelemetryApi
 
 struct TraceScenario: Scenario {
     func start(info: TestInfo) -> UIViewController {
-        Datadog.verbosityLevel = .debug
+        OpenObserve.verbosityLevel = .debug
 
-        Datadog.initialize(
+        OpenObserve.initialize(
             with: .e2e(info: info),
             trackingConsent: .granted
         )

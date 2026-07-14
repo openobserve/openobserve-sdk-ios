@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 public final class FeatureScopeMock: FeatureScope, @unchecked Sendable {
     private struct EventWriterMock: Writer {
@@ -19,7 +19,7 @@ public final class FeatureScopeMock: FeatureScope, @unchecked Sendable {
     }
 
     @ReadWriteLock
-    public var contextMock: DatadogContext
+    public var contextMock: OpenObserveContext
     @ReadWriteLock
     private var events: [(event: Encodable, metadata: Encodable?, bypassConsent: Bool)] = []
     @ReadWriteLock
@@ -27,18 +27,18 @@ public final class FeatureScopeMock: FeatureScope, @unchecked Sendable {
     public let dataStore: DataStore
 
     public init(
-        context: DatadogContext = .mockAny(),
+        context: OpenObserveContext = .mockAny(),
         dataStore: DataStore = DataStoreMock()
     ) {
         self.contextMock = context
         self.dataStore = dataStore
     }
 
-    public func eventWriteContext(bypassConsent: Bool, _ block: @escaping (DatadogContext, Writer) -> Void) {
+    public func eventWriteContext(bypassConsent: Bool, _ block: @escaping (OpenObserveContext, Writer) -> Void) {
         block(contextMock, EventWriterMock(scope: self, bypassConsent: bypassConsent))
     }
 
-    public func context(_ block: @escaping (DatadogContext) -> Void) {
+    public func context(_ block: @escaping (OpenObserveContext) -> Void) {
         block(contextMock)
     }
 

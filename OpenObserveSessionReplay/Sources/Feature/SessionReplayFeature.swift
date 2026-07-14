@@ -1,0 +1,70 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if os(iOS)
+import Foundation
+import OpenObserveInternal
+
+internal class SessionReplayFeature: SessionReplayConfiguration, OpenObserveRemoteFeature {
+    let requestBuilder: FeatureRequestBuilder
+    let messageReceiver: FeatureMessageReceiver
+    let performanceOverride: PerformancePresetOverride?
+    let textAndInputPrivacyLevel: TextAndInputPrivacyLevel
+    let imagePrivacyLevel: ImagePrivacyLevel
+    let touchPrivacyLevel: TouchPrivacyLevel
+
+    // MARK: - Main Components
+
+    /// Orchestrates the process of capturing next snapshots on the main thread.
+    let recordingCoordinator: any RecordingController
+
+    // MARK: - Initialization
+
+    init(
+        core: OpenObserveCoreProtocol,
+        configuration: SessionReplay.Configuration
+    ) throws {
+        let recordingComponents = try RecordingComponents(
+            core: core,
+            configuration: configuration
+        )
+
+        self.requestBuilder = SegmentRequestBuilder(
+            customUploadURL: configuration.customEndpoint,
+            telemetry: core.telemetry
+        )
+        self.messageReceiver = CombinedFeatureMessageReceiver(
+            [
+                recordingComponents.messageReceiver,
+                WebViewRecordReceiver(scope: core.scope(for: SessionReplayFeature.self))
+            ]
+        )
+        self.performanceOverride = PerformancePresetOverride(
+            maxFileSize: SessionReplay.maxObjectSize,
+            maxObjectSize: SessionReplay.maxObjectSize,
+            meanFileAge: 2, // vs 5s with `batchSize: .small` - see `OpenObserveCore.PerformancePreset`
+            maxFileAgeForRead: 5.hours, // Session Replay intake max age is 5 hours
+            uploadDelay: (
+                initial: 2, // vs 5s with `uploadFrequency: .frequent`
+                range: 0.6..<6, // vs 1s ..< 10s with `uploadFrequency: .frequent`
+                changeRate: 0.75 // vs 0.1 with `uploadFrequency: .frequent`
+            )
+        )
+        self.textAndInputPrivacyLevel = configuration.textAndInputPrivacyLevel
+        self.imagePrivacyLevel = configuration.imagePrivacyLevel
+        self.touchPrivacyLevel = configuration.touchPrivacyLevel
+        self.recordingCoordinator = recordingComponents.recordingCoordinator
+    }
+
+    func startRecording() {
+        self.recordingCoordinator.startRecording()
+    }
+
+    func stopRecording() {
+        self.recordingCoordinator.stopRecording()
+    }
+}
+#endif

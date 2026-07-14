@@ -1,13 +1,13 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
-internal class MockFeature: DatadogRemoteFeature {
+internal class MockFeature: OpenObserveRemoteFeature {
     static var name = "mock-feature"
 
     var messageReceiver: FeatureMessageReceiver = NOPFeatureMessageReceiver()
@@ -16,7 +16,7 @@ internal class MockFeature: DatadogRemoteFeature {
 }
 
 internal class MockRequestBuilder: FeatureRequestBuilder {
-    func request(for events: [DatadogInternal.Event], with context: DatadogInternal.DatadogContext, execution: DatadogInternal.ExecutionContext) throws -> URLRequest {
+    func request(for events: [OpenObserveInternal.Event], with context: OpenObserveInternal.OpenObserveContext, execution: OpenObserveInternal.ExecutionContext) throws -> URLRequest {
         URLRequest.mockAny()
     }
 }

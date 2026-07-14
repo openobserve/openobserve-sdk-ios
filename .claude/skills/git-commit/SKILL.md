@@ -1,9 +1,9 @@
 ---
-name: dd-sdk-ios:git-commit
-description: Use when committing changes in dd-sdk-ios. Use when writing commit messages, signing commits, or staging files before a commit.
+name: openobserve-sdk-ios:git-commit
+description: Use when committing changes in openobserve-sdk-ios. Use when writing commit messages, signing commits, or staging files before a commit.
 ---
 
-# Committing in dd-sdk-ios
+# Committing in openobserve-sdk-ios
 
 ## Requirements
 

@@ -1,6 +1,6 @@
 # End to End Tests
 
-[Synthetics for Mobile](https://docs.datadoghq.com/mobile_app_testing/) runs E2E test scenarios. [Monitors](https://docs.datadoghq.com/monitors/) assert the proper propagation of data.
+[Synthetics for Mobile](https://openobserve.ai/docs/mobile_app_testing/) runs E2E test scenarios. [Monitors](https://openobserve.ai/docs/monitors/) assert the proper propagation of data.
 
 
 ## CI
@@ -34,8 +34,8 @@ To sign the runner application, the certificate and provision profile defined in
 The application version (build number) is set to the commit SHA of the current job, and the build is uploaded to Synthetics using the [datadog-ci](https://github.com/DataDog/datadog-ci) CLI. This step expects environment variables to authenticate with the `Mobile - Integration Org`:
 
 ```bash
-export DATADOG_API_KEY=
-export DATADOG_APP_KEY=
+export OPENOBSERVE_API_KEY=
+export OPENOBSERVE_APP_KEY=
 export S8S_APPLICATION_ID=
 ```
 
@@ -52,14 +52,14 @@ Here is a simple example of a scenario using Logs:
 import Foundation
 import UIKit
 
-import DatadogCore
-import DatadogLogs
+import OpenObserveCore
+import OpenObserveLogs
 
 struct SessionReplayWebViewScenario: Scenario {
 
     func start(info: TestInfo) -> UIViewController {
 
-        Datadog.initialize(
+        OpenObserve.initialize(
             with: .e2e(info: info), // SDK init with the e2e configuration
             trackingConsent: .granted
         )

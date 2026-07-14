@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 #if os(iOS)
@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 import WebKit
 
-import DatadogInternal
+import OpenObserveInternal
 @_spi(Internal)
-@testable import DatadogSessionReplay
+@testable import OpenObserveSessionReplay
 
 // MARK: - ViewTreeSnapshot Mocks
 
@@ -106,7 +106,7 @@ extension ViewAttributes: AnyMockable, RandomMockable {
 
     /// A fixture for mocking consistent state in `ViewAttributes`.
     public enum Fixture: CaseIterable {
-        public static var allCases: [DatadogSessionReplay.ViewAttributes.Fixture] = [
+        public static var allCases: [OpenObserveSessionReplay.ViewAttributes.Fixture] = [
             .invisible,
             .visible(.noAppearance),
             .visible(.someAppearance),

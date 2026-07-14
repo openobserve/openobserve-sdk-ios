@@ -1,0 +1,45 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+import XCTest
+import TestUtilities
+import OpenObserveInternal
+
+@testable import OpenObserveTrace
+
+class DDNoopTracerTests: XCTestCase {
+    func testWhenUsingDDNoopTracerAPIs_itPrintsWarning() {
+        let dd = DD.mockWith(logger: CoreLoggerMock())
+        defer { dd.reset() }
+
+        // Given
+        let noop = DDNoopTracer()
+
+        // When
+        let context = DDSpanContext.mockAny()
+        noop.inject(
+            spanContext: context,
+            writer: HTTPHeadersWriter(traceContextInjection: .sampled)
+        )
+        _ = noop.extract(reader: HTTPHeadersReader(httpHeaderFields: [:]))
+        let root = noop.startRootSpan(operationName: "root operation").setActive()
+        let child = noop.startSpan(operationName: "child operation")
+        child.finish()
+        root.finish()
+
+        // Then
+        let expectedWarningMessage = """
+        The `OpenObserveTracer.shared()` was called but `OpenObserveTracer` is not initialised. Configure the `OpenObserveTracer` before invoking the feature:
+            OpenObserveTracer.initialize()
+        See https://openobserve.ai/docs/tracing/setup_overview/setup/ios
+        """
+
+        XCTAssertEqual(dd.logger.warnLogs.count, 4)
+        dd.logger.warnLogs.forEach { log in
+            XCTAssertEqual(log.message, expectedWarningMessage)
+        }
+    }
+}

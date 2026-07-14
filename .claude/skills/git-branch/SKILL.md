@@ -1,9 +1,9 @@
 ---
-name: dd-sdk-ios:git-branch
-description: Use when creating a new branch in dd-sdk-ios for a JIRA ticket or feature. Use when choosing a branch name or base branch for development work.
+name: openobserve-sdk-ios:git-branch
+description: Use when creating a new branch in openobserve-sdk-ios for a JIRA ticket or feature. Use when choosing a branch name or base branch for development work.
 ---
 
-# Branching in dd-sdk-ios
+# Branching in openobserve-sdk-ios
 
 ## Convention
 

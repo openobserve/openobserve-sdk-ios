@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
@@ -9,7 +9,7 @@ import XCTest
 
 /*
  Set of general extensions over standard types for writing more readable tests.
- Extensions using Datadog domain objects should be put in `DatadogExtensions.swift`.
+ Extensions using OpenObserve domain objects should be put in `OpenObserveExtensions.swift`.
 */
 
 extension Optional {

@@ -1,21 +1,21 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
-@testable import DatadogLogs
-@testable import DatadogRUM
-@testable import DatadogCrashReporting
-@testable import DatadogCore
+@testable import OpenObserveLogs
+@testable import OpenObserveRUM
+@testable import OpenObserveCrashReporting
+@testable import OpenObserveCore
 
 extension CrashReportingFeature {
     /// Mocks the Crash Reporting feature instance which doesn't load crash reports.
     public static func mockNoOp(
-            core: DatadogCoreProtocol = NOPDatadogCore(),
+            core: OpenObserveCoreProtocol = NOPOpenObserveCore(),
             crashReportingPlugin: CrashReportingPlugin = NOPCrashReportingPlugin()
     ) -> Self {
         return .mockWith(
@@ -105,13 +105,13 @@ public class CrashReportSenderMock: CrashReportSender {
 
     public var didSendCrashReport: (() -> Void)?
 
-    public func send(launch: DatadogInternal.LaunchReport) {}
+    public func send(launch: OpenObserveInternal.LaunchReport) {}
 }
 
 public class CrashReceiverMock: FeatureMessageReceiver {
     public var receivedCrash: Crash?
 
-    public func receive(message: FeatureMessage, from core: DatadogCoreProtocol) -> Bool {
+    public func receive(message: FeatureMessage, from core: OpenObserveCoreProtocol) -> Bool {
         guard case let .payload(crash as Crash) = message else {
             return false
         }

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import XCTest
@@ -214,7 +214,7 @@ class IntegrationTests: XCTestCase {
 
     /// Creates a unique temporary directory
     private func createTemporaryDirectory() throws -> URL {
-        let tempDirectory = FileManager.default.temporaryDirectory.appendingPathComponent("com.datadoghq.api-surface-" + UUID().uuidString)
+        let tempDirectory = FileManager.default.temporaryDirectory.appendingPathComponent("io.openobserve.api-surface-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true, attributes: nil)
         try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true, attributes: nil)
         return tempDirectory

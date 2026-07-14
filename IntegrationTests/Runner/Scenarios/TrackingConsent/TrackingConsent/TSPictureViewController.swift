@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import UIKit
@@ -25,7 +25,7 @@ internal class TSPictureViewController: UIViewController {
     @IBAction func didTapDownloadImage(_ sender: UIButton) {
         let enableSender = sender.disableUntilCompletion()
 
-        let imageURL = URL(string: "https://imgix.datadoghq.com/img/about/presskit/usage/logousage_white.png")!
+        let imageURL = URL(string: "https://imgix.openobserve.ai/img/about/presskit/usage/logousage_white.png")!
         var imageRequest = URLRequest(url: imageURL)
         imageRequest.cachePolicy = .reloadIgnoringLocalCacheData
 

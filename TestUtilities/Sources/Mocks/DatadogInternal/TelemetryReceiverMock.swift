@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 /// `FeatureMessageReceiver` that records received telemetry events.
 public class TelemetryReceiverMock: FeatureMessageReceiver {
@@ -14,7 +14,7 @@ public class TelemetryReceiverMock: FeatureMessageReceiver {
 
     public init() {}
 
-    public func receive(message: FeatureMessage, from core: DatadogCoreProtocol) -> Bool {
+    public func receive(message: FeatureMessage, from core: OpenObserveCoreProtocol) -> Bool {
         guard case let .telemetry(message) = message else {
             return false
         }

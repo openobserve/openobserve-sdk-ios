@@ -1,28 +1,28 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
-@testable import DatadogTrace
+@testable import OpenObserveTrace
 
 // MARK: - Span Mocks
 
 public struct NOPSpanWriteContext: SpanWriteContext {
     public init() {}
-    public func spanWriteContext(_ block: @escaping (DatadogContext, Writer) -> Void) {}
+    public func spanWriteContext(_ block: @escaping (OpenObserveContext, Writer) -> Void) {}
 }
 
 extension DDSpan {
-    public static func mockAny(in core: DatadogCoreProtocol) -> DDSpan {
+    public static func mockAny(in core: OpenObserveCoreProtocol) -> DDSpan {
         return mockWith(core: core)
     }
 
     public static func mockWith(
-        tracer: DatadogTracer,
+        tracer: OpenObserveTracer,
         context: DDSpanContext = .mockAny(),
         operationName: String = .mockAny(),
         startTime: Date = .mockAny(),
@@ -42,7 +42,7 @@ extension DDSpan {
     }
 
     public static func mockWith(
-        core: DatadogCoreProtocol,
+        core: OpenObserveCoreProtocol,
         context: DDSpanContext = .mockAny(),
         operationName: String = .mockAny(),
         startTime: Date = .mockAny(),
@@ -94,13 +94,13 @@ extension BaggageItems {
 
 // MARK: - Component Mocks
 
-extension DatadogTracer {
-    public static func mockAny(in core: DatadogCoreProtocol) -> DatadogTracer {
+extension OpenObserveTracer {
+    public static func mockAny(in core: OpenObserveCoreProtocol) -> OpenObserveTracer {
         return mockWith(core: core)
     }
 
     public static func mockWith(
-        core: DatadogCoreProtocol,
+        core: OpenObserveCoreProtocol,
         samplingProvider: TracerSamplerProvider = TracerSamplerProviderMock.mockKeepAll(),
         tags: [String: Encodable] = [:],
         traceIDGenerator: TraceIDGenerator = DefaultTraceIDGenerator(),
@@ -108,8 +108,8 @@ extension DatadogTracer {
         dateProvider: DateProvider = SystemDateProvider(),
         spanEventBuilder: SpanEventBuilder = .mockAny(),
         loggingIntegration: TracingWithLoggingIntegration = .mockAny()
-    ) -> DatadogTracer {
-        return DatadogTracer(
+    ) -> OpenObserveTracer {
+        return OpenObserveTracer(
             core: core,
             samplingProvider: samplingProvider,
             tags: tags,
@@ -130,8 +130,8 @@ extension DatadogTracer {
         dateProvider: DateProvider = SystemDateProvider(),
         spanEventBuilder: SpanEventBuilder = .mockAny(),
         loggingIntegration: TracingWithLoggingIntegration = .mockAny()
-    ) -> DatadogTracer {
-        return DatadogTracer(
+    ) -> OpenObserveTracer {
+        return OpenObserveTracer(
             featureScope: featureScope,
             samplingProvider: samplingProvider,
             tags: tags,
@@ -147,7 +147,7 @@ extension DatadogTracer {
 extension TracingWithLoggingIntegration {
     public static func mockAny() -> TracingWithLoggingIntegration {
         return TracingWithLoggingIntegration(
-            core: NOPDatadogCore(),
+            core: NOPOpenObserveCore(),
             service: .mockAny(),
             networkInfoEnabled: .mockAny()
         )
@@ -333,7 +333,7 @@ extension SamplingDecision: AnyMockable, RandomMockable {
         SamplingDecision(sampling: MockSampler(decision: false))
     }
 
-    public static func mockRandom() -> DatadogTrace.SamplingDecision {
+    public static func mockRandom() -> OpenObserveTrace.SamplingDecision {
         let randomPriority = (-1...2).randomElement()
 
         switch randomPriority {

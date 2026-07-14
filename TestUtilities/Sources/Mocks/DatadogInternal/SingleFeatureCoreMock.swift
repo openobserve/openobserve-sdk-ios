@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-2020 Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-2020 OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 /// Single-Feature core mock is a `PassthroughCoreMock` with the ability to register
 /// a single Feature instance.
@@ -26,7 +26,7 @@ import DatadogInternal
 ///     try core.register(feature: feature)
 ///     core.get(feature: MyCustomFeature.self) // returns feature instance
 ///
-public final class SingleFeatureCoreMock<Feature>: PassthroughCoreMock, @unchecked Sendable where Feature: DatadogFeature {
+public final class SingleFeatureCoreMock<Feature>: PassthroughCoreMock, @unchecked Sendable where Feature: OpenObserveFeature {
     /// The single Feature.
     private var feature: Feature?
 
@@ -38,7 +38,7 @@ public final class SingleFeatureCoreMock<Feature>: PassthroughCoreMock, @uncheck
     ///   - expectation: The test exepection to fullfill when `eventWriteContext`
     ///                  is invoked.
     public required init(
-        context: DatadogContext = .mockAny(),
+        context: OpenObserveContext = .mockAny(),
         dataStore: DataStore = NOPDataStore(),
         feature: Feature? = nil,
         messageReceiver: FeatureMessageReceiver = NOPFeatureMessageReceiver()
@@ -59,7 +59,7 @@ public final class SingleFeatureCoreMock<Feature>: PassthroughCoreMock, @uncheck
     ///   - expectation: The test exepection to fullfill when `eventWriteContext`
     ///                  is invoked.
     public required init(
-        context: DatadogContext = .mockAny(),
+        context: OpenObserveContext = .mockAny(),
         dataStore: DataStore = NOPDataStore(),
         messageReceiver: FeatureMessageReceiver = NOPFeatureMessageReceiver()
     ) {
@@ -72,7 +72,7 @@ public final class SingleFeatureCoreMock<Feature>: PassthroughCoreMock, @uncheck
         )
     }
 
-    override public func register<T>(feature: T) throws where T: DatadogFeature {
+    override public func register<T>(feature: T) throws where T: OpenObserveFeature {
         self.feature = feature as? Feature
     }
 
@@ -80,7 +80,7 @@ public final class SingleFeatureCoreMock<Feature>: PassthroughCoreMock, @uncheck
         feature as? T
     }
 
-    override public func scope<T>(for featureType: T.Type) -> FeatureScope where T: DatadogFeature {
+    override public func scope<T>(for featureType: T.Type) -> FeatureScope where T: OpenObserveFeature {
         guard T.name == Feature.name else {
             return NOPFeatureScope()
         }

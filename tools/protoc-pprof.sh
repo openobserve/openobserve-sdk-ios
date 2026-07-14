@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Usage:
-# $ ./tools/protoc-pprof.sh --proto-path DatadogProfiling/Protos/profile.proto --output-dir DatadogProfiling/Mach
+# $ ./tools/protoc-pprof.sh --proto-path OpenObserveProfiling/Protos/profile.proto --output-dir OpenObserveProfiling/Mach
 
 set -e
 source ./tools/utils/echo-color.sh

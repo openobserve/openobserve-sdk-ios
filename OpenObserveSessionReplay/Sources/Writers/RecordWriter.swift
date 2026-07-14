@@ -1,0 +1,33 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if os(iOS)
+import Foundation
+import OpenObserveInternal
+
+/// A type writing Session Replay records to `OpenObserveCore`.
+internal protocol RecordWriting {
+    /// Writes next records to SDK core.
+    func write(nextRecord: EnrichedRecord)
+}
+
+internal class RecordWriter: RecordWriting {
+    /// An instance of SDK core the SR feature is registered to.
+    private weak var core: OpenObserveCoreProtocol?
+
+    init(core: OpenObserveCoreProtocol) {
+        self.core = core
+    }
+
+    // MARK: - Writing
+
+    func write(nextRecord: EnrichedRecord) {
+        core?.scope(for: SessionReplayFeature.self).eventWriteContext { _, recordWriter in
+            recordWriter.write(value: nextRecord)
+        }
+    }
+}
+#endif

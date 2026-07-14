@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Datadog/Datadog.xcodeproj">
+      location = "group:OpenObserve/OpenObserve.xcodeproj">
    </FileRef>
 </Workspace>

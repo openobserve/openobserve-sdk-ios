@@ -1,12 +1,12 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 #if os(iOS)
 import Foundation
-@testable import DatadogSessionReplay
+@testable import OpenObserveSessionReplay
 
 extension EnrichedResource: RandomMockable, AnyMockable {
     public static func mockAny() -> EnrichedResource {
@@ -43,7 +43,7 @@ extension EnrichedResource: RandomMockable, AnyMockable {
 }
 
 extension EnrichedResource.Context: RandomMockable, AnyMockable {
-    public static func mockAny() -> DatadogSessionReplay.EnrichedResource.Context {
+    public static func mockAny() -> OpenObserveSessionReplay.EnrichedResource.Context {
         return .init(
             .mockAny()
         )

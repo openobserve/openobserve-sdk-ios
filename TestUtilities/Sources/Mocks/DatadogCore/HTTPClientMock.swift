@@ -1,15 +1,15 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-@testable import DatadogCore
+@testable import OpenObserveCore
 
 public class HTTPClientMock: HTTPClient {
     /// The queue to synchronise access to tracked requests.
-    private let queue = DispatchQueue(label: "com.datadoghq.HTTPClientMock-\(UUID().uuidString)")
+    private let queue = DispatchQueue(label: "io.openobserve.HTTPClientMock-\(UUID().uuidString)")
     /// Keeps track of sent requests.
     private var requests: [URLRequest] = []
     /// Closure providing the result for each request.

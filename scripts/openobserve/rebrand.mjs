@@ -26,7 +26,7 @@ const CHECK = process.argv.includes('--check')
 const CONTENT_ONLY = process.argv.includes('--content-only')
 const LIST = process.argv.includes('--list')
 
-const { rules, pathRenames } = JSON.parse(fs.readFileSync(path.join(HERE, 'rename-map.json'), 'utf8'))
+const { rules, pathRenames, fileRenames = [] } = JSON.parse(fs.readFileSync(path.join(HERE, 'rename-map.json'), 'utf8'))
 const keepOursPaths = fs
   .readFileSync(path.join(HERE, 'keep-ours.txt'), 'utf8')
   .split('\n')
@@ -73,6 +73,24 @@ for (const rule of pathRenames) {
   }
 }
 
+// ---- Phase 1.5: file renames (basename token) -------------------------------
+// Rename nested class-name FILES whose basename still carries a Datadog token
+// (topLevelPrefix only moves top-level product dirs/podspecs). Literal token
+// replacement on the basename only. Applied after Phase 1 so paths are final.
+let fileMoves = 0
+for (const rule of fileRenames) {
+  for (const f of tracked().filter(
+    (x) => !SKIP.some((re) => re.test(x)) && !keepOursPaths.some((p) => x === p || x.startsWith(`${p}/`))
+  )) {
+    const base = path.basename(f)
+    if (!base.includes(rule.token)) continue
+    const to = path.join(path.dirname(f), base.split(rule.token).join(rule.to))
+    fileMoves++
+    if (!CHECK && !CONTENT_ONLY) git(['mv', f, to])
+  }
+}
+if (fileRenames.length) console.log(`fileRenames: ${fileMoves} files ${CHECK ? 'would be' : ''} moved`)
+
 // ---- Phase 2: content -------------------------------------------------------
 let changed = 0
 for (const file of tracked().filter(
@@ -96,4 +114,4 @@ for (const file of tracked().filter(
   }
 }
 console.log(`content: ${changed} files ${CHECK ? 'would be' : ''} rebranded`)
-if (CHECK && (changed > 0 || totalMoves > 0)) process.exit(1)
+if (CHECK && (changed > 0 || totalMoves > 0 || fileMoves > 0)) process.exit(1)

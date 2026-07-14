@@ -1,0 +1,220 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if !os(watchOS)
+import XCTest
+import OpenObserveInternal
+import TestUtilities
+
+@testable import OpenObserveProfiling
+
+class RequestBuilderTests: XCTestCase {
+    private let rumContext: RUMCoreContext = .mockRandom()
+
+    let profileEvent = ProfileEvent(
+        family: .mockRandom(),
+        runtime: .mockRandom(),
+        version: .mockRandom(),
+        start: .mockRandomInThePast(),
+        end: Date(),
+        attachments: [],
+        tags: .mockAny(),
+        additionalAttributes: mockRandomAttributes()
+    )
+
+    let profileData: Data = .mockRandom()
+
+    private func mockEvent() throws -> Event {
+        let encoder = JSONEncoder.dd.default()
+        return try Event(
+            data: encoder.encode(profileData),
+            metadata: encoder.encode(profileEvent)
+        )
+    }
+
+    func testItCreatesPOSTRequest() throws {
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+
+        // When
+        let request = try builder.request(for: [mockEvent()], with: .mockAny(), execution: .mockAny())
+
+        // Then
+        XCTAssertEqual(request.httpMethod, "POST")
+    }
+
+    func testItSetsIntakeURL() {
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+
+        // When
+        func url(for site: OpenObserveSite) throws -> String {
+            let request = try builder.request(for: [mockEvent()], with: .mockWith(site: site), execution: .mockAny())
+            return request.url!.absoluteStringWithoutQuery!
+        }
+
+        // Then
+        XCTAssertEqual(try url(for: .us1), "https://browser-intake-openobserve.ai/api/v2/profile")
+        XCTAssertEqual(try url(for: .us3), "https://browser-intake-us3-openobserve.ai/api/v2/profile")
+        XCTAssertEqual(try url(for: .us5), "https://browser-intake-us5-openobserve.ai/api/v2/profile")
+        XCTAssertEqual(try url(for: .eu1), "https://browser-intake-openobserve.eu/api/v2/profile")
+        XCTAssertEqual(try url(for: .ap1), "https://browser-intake-ap1-openobserve.ai/api/v2/profile")
+        XCTAssertEqual(try url(for: .ap2), "https://browser-intake-ap2-openobserve.ai/api/v2/profile")
+        XCTAssertEqual(try url(for: .us1_fed), "https://browser-intake-ddog-gov.com/api/v2/profile")
+        XCTAssertEqual(try url(for: .us2_fed), "https://browser-intake-us2-ddog-gov.com/api/v2/profile")
+    }
+
+    func testItSetsCustomIntakeURL() {
+        // Given
+        let randomURL: URL = .mockRandom()
+        let builder = RequestBuilder(customUploadURL: randomURL, telemetry: TelemetryMock())
+
+        // When
+        func url(for site: OpenObserveSite) throws -> String {
+            let request = try builder.request(for: [mockEvent()], with: .mockWith(site: site), execution: .mockAny())
+            return request.url!.absoluteStringWithoutQuery!
+        }
+
+        // Then
+        let expectedURL = randomURL.absoluteStringWithoutQuery
+        XCTAssertEqual(try url(for: .us1), expectedURL)
+        XCTAssertEqual(try url(for: .us3), expectedURL)
+        XCTAssertEqual(try url(for: .us5), expectedURL)
+        XCTAssertEqual(try url(for: .eu1), expectedURL)
+        XCTAssertEqual(try url(for: .ap1), expectedURL)
+        XCTAssertEqual(try url(for: .ap2), expectedURL)
+        XCTAssertEqual(try url(for: .us1_fed), expectedURL)
+        XCTAssertEqual(try url(for: .us2_fed), expectedURL)
+    }
+
+    func testItSetsQueryParameters() throws {
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+        let context: OpenObserveContext = .mockRandom()
+
+        // When
+        let request = try builder.request(for: [mockEvent()], with: context, execution: .mockWith(previousResponseCode: nil, attempt: 0))
+
+        // Then
+        XCTAssertNil(request.url!.query)
+    }
+
+    func testItSetsHTTPHeaders() throws {
+        let randomApplicationName: String = .mockRandom(among: .alphanumerics)
+        let randomVersion: String = .mockRandom(among: .decimalDigits)
+        let randomSource: String = .mockRandom(among: .alphanumerics)
+        let randomSDKVersion: String = .mockRandom(among: .alphanumerics)
+        let randomClientToken: String = .mockRandom()
+        let randomDeviceName: String = .mockRandom()
+        let randomDeviceOSName: String = .mockRandom()
+        let randomDeviceOSVersion: String = .mockRandom()
+
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+        let context: OpenObserveContext = .mockWith(
+            clientToken: randomClientToken,
+            version: randomVersion,
+            source: randomSource,
+            sdkVersion: randomSDKVersion,
+            applicationName: randomApplicationName,
+            device: .mockWith(name: randomDeviceName),
+            os: .mockWith(
+                name: randomDeviceOSName,
+                version: randomDeviceOSVersion
+            )
+        )
+
+        // When
+        let request = try builder.request(for: [mockEvent()], with: context, execution: .mockAny())
+
+        // Then
+        let contentType = try XCTUnwrap(request.allHTTPHeaderFields?["Content-Type"])
+        XCTAssertTrue(contentType.matches(regex: #"multipart\/form-data; boundary=([0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})"#))
+        XCTAssertEqual(
+            request.allHTTPHeaderFields?["User-Agent"],
+            """
+            \(randomApplicationName)/\(randomVersion) CFNetwork (\(randomDeviceName); \(randomDeviceOSName)/\(randomDeviceOSVersion))
+            """
+        )
+        XCTAssertEqual(request.allHTTPHeaderFields?["DD-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN"], randomSource)
+        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertNil(request.allHTTPHeaderFields?["Content-Encoding"], "It must us no compression, because multipart file is compressed separately")
+        XCTAssertEqual(request.allHTTPHeaderFields?["DD-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+    }
+
+    func testItSetsHTTPBodyInExpectedFormat() throws {
+        // Given
+        let event = try mockEvent()
+        let multipartSpy = MultipartBuilderSpy()
+        let builder = RequestBuilder(multipartBuilder: multipartSpy, customUploadURL: nil, telemetry: TelemetryMock())
+
+        // When
+        let request = try builder.request(for: [event], with: .mockAny(), execution: .mockAny())
+
+        // Then
+        let contentType = try XCTUnwrap(request.allHTTPHeaderFields?["Content-Type"])
+        XCTAssertTrue(contentType.matches(regex: "multipart/form-data; boundary=\(multipartSpy.boundary)"))
+        XCTAssertEqual(multipartSpy.formFiles.count, 2)
+
+        let eventFile = multipartSpy.formFiles[0]
+        XCTAssertEqual(eventFile.filename, "event.json")
+        XCTAssertEqual(eventFile.mimeType, "application/json")
+        XCTAssertEqual(eventFile.data, event.metadata)
+
+        let pprofFile = multipartSpy.formFiles[1]
+        XCTAssertEqual(pprofFile.filename, "wall.pprof")
+        XCTAssertEqual(pprofFile.mimeType, "application/octet-stream")
+        XCTAssertEqual(pprofFile.data, profileData)
+    }
+
+    func testWhenBatchDataHasMoreThanOneProfile() {
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+
+        // When, Then
+        XCTAssertThrowsError(try builder.request(for: .mockAny(count: 2), with: .mockAny(), execution: .mockAny()))
+    }
+
+    func testWhenBatchDataIsMissingMetadata() {
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+
+        // When, Then
+        XCTAssertThrowsError(try builder.request(
+            for: [.mockWith(data: .mockRandom(), metadata: nil)],
+            with: .mockAny(),
+            execution: .mockAny()
+        ))
+    }
+
+    func testItSetsRetryQueryParameters() throws {
+        // Given
+        let randomAttempt: UInt = .mockRandom(min: 1, max: 10)
+        let randomStatus: Int = .mockRandom()
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+        let execution: ExecutionContext = .mockWith(previousResponseCode: randomStatus, attempt: randomAttempt)
+
+        // When
+        let request = try builder.request(for: [mockEvent()], with: .mockRandom(), execution: execution)
+
+        // Then
+        XCTAssertEqual(request.url!.query, "ddtags=retry_count:\(randomAttempt),retry_after:\(randomStatus)")
+    }
+
+    func testItSetsRetryQueryParametersOnNetworkErrorRetry() throws {
+        // Given
+        let builder = RequestBuilder(customUploadURL: nil, telemetry: TelemetryMock())
+        let execution: ExecutionContext = .mockWith(previousResponseCode: nil, attempt: 1) // network error retry has no response code
+
+        // When
+        let request = try builder.request(for: [mockEvent()], with: .mockRandom(), execution: execution)
+
+        // Then
+        XCTAssertEqual(request.url!.query, "ddtags=retry_count:1") // no retry_after without response code
+    }
+}
+#endif // !os(watchOS)

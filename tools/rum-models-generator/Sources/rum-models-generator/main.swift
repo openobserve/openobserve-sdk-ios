@@ -1,7 +1,7 @@
 /*
 * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-* This product includes software developed at Datadog (https://www.datadoghq.com/).
-* Copyright 2019-Present Datadog, Inc.
+* This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+* Copyright 2019-Present OpenObserve, Inc.
 */
 
 import Foundation
@@ -29,7 +29,7 @@ private struct RootCommand: ParsableCommand {
     struct GenerateSwift: ParsableCommand {
         static let configuration = CommandConfiguration(
             commandName: "generate-swift",
-            abstract: "Generates models for Datadog Swift."
+            abstract: "Generates models for OpenObserve Swift."
         )
 
         @Option(help: "The path to the JSON schema.")
@@ -52,7 +52,7 @@ private struct RootCommand: ParsableCommand {
     struct GenerateObjc: ParsableCommand {
         static let configuration = CommandConfiguration(
             commandName: "generate-objc",
-            abstract: "Generates models for Datadog Objc."
+            abstract: "Generates models for OpenObserve Objc."
         )
 
         @Option(help: "The path to the JSON schema.")

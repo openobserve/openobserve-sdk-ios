@@ -1,21 +1,21 @@
 /*
 * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-* This product includes software developed at Datadog (https://www.datadoghq.com/).
-* Copyright 2019-Present Datadog, Inc.
+* This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+* Copyright 2019-Present OpenObserve, Inc.
 */
 
 import UIKit
-import DatadogRUM
-import DatadogSessionReplay // it should compile for iOS and tvOS, but APIs are only available on iOS
-import DatadogTrace
-import DatadogFlags
-import DatadogProfiling
+import OpenObserveRUM
+import OpenObserveSessionReplay // it should compile for iOS and tvOS, but APIs are only available on iOS
+import OpenObserveTrace
+import OpenObserveFlags
+import OpenObserveProfiling
 @preconcurrency import OpenTelemetryApi
 
 internal class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        DatadogSetup.initialize()
+        OpenObserveSetup.initialize()
 
         // RUM APIs must be visible:
         RUM.enable(with: .init(applicationID: "app-id"))

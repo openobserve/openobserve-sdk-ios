@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
@@ -11,7 +11,7 @@ enum MetricExporterError: Error {
     case unsupportedMetric(type: MetricDataType, dataType: Any.Type)
 }
 
-/// Replacement of otel `DatadogExporter` for metrics.
+/// Replacement of otel `OpenObserveExporter` for metrics.
 ///
 /// This version does not store data to disk, it uploads to the intake directly.
 /// Additionally, it does not crash.
@@ -29,7 +29,7 @@ final class MetricExporter: OpenTelemetrySdk.MetricExporter {
         case gauge = 3
     }
 
-    /// https://docs.datadoghq.com/api/latest/metrics/#submit-metrics
+    /// https://openobserve.ai/docs/api/latest/metrics/#submit-metrics
     internal struct Serie: Codable {
         struct Point: Codable {
             let timestamp: Int64
@@ -55,7 +55,7 @@ final class MetricExporter: OpenTelemetrySdk.MetricExporter {
     let configuration: Configuration
 
     // swiftlint:disable force_unwrapping
-    let intake = URL(string: "https://api.datadoghq.com/api/v2/series")!
+    let intake = URL(string: "https://api.openobserve.ai/api/v2/series")!
     let prefix = "{ \"series\": [".data(using: .utf8)!
     let separator = ",".data(using: .utf8)!
     let suffix = "]}".data(using: .utf8)!
@@ -90,7 +90,7 @@ final class MetricExporter: OpenTelemetrySdk.MetricExporter {
         return .cumulative
     }
 
-    /// Transforms otel `MetricData` to Datadog `serie`.
+    /// Transforms otel `MetricData` to OpenObserve `serie`.
     ///
     /// - Parameter metric: The otel metric data
     /// - Returns: The timeserie.

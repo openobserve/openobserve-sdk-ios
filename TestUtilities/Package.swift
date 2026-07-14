@@ -18,19 +18,19 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Datadog", path: ".."),
+        .package(name: "OpenObserve", path: ".."),
     ],
     targets: [
         .target(
             name: "TestUtilities",
             dependencies: [
-                .product(name: "DatadogCore", package: "Datadog"),
-                .product(name: "DatadogRUM", package: "Datadog"),
-                .product(name: "DatadogLogs",package: "Datadog"),
-                .product(name: "DatadogTrace",package: "Datadog"),
-                .product(name: "DatadogCrashReporting",package: "Datadog"),
-                .product(name: "DatadogSessionReplay", package: "Datadog"),
-                .product(name: "DatadogWebViewTracking",package: "Datadog")
+                .product(name: "OpenObserveCore", package: "OpenObserve"),
+                .product(name: "OpenObserveRUM", package: "OpenObserve"),
+                .product(name: "OpenObserveLogs",package: "OpenObserve"),
+                .product(name: "OpenObserveTrace",package: "OpenObserve"),
+                .product(name: "OpenObserveCrashReporting",package: "OpenObserve"),
+                .product(name: "OpenObserveSessionReplay", package: "OpenObserve"),
+                .product(name: "OpenObserveWebViewTracking",package: "OpenObserve")
             ],
             path: ".",
             sources: ["Sources"],

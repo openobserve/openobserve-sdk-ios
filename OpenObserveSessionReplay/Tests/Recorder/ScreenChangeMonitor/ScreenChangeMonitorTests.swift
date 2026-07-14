@@ -1,0 +1,73 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if os(iOS)
+import QuartzCore
+import XCTest
+
+@testable import OpenObserveSessionReplay
+
+@MainActor
+final class ScreenChangeMonitorTests: XCTestCase {
+    private let testTimerScheduler = TestTimerScheduler(now: 0)
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    private var screenChangeMonitor: ScreenChangeMonitor!
+    private var snapshots: [CALayerChangeSnapshot] = []
+
+    override func setUp() async throws {
+        try await super.setUp()
+
+        screenChangeMonitor = try ScreenChangeMonitor(
+            minimumDeliveryInterval: 0.1,
+            timerScheduler: testTimerScheduler
+        ) { [weak self] snapshot in
+            self?.snapshots.append(snapshot)
+        }
+    }
+
+    override func tearDown() {
+        snapshots.removeAll()
+        super.tearDown()
+    }
+
+    func testStartAndStop() {
+        // given
+        let layer = CALayer()
+
+        // when
+        testTimerScheduler.advance(to: 0.01)
+        layer.display() // ignored
+        testTimerScheduler.advance(to: 1.00)
+
+        // then
+        XCTAssertEqual(snapshots.count, 0, "Should ignore layer changes before calling start()")
+
+        // when
+        screenChangeMonitor.start()
+
+        testTimerScheduler.advance(to: 1.01)
+        layer.display()
+        testTimerScheduler.advance(to: 1.20)
+
+        // then
+        XCTAssertEqual(snapshots.count, 1)
+        XCTAssertEqual(snapshots[0].aspects(for: layer), .display)
+
+        // given
+        snapshots.removeAll()
+
+        // when
+        screenChangeMonitor.stop()
+
+        testTimerScheduler.advance(to: 2.00)
+        layer.display()
+        testTimerScheduler.advance(to: 3.00)
+
+        // then
+        XCTAssertEqual(snapshots.count, 0, "Should ignore layer changes after calling stop()")
+    }
+}
+#endif

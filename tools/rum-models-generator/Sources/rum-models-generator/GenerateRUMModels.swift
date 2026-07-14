@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
@@ -15,8 +15,8 @@ internal func generateRUMSwiftModels(from schema: URL) throws -> String {
         header: """
             /*
              * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-             * This product includes software developed at Datadog (https://www.datadoghq.com/).
-             * Copyright 2019-Present Datadog, Inc.
+             * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+             * Copyright 2019-Present OpenObserve, Inc.
              */
 
             // This file was generated from JSON Schema. Do not modify it directly.
@@ -51,12 +51,12 @@ internal func generateRUMObjcInteropModels(from schema: URL, skip typesToSkip: S
         header: """
             /*
              * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-             * This product includes software developed at Datadog (https://www.datadoghq.com/).
-             * Copyright 2019-Present Datadog, Inc.
+             * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+             * Copyright 2019-Present OpenObserve, Inc.
              */
 
             import Foundation
-            import DatadogInternal
+            import OpenObserveInternal
 
             // This file was generated from JSON Schema. Do not modify it directly.
 

@@ -1,10 +1,10 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
-import DatadogInternal
+import OpenObserveInternal
 import HTTPServerMock
 import TestUtilities
 import XCTest
@@ -165,6 +165,6 @@ class TracingURLSessionScenarioTests: IntegrationTests, TracingCommonAsserts {
         XCTAssertEqual(firstPartyRequest.httpHeaders["x-datadog-sampling-priority"], "1")
         XCTAssertNil(firstPartyRequest.httpHeaders["x-datadog-origin"])
         let tid = try taskWithRequest.meta.tid()
-        XCTAssertEqual(firstPartyRequest.httpHeaders["x-datadog-tags"], "_dd.p.tid=\(tid),_dd.p.dm=-1")
+        XCTAssertEqual(firstPartyRequest.httpHeaders["x-datadog-tags"], "_oo.p.tid=\(tid),_oo.p.dm=-1")
     }
 }

@@ -1,27 +1,27 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
-import DatadogInternal
+import OpenObserveInternal
 import Foundation
 
 #if SPM_BUILD
-import DatadogPrivate
+import OpenObservePrivate
 #endif
-@testable import DatadogCore
-@testable import DatadogLogs
+@testable import OpenObserveCore
+@testable import OpenObserveLogs
 
 // MARK: - Configuration Mocks
 
-extension Datadog.Configuration: AnyMockable {
-    public static func mockAny() -> Datadog.Configuration { .mockWith() }
+extension OpenObserve.Configuration: AnyMockable {
+    public static func mockAny() -> OpenObserve.Configuration { .mockWith() }
 
     public static func mockWith(
         clientToken: String = .mockAny(),
         env: String = .mockAny(),
-        site: DatadogSite = .us1,
+        site: OpenObserveSite = .us1,
         service: String? = .mockAny(),
         bundle: Bundle = .main,
         batchSize: BatchSize = .medium,
@@ -45,7 +45,7 @@ extension Datadog.Configuration: AnyMockable {
     }
 }
 
-typealias BatchSize = Datadog.Configuration.BatchSize
+typealias BatchSize = OpenObserve.Configuration.BatchSize
 
 extension BatchSize: RandomMockable {
     public static func mockRandom() -> Self {
@@ -53,7 +53,7 @@ extension BatchSize: RandomMockable {
     }
 }
 
-typealias UploadFrequency = Datadog.Configuration.UploadFrequency
+typealias UploadFrequency = OpenObserve.Configuration.UploadFrequency
 
 extension UploadFrequency: RandomMockable {
     public static func mockRandom() -> Self {
@@ -61,7 +61,7 @@ extension UploadFrequency: RandomMockable {
     }
 }
 
-extension Datadog.Configuration.BatchProcessingLevel: RandomMockable {
+extension OpenObserve.Configuration.BatchProcessingLevel: RandomMockable {
     public static func mockRandom() -> Self {
         allCases.randomElement()!
     }
@@ -298,8 +298,8 @@ public  class DataUploaderMock: DataUploaderType {
     }
 
     public func upload(
-        events: [DatadogInternal.Event],
-        context: DatadogInternal.DatadogContext,
+        events: [OpenObserveInternal.Event],
+        context: OpenObserveInternal.OpenObserveContext,
         previous: DataUploadStatus?) throws -> DataUploadStatus {
             uploadedEvents += events
             try onUpload?(previous)

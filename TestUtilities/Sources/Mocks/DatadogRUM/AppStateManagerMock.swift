@@ -1,12 +1,12 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-2020 Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-2020 OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
-@testable import DatadogRUM
+import OpenObserveInternal
+@testable import OpenObserveRUM
 
 /// Mock of the AppState manager.
 public final class AppStateManagerMock: AppStateManaging {
@@ -15,7 +15,7 @@ public final class AppStateManagerMock: AppStateManaging {
 
     public func deleteAppState() {}
     public func updateAppState(state: AppState) {}
-    public func previousAppStateInfo(completion: @escaping (DatadogRUM.AppStateInfo?) -> Void) {
+    public func previousAppStateInfo(completion: @escaping (OpenObserveRUM.AppStateInfo?) -> Void) {
         completion(previousAppStateInfo)
     }
     public func currentAppStateInfo(completion: @escaping (AppStateInfo) -> Void) {

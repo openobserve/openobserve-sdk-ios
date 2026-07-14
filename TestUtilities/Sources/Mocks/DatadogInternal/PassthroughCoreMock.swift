@@ -1,15 +1,15 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 /// Passthrough core mocks feature-scope allowing recording events in **sync**.
 ///
-/// The `DatadogCoreProtocol` implementation does not require any feature registration,
+/// The `OpenObserveCoreProtocol` implementation does not require any feature registration,
 /// it will always provide a `FeatureScope` with the current context and a `writer` that will
 /// store all events in the `events` property.
 ///
@@ -26,14 +26,14 @@ import DatadogInternal
 ///     try core.register(feature: feature)
 ///     core.get(feature: MyCustomFeature.self) // returns nil
 ///
-open class PassthroughCoreMock: DatadogCoreProtocol, FeatureScope, @unchecked Sendable {
+open class PassthroughCoreMock: OpenObserveCoreProtocol, FeatureScope, @unchecked Sendable {
     /// Counts references to `PassthroughCoreMock` instances, so we can prevent memory
-    /// leaks of SDK core in `DatadogTestsObserver`.
+    /// leaks of SDK core in `OpenObserveTestsObserver`.
     public private(set) static var referenceCount = 0
 
     /// Current context that will be passed to feature-scopes.
     @ReadWriteLock
-    public var context: DatadogContext {
+    public var context: OpenObserveContext {
         didSet { send(message: .context(context)) }
     }
 
@@ -51,7 +51,7 @@ open class PassthroughCoreMock: DatadogCoreProtocol, FeatureScope, @unchecked Se
     ///   - context: The testing context.
 
     public required init(
-        context: DatadogContext = .mockAny(),
+        context: OpenObserveContext = .mockAny(),
         dataStore: DataStore = NOPDataStore(),
         messageReceiver: FeatureMessageReceiver = NOPFeatureMessageReceiver()
     ) {
@@ -69,12 +69,12 @@ open class PassthroughCoreMock: DatadogCoreProtocol, FeatureScope, @unchecked Se
     }
 
     /// no-op
-    public func register<T>(feature: T) throws where T: DatadogFeature { }
+    public func register<T>(feature: T) throws where T: OpenObserveFeature { }
     /// no-op
     public func feature<T>(named name: String, type: T.Type) -> T? { nil }
 
     /// Always returns a feature-scope.
-    public func scope<T>(for featureType: T.Type) -> FeatureScope where T: DatadogFeature {
+    public func scope<T>(for featureType: T.Type) -> FeatureScope where T: OpenObserveFeature {
         self
     }
 
@@ -94,12 +94,12 @@ open class PassthroughCoreMock: DatadogCoreProtocol, FeatureScope, @unchecked Se
     /// Execute `block` with the current context and a `writer` to record events.
     ///
     /// - Parameter block: The block to execute.
-    public func eventWriteContext(bypassConsent: Bool, _ block: @escaping (DatadogContext, Writer) -> Void) {
+    public func eventWriteContext(bypassConsent: Bool, _ block: @escaping (OpenObserveContext, Writer) -> Void) {
         block(context, writer)
         onEventWriteContext?(bypassConsent)
     }
 
-    public func context(_ block: @escaping (DatadogContext) -> Void) {
+    public func context(_ block: @escaping (OpenObserveContext) -> Void) {
         block(context)
     }
 

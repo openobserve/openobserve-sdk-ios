@@ -1,16 +1,16 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 public class FeatureRequestBuilderMock: FeatureRequestBuilder {
-    private let factory: (([Event], DatadogContext) throws -> URLRequest)
+    private let factory: (([Event], OpenObserveContext) throws -> URLRequest)
 
-    public init(factory: @escaping (([Event], DatadogContext) throws -> URLRequest) = { _, _ in .mockAny() }) {
+    public init(factory: @escaping (([Event], OpenObserveContext) throws -> URLRequest) = { _, _ in .mockAny() }) {
         self.factory = factory
     }
 
@@ -20,7 +20,7 @@ public class FeatureRequestBuilderMock: FeatureRequestBuilder {
 
     public func request(
         for events: [Event],
-        with context: DatadogContext,
+        with context: OpenObserveContext,
         execution: ExecutionContext
     ) throws -> URLRequest {
         return try factory(events, context)
@@ -30,17 +30,17 @@ public class FeatureRequestBuilderMock: FeatureRequestBuilder {
 public  class FeatureRequestBuilderSpy: FeatureRequestBuilder {
     /// Stores the parameters passed to the `request(for:with:)` method.
     @ReadWriteLock
-    public private(set) var requestParameters: [(events: [Event], context: DatadogContext)] = []
+    public private(set) var requestParameters: [(events: [Event], context: OpenObserveContext)] = []
 
     /// A closure that is called when a request is about to be created in the `request(for:with:)` method.
     @ReadWriteLock
-    public var onRequest: ((_ events: [Event], _ context: DatadogContext) -> Void)?
+    public var onRequest: ((_ events: [Event], _ context: OpenObserveContext) -> Void)?
 
     public init() {}
 
     public func request(
         for events: [Event],
-        with context: DatadogContext,
+        with context: OpenObserveContext,
         execution: ExecutionContext
     ) throws -> URLRequest {
         requestParameters.append((events: events, context: context))
@@ -58,7 +58,7 @@ public struct FailingRequestBuilderMock: FeatureRequestBuilder {
 
     public func request(
         for events: [Event],
-        with context: DatadogContext,
+        with context: OpenObserveContext,
         execution: ExecutionContext
     ) throws -> URLRequest {
         throw error

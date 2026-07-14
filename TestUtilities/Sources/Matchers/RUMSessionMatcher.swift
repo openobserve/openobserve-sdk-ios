@@ -1,16 +1,16 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
 #if !DD_COMPILED_FOR_INTEGRATION_TESTS
 /// This file is compiled both for Unit and Integration tests.
-/// * The Unit Tests target can see `Datadog` by `@testable import DatadogCore`.
-/// * In Integration Tests target we want to compile `Datadog` in "Release" configuration, so testability is not possible.
+/// * The Unit Tests target can see `OpenObserve` by `@testable import OpenObserveCore`.
+/// * In Integration Tests target we want to compile `OpenObserve` in "Release" configuration, so testability is not possible.
 /// This compiler statement gives both targets the visibility of `RUMDataModels.swift` either by import or direct compilation.
-@testable import DatadogInternal
+@testable import OpenObserveInternal
 #endif
 
 /// An error thrown by the `RUMSessionMatcher` if it spots an inconsistency in tracked RUM Session, e.g. when

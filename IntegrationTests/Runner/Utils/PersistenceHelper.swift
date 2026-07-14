@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import Foundation
@@ -42,7 +42,7 @@ internal struct PersistenceHelpers {
     // MARK: - Private
 
     private static func isFeatureDirectory(_ url: URL) -> Bool {
-        url.absoluteString.contains("com.datadoghq")
+        url.absoluteString.contains("io.openobserve")
     }
 
     private static func isCrashReporterDirectory(_ url: URL) -> Bool {

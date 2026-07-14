@@ -1,9 +1,9 @@
 ---
-name: dd-sdk-ios:open-pr
-description: Use when creating a pull request in dd-sdk-ios. Use when writing PR titles, PR body, or choosing the target branch.
+name: openobserve-sdk-ios:open-pr
+description: Use when creating a pull request in openobserve-sdk-ios. Use when writing PR titles, PR body, or choosing the target branch.
 ---
 
-# Pull Requests in dd-sdk-ios
+# Pull Requests in openobserve-sdk-ios
 
 ## PR Title Format
 

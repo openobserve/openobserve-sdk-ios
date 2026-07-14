@@ -105,17 +105,17 @@ test-ios:
 
 # Run unit tests for all iOS schemes
 test-ios-all:
-	@$(MAKE) test-ios SCHEME="DatadogCore"
-	@$(MAKE) test-ios SCHEME="DatadogInternal"
-	@$(MAKE) test-ios SCHEME="DatadogRUM"
-	@$(MAKE) test-ios SCHEME="DatadogSessionReplay"
-	@$(MAKE) test-ios SCHEME="DatadogLogs"
-	@$(MAKE) test-ios SCHEME="DatadogTrace"
-	@$(MAKE) test-ios SCHEME="DatadogCrashReporting"
-	@$(MAKE) test-ios SCHEME="DatadogWebViewTracking"
-	@$(MAKE) test-ios SCHEME="DatadogFlags"
-	@$(MAKE) test-ios SCHEME="DatadogProfiling"
-	@$(MAKE) test-ios SCHEME="DatadogIntegrationTests"
+	@$(MAKE) test-ios SCHEME="OpenObserveCore"
+	@$(MAKE) test-ios SCHEME="OpenObserveInternal"
+	@$(MAKE) test-ios SCHEME="OpenObserveRUM"
+	@$(MAKE) test-ios SCHEME="OpenObserveSessionReplay"
+	@$(MAKE) test-ios SCHEME="OpenObserveLogs"
+	@$(MAKE) test-ios SCHEME="OpenObserveTrace"
+	@$(MAKE) test-ios SCHEME="OpenObserveCrashReporting"
+	@$(MAKE) test-ios SCHEME="OpenObserveWebViewTracking"
+	@$(MAKE) test-ios SCHEME="OpenObserveFlags"
+	@$(MAKE) test-ios SCHEME="OpenObserveProfiling"
+	@$(MAKE) test-ios SCHEME="OpenObserveIntegrationTests"
 
 # Run unit tests for specified SCHEME using tvOS Simulator
 test-tvos:
@@ -127,15 +127,15 @@ test-tvos:
 
 # Run unit tests for all tvOS schemes
 test-tvos-all:
-	@$(MAKE) test-tvos SCHEME="DatadogCore"
-	@$(MAKE) test-tvos SCHEME="DatadogInternal"
-	@$(MAKE) test-tvos SCHEME="DatadogRUM"
-	@$(MAKE) test-tvos SCHEME="DatadogLogs"
-	@$(MAKE) test-tvos SCHEME="DatadogTrace"
-	@$(MAKE) test-tvos SCHEME="DatadogCrashReporting"
-	@$(MAKE) test-tvos SCHEME="DatadogFlags"
-	@$(MAKE) test-tvos SCHEME="DatadogProfiling"
-	@$(MAKE) test-tvos SCHEME="DatadogIntegrationTests"
+	@$(MAKE) test-tvos SCHEME="OpenObserveCore"
+	@$(MAKE) test-tvos SCHEME="OpenObserveInternal"
+	@$(MAKE) test-tvos SCHEME="OpenObserveRUM"
+	@$(MAKE) test-tvos SCHEME="OpenObserveLogs"
+	@$(MAKE) test-tvos SCHEME="OpenObserveTrace"
+	@$(MAKE) test-tvos SCHEME="OpenObserveCrashReporting"
+	@$(MAKE) test-tvos SCHEME="OpenObserveFlags"
+	@$(MAKE) test-tvos SCHEME="OpenObserveProfiling"
+	@$(MAKE) test-tvos SCHEME="OpenObserveIntegrationTests"
 
 # Run unit tests for specified SCHEME using watchOS Simulator
 test-watchos:
@@ -147,14 +147,14 @@ test-watchos:
 
 # Run unit tests for all watchOS schemes
 test-watchos-all:
-	@$(MAKE) test-watchos SCHEME="DatadogCore"
-	@$(MAKE) test-watchos SCHEME="DatadogInternal"
-	@$(MAKE) test-watchos SCHEME="DatadogRUM"
-	@$(MAKE) test-watchos SCHEME="DatadogLogs"
-	@$(MAKE) test-watchos SCHEME="DatadogTrace"
-	@$(MAKE) test-watchos SCHEME="DatadogCrashReporting"
-	@$(MAKE) test-watchos SCHEME="DatadogFlags"
-	@$(MAKE) test-watchos SCHEME="DatadogIntegrationTests"
+	@$(MAKE) test-watchos SCHEME="OpenObserveCore"
+	@$(MAKE) test-watchos SCHEME="OpenObserveInternal"
+	@$(MAKE) test-watchos SCHEME="OpenObserveRUM"
+	@$(MAKE) test-watchos SCHEME="OpenObserveLogs"
+	@$(MAKE) test-watchos SCHEME="OpenObserveTrace"
+	@$(MAKE) test-watchos SCHEME="OpenObserveCrashReporting"
+	@$(MAKE) test-watchos SCHEME="OpenObserveFlags"
+	@$(MAKE) test-watchos SCHEME="OpenObserveIntegrationTests"
 
 # Run unit tests for specified SCHEME using visionOS Simulator
 test-visionos:
@@ -166,16 +166,16 @@ test-visionos:
 
 # Run unit tests for all visionOS schemes
 test-visionos-all:
-	@$(MAKE) test-visionos SCHEME="DatadogCore"
-	@$(MAKE) test-visionos SCHEME="DatadogInternal"
-	@$(MAKE) test-visionos SCHEME="DatadogRUM"
-	@$(MAKE) test-visionos SCHEME="DatadogLogs"
-	@$(MAKE) test-visionos SCHEME="DatadogTrace"
-	@$(MAKE) test-visionos SCHEME="DatadogCrashReporting"
-	@$(MAKE) test-visionos SCHEME="DatadogWebViewTracking"
-	@$(MAKE) test-visionos SCHEME="DatadogFlags"
-	@$(MAKE) test-visionos SCHEME="DatadogProfiling"
-	@$(MAKE) test-visionos SCHEME="DatadogIntegrationTests"
+	@$(MAKE) test-visionos SCHEME="OpenObserveCore"
+	@$(MAKE) test-visionos SCHEME="OpenObserveInternal"
+	@$(MAKE) test-visionos SCHEME="OpenObserveRUM"
+	@$(MAKE) test-visionos SCHEME="OpenObserveLogs"
+	@$(MAKE) test-visionos SCHEME="OpenObserveTrace"
+	@$(MAKE) test-visionos SCHEME="OpenObserveCrashReporting"
+	@$(MAKE) test-visionos SCHEME="OpenObserveWebViewTracking"
+	@$(MAKE) test-visionos SCHEME="OpenObserveFlags"
+	@$(MAKE) test-visionos SCHEME="OpenObserveProfiling"
+	@$(MAKE) test-visionos SCHEME="OpenObserveIntegrationTests"
 
 # Run UI tests for specified TEST_PLAN
 ui-test:
@@ -253,30 +253,30 @@ spm-build:
 
 # Builds SPM package for iOS
 spm-build-ios:
-	@$(MAKE) spm-build SCHEME="Datadog-Package" DESTINATION="generic/platform=ios"
+	@$(MAKE) spm-build SCHEME="OpenObserve-Package" DESTINATION="generic/platform=ios"
 
 # Builds SPM package for tvOS
 spm-build-tvos:
-	@$(MAKE) spm-build SCHEME="Datadog-Package" DESTINATION="generic/platform=tvOS"
+	@$(MAKE) spm-build SCHEME="OpenObserve-Package" DESTINATION="generic/platform=tvOS"
 
 # Builds SPM package for visionOS
 spm-build-visionos:
-	@$(MAKE) spm-build SCHEME="Datadog-Package" DESTINATION="generic/platform=visionOS"
+	@$(MAKE) spm-build SCHEME="OpenObserve-Package" DESTINATION="generic/platform=visionOS"
 
 # Builds SPM package for watchOS
 spm-build-watchos:
 	# Build only compatible schemes for watchOS:
-	@$(MAKE) spm-build SCHEME="Datadog-Package" DESTINATION="generic/platform=watchOS"
+	@$(MAKE) spm-build SCHEME="OpenObserve-Package" DESTINATION="generic/platform=watchOS"
 
 # Builds SPM package for macOS (and Mac Catalyst)
 spm-build-macos:
 	# Whole package for Mac Catalyst:
-	@$(MAKE) spm-build SCHEME="Datadog-Package" DESTINATION="platform=macOS,variant=Mac Catalyst"
+	@$(MAKE) spm-build SCHEME="OpenObserve-Package" DESTINATION="platform=macOS,variant=Mac Catalyst"
 	# Only compatible schemes for macOS:
-	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="DatadogCore"
-	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="DatadogLogs"
-	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="DatadogTrace"
-	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="DatadogCrashReporting"
+	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="OpenObserveCore"
+	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="OpenObserveLogs"
+	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="OpenObserveTrace"
+	@$(MAKE) spm-build DESTINATION="platform=macOS" SCHEME="OpenObserveCrashReporting"
 
 # Builds a new version of the E2E app and publishes it to synthetics.
 e2e-upload:
@@ -303,8 +303,8 @@ benchmark-tests-open:
 	@$(MAKE) -C BenchmarkTests open
 
 xcodeproj-session-replay:
-		@echo "⚙️  Generating 'DatadogSessionReplay.xcodeproj'..."
-		@cd DatadogSessionReplay/ && swift package generate-xcodeproj
+		@echo "⚙️  Generating 'OpenObserveSessionReplay.xcodeproj'..."
+		@cd OpenObserveSessionReplay/ && swift package generate-xcodeproj
 		@echo "OK 👌"
 
 templates:
@@ -344,7 +344,7 @@ sr-models-verify:
 # Generate profiling protobuf-c files from pprof proto
 protoc-pprof:
 	@$(ECHO_TITLE) "protoc-pprof"
-	./tools/protoc-pprof.sh --proto-path DatadogProfiling/Protos/profile.proto --output-dir DatadogProfiling/Mach
+	./tools/protoc-pprof.sh --proto-path OpenObserveProfiling/Protos/profile.proto --output-dir OpenObserveProfiling/Mach
 
 # Pushes current SR snapshots to snapshots repo
 sr-snapshots-push:
@@ -381,10 +381,10 @@ ifeq ($(ENV),ci)
   OBJC_OUTPUT_PATH := api-surface-objc-generated
 endif
 
-# Define the list of Datadog modules for API surface generation
-DATADOG_MODULES := DatadogCore DatadogLogs DatadogTrace DatadogRUM DatadogCrashReporting DatadogWebViewTracking DatadogSessionReplay DatadogFlags DatadogProfiling
+# Define the list of OpenObserve modules for API surface generation
+OPENOBSERVE_MODULES := OpenObserveCore OpenObserveLogs OpenObserveTrace OpenObserveRUM OpenObserveCrashReporting OpenObserveWebViewTracking OpenObserveSessionReplay OpenObserveFlags OpenObserveProfiling
 
-# Generate api-surface files for Datadog APIs
+# Generate api-surface files for OpenObserve APIs
 api-surface:
 	@$(ECHO_TITLE) "make api-surface"
 	@echo "Generating api-surface-swift"
@@ -392,7 +392,7 @@ api-surface:
 		swift run api-surface generate \
 		--path ../../ \
 		--language swift \
-		$(foreach module,$(DATADOG_MODULES),--library-name $(module)) \
+		$(foreach module,$(OPENOBSERVE_MODULES),--library-name $(module)) \
 		--output-file ../../$(SWIFT_OUTPUT_PATH)
 
 	@echo "Generating api-surface-objc"
@@ -400,10 +400,10 @@ api-surface:
 		swift run api-surface generate \
 		--path ../../ \
 		--language objc \
-		$(foreach module,$(DATADOG_MODULES),--library-name $(module)) \
+		$(foreach module,$(OPENOBSERVE_MODULES),--library-name $(module)) \
 		--output-file ../../$(OBJC_OUTPUT_PATH)
 
-# Verify API surface files for Datadog APIs
+# Verify API surface files for OpenObserve APIs
 api-surface-verify:
 	@$(ECHO_TITLE) "make api-surface-verify"
 	@echo "Verifying api-surface-swift"
@@ -411,7 +411,7 @@ api-surface-verify:
 		swift run api-surface verify \
 		--path ../../ \
 		--language swift \
-		$(foreach module,$(DATADOG_MODULES),--library-name $(module)) \
+		$(foreach module,$(OPENOBSERVE_MODULES),--library-name $(module)) \
 		--output-file /tmp/api-surface-swift-generated \
 		../../api-surface-swift
 
@@ -420,7 +420,7 @@ api-surface-verify:
 		swift run api-surface verify \
 		--path ../../ \
 		--language objc \
-		$(foreach module,$(DATADOG_MODULES),--library-name $(module)) \
+		$(foreach module,$(OPENOBSERVE_MODULES),--library-name $(module)) \
 		--output-file /tmp/api-surface-objc-generated \
 		../../api-surface-objc
 
@@ -477,21 +477,21 @@ release-publish-podspec:
 		 --artifacts-path "$(ARTIFACTS_PATH)" \
 		 --podspec-name "$(PODSPEC_NAME)"
 
-# Publish DatadogInternal podspec
+# Publish OpenObserveInternal podspec
 release-publish-internal-podspecs:
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogInternal.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveInternal.podspec"
 
-# Publish podspecs that depend on DatadogInternal
+# Publish podspecs that depend on OpenObserveInternal
 release-publish-dependent-podspecs:
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogCore.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogLogs.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogTrace.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogRUM.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogSessionReplay.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogCrashReporting.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogWebViewTracking.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogFlags.podspec"
-	@$(MAKE) release-publish-podspec PODSPEC_NAME="DatadogProfiling.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveCore.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveLogs.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveTrace.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveRUM.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveSessionReplay.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveCrashReporting.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveWebViewTracking.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveFlags.podspec"
+	@$(MAKE) release-publish-podspec PODSPEC_NAME="OpenObserveProfiling.podspec"
 
 # Set ot update CI secrets
 set-ci-secret:
@@ -500,7 +500,7 @@ set-ci-secret:
 
 bump:
 	@read -p "Enter version number: " version;  \
-	echo "// GENERATED FILE: Do not edit directly\n\ninternal let __sdkVersion = \"$$version\"" > DatadogCore/Sources/Versioning.swift; \
+	echo "// GENERATED FILE: Do not edit directly\n\ninternal let __sdkVersion = \"$$version\"" > OpenObserveCore/Sources/Versioning.swift; \
 	./tools/podspec_bump_version.sh $$version; \
 	git add . ; \
 	git commit -m "Bumped version to $$version"; \

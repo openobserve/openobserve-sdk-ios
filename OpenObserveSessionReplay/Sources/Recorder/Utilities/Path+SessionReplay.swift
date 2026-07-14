@@ -1,0 +1,54 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if os(iOS)
+
+import OpenObserveInternal
+import Foundation
+import SwiftUI
+
+@available(iOS 13.0, *)
+extension SwiftUI.Path: OpenObserveExtended {}
+
+@available(iOS 13.0, *)
+extension OpenObserveExtension where ExtendedType == SwiftUI.Path {
+    var svgString: String {
+        var d = ""
+        type.forEach { element in
+            switch element {
+            case let .move(to):
+                d += "M \(to.dd.svgString) "
+            case let .line(to):
+                d += "L \(to.dd.svgString) "
+            case let .quadCurve(to, control):
+                d += "Q \(control.dd.svgString) \(to.dd.svgString) "
+            case let .curve(to, control1, control2):
+                d += "C \(control1.dd.svgString) \(control2.dd.svgString) \(to.dd.svgString) "
+            case .closeSubpath:
+                d += "Z "
+            }
+        }
+        return d.trimmingCharacters(in: .whitespaces)
+    }
+}
+
+extension CGPoint: OpenObserveExtended {}
+
+extension OpenObserveExtension where ExtendedType == CGPoint {
+    internal var svgString: String {
+        "\(type.x.dd.svgString) \(type.y.dd.svgString)"
+    }
+}
+
+extension CGFloat: OpenObserveExtended {}
+
+extension OpenObserveExtension where ExtendedType == CGFloat {
+    internal var svgString: String {
+        String(format: "%.3f", locale: .init(identifier: "en_US_POSIX"), type)
+    }
+}
+
+#endif

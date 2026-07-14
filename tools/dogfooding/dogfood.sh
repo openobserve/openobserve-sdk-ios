@@ -2,11 +2,11 @@
 
 # Usage:
 # $ ./tools/dogfooding/dogfood.sh -h                                                                                   
-# Updates the 'dd-sdk-ios' version in a dependent project and creates a dogfooding PR in its repository.
+# Updates the 'openobserve-sdk-ios' version in a dependent project and creates a dogfooding PR in its repository.
 
 # Options:
 #   --shopist       Dogfood in the Shopist iOS project.
-#   --datadog-app   Dogfood in the Datadog iOS app.
+#   --datadog-app   Dogfood in the OpenObserve iOS app.
 
 set -eo pipefail
 source ./tools/utils/argparse.sh
@@ -14,9 +14,9 @@ source ./tools/utils/echo-color.sh
 source ./tools/utils/current-git.sh
 source ./tools/secrets/get-secret.sh
 
-set_description "Updates 'dd-sdk-ios' version in dependent project and opens dogfooding PR to its repo."
+set_description "Updates 'openobserve-sdk-ios' version in dependent project and opens dogfooding PR to its repo."
 define_arg "shopist" "false" "Dogfood in Shopist iOS." "store_true"
-define_arg "datadog-app" "false" "Dogfood in Datadog iOS app." "store_true"
+define_arg "datadog-app" "false" "Dogfood in OpenObserve iOS app." "store_true"
 
 check_for_help "$@"
 parse_args "$@"
@@ -27,7 +27,7 @@ echo_info "cd '$SCRIPT_DIR'" && cd "$SCRIPT_DIR"
 DEPENDENT_REPO_CLONE_DIR="repos"
 
 SDK_PACKAGE_PATH=$(realpath "../..")
-SDK_VERSION_FILE_PATH=$(realpath "../../DatadogCore/Sources/Versioning.swift")
+SDK_VERSION_FILE_PATH=$(realpath "../../OpenObserveCore/Sources/Versioning.swift")
 DOGFOODED_BRANCH="$(current_git_branch)"
 DOGFOODED_COMMIT="$(current_git_commit)"
 DOGFOODED_COMMIT_SHORT="$(current_git_commit_short)"
@@ -79,7 +79,7 @@ commit_repo() {
     cd "$repo_path"
     git checkout -b "$DOGFOODING_BRANCH_NAME"
     git add .
-    git commit -m "Dogfooding dd-sdk-ios commit: $DOGFOODED_COMMIT"
+    git commit -m "Dogfooding openobserve-sdk-ios commit: $DOGFOODED_COMMIT"
     cd -
 }
 
@@ -103,10 +103,10 @@ create_pr() {
     local target_branch="$3"
     echo_subtitle "Create PR in '$REPO_NAME' repo"
 
-    PR_TITLE="[Dogfooding] Upgrade dd-sdk-ios to \`$DOGFOODED_SDK_VERSION\`"
+    PR_TITLE="[Dogfooding] Upgrade openobserve-sdk-ios to \`$DOGFOODED_SDK_VERSION\`"
     PR_DESCRIPTION="$(cat <<EOF
-⚙️ This is an automated PR upgrading the version of 'dd-sdk-ios' to:
-- https://github.com/DataDog/dd-sdk-ios/commit/$DOGFOODED_COMMIT
+⚙️ This is an automated PR upgrading the version of 'openobserve-sdk-ios' to:
+- https://github.com/openobserve/openobserve-sdk-ios/commit/$DOGFOODED_COMMIT
 
 ### 🎁 What's new:
 $changelog
@@ -125,15 +125,15 @@ EOF
     cd -
 }
 
-# Resolves dependencies version in `dd-sdk-ios`.
+# Resolves dependencies version in `openobserve-sdk-ios`.
 resolve_dd_sdk_ios_package() {
-    echo_subtitle "Resolve dd-sdk-ios package in '$SDK_PACKAGE_PATH'"
+    echo_subtitle "Resolve openobserve-sdk-ios package in '$SDK_PACKAGE_PATH'"
     swift package --package-path "$SDK_PACKAGE_PATH" resolve
-    echo "dd-sdk-ios dependencies:"
+    echo "openobserve-sdk-ios dependencies:"
     swift package --package-path "$SDK_PACKAGE_PATH" show-dependencies
 }
 
-# Reads sdk_version from current `dd-sdk-ios` commit and stores it in DOGFOODED_SDK_VERSION variable.
+# Reads sdk_version from current `openobserve-sdk-ios` commit and stores it in DOGFOODED_SDK_VERSION variable.
 read_dogfooded_version() {
     echo_subtitle "Read sdk_version from '$SDK_VERSION_FILE_PATH'"
     sdk_version=$(grep 'internal let __sdkVersion' "$SDK_VERSION_FILE_PATH" | awk -F'"' '{print $2}')
@@ -180,9 +180,9 @@ print_changelog() {
     echo_info "<<< git log end" >&2
 
     # Extract only merge commits:
-    CHANGELOG=$(echo "$git_log" | grep -o 'Merge pull request #[0-9]\+' | awk -F'#' '{print "- https://github.com/DataDog/dd-sdk-ios/pull/"$2}' || true)
+    CHANGELOG=$(echo "$git_log" | grep -o 'Merge pull request #[0-9]\+' | awk -F'#' '{print "- https://github.com/openobserve/openobserve-sdk-ios/pull/"$2}' || true)
     if [ -z "$CHANGELOG" ]; then
-        CHANGELOG="- Empty (no PRs merged since https://github.com/DataDog/dd-sdk-ios/commit/$from_commit)"
+        CHANGELOG="- Empty (no PRs merged since https://github.com/openobserve/openobserve-sdk-ios/commit/$from_commit)"
     fi
 
     echo_info "▸ Changelog:" >&2
@@ -193,10 +193,10 @@ print_changelog() {
     echo "$CHANGELOG"
 }
 
-# Updates dd-sdk-ios version in dependent project to DOGFOODED_COMMIT.
+# Updates openobserve-sdk-ios version in dependent project to DOGFOODED_COMMIT.
 update_dependent_package_resolved() {
     local package_resolved_path="$1"
-    echo_subtitle "Update dd-sdk-ios version in '$package_resolved_path'"
+    echo_subtitle "Update openobserve-sdk-ios version in '$package_resolved_path'"
     make run PARAMS="update-dependency.py \
         --repo-package-resolved-path '$package_resolved_path' \
         --dogfooded-package-resolved-path '$SDK_PACKAGE_PATH/Package.resolved' \
@@ -204,10 +204,10 @@ update_dependent_package_resolved() {
         --dogfooded-commit '$DOGFOODED_COMMIT'"
 }
 
-# Updates dd-sdk-ios branch requirement in dependent project's project.pbxproj.
+# Updates openobserve-sdk-ios branch requirement in dependent project's project.pbxproj.
 update_dependent_pbxproj_branch() {
     local pbxproj_path="$1"
-    echo_subtitle "Update dd-sdk-ios branch to '$DOGFOODED_BRANCH' in '$pbxproj_path'"
+    echo_subtitle "Update openobserve-sdk-ios branch to '$DOGFOODED_BRANCH' in '$pbxproj_path'"
     sed -i '' -E "s/(branch = )develop(;)/\1$DOGFOODED_BRANCH\2/" "$pbxproj_path"
 }
 # Updates 'sdk_version' in dependent project to DOGFOODED_SDK_VERSION.
@@ -249,13 +249,13 @@ if [ "$shopist" = "true" ]; then
     LAST_DOGFOODED_COMMIT=$(read_dogfooded_commit "$CLONE_PATH/Shopist/Shopist/DogfoodingConfig.swift")
     CHANGELOG=$(print_changelog "$LAST_DOGFOODED_COMMIT")
     
-    # Update dd-sdk-ios version:
+    # Update openobserve-sdk-ios version:
     update_dependent_package_resolved "$CLONE_PATH/Shopist/Shopist.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
     update_dependent_sdk_version "$CLONE_PATH/Shopist/Shopist/DogfoodingConfig.swift"
     update_dependent_pbxproj_branch "$CLONE_PATH/Shopist/Shopist.xcodeproj/project.pbxproj"
 
     echo_info "▸ Exporting 'GITHUB_TOKEN' for CI"
-    export GITHUB_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/shopist-ios --policy dd-sdk-ios.gitlab.pr)
+    export GITHUB_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/shopist-ios --policy openobserve-sdk-ios.gitlab.pr)
     verify_gh_auth
 
     # Push & create PR:
@@ -274,15 +274,15 @@ if [ "$datadog_app" = "true" ]; then
     clone_repo "git@github.com:DataDog/datadog-ios.git" $DEFAULT_BRANCH $CLONE_PATH
 
     # Generate CHANGELOG:
-    LAST_DOGFOODED_COMMIT=$(read_dogfooded_commit "$CLONE_PATH/Targets/Platform/DatadogObservability/DogfoodingConfig.swift")
+    LAST_DOGFOODED_COMMIT=$(read_dogfooded_commit "$CLONE_PATH/Targets/Platform/OpenObserveObservability/DogfoodingConfig.swift")
     CHANGELOG=$(print_changelog "$LAST_DOGFOODED_COMMIT")
     
-    # Update dd-sdk-ios version:
+    # Update openobserve-sdk-ios version:
     update_dependent_package_resolved "$CLONE_PATH/Tuist/Package.resolved"
-    update_dependent_sdk_version "$CLONE_PATH/Targets/Platform/DatadogObservability/DogfoodingConfig.swift"
+    update_dependent_sdk_version "$CLONE_PATH/Targets/Platform/OpenObserveObservability/DogfoodingConfig.swift"
 
     echo_info "▸ Exporting 'GITHUB_TOKEN' for CI"
-    export GITHUB_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/datadog-ios --policy dd-sdk-ios.gitlab.pr)
+    export GITHUB_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/datadog-ios --policy openobserve-sdk-ios.gitlab.pr)
     verify_gh_auth
 
     # Push & create PR:

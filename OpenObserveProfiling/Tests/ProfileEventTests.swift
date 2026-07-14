@@ -1,0 +1,42 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+#if !os(watchOS)
+import XCTest
+import OpenObserveInternal
+import TestUtilities
+
+@testable import OpenObserveProfiling
+
+class ProfileEventTests: XCTestCase {
+    func testEncoding() {
+        let additionalAttribues = mockRandomAttributes()
+
+        let event = ProfileEvent(
+            family: "family",
+            runtime: "runtime",
+            version: "version",
+            start: .mockAny(),
+            end: .mockAny(),
+            attachments: ["attachment"],
+            tags: "tag:tag",
+            additionalAttributes: additionalAttribues
+        )
+
+        let expected: [String: Encodable] = [
+            "family": "family",
+            "runtime": "runtime",
+            "version": "version",
+            "start": Date.mockAny(),
+            "end": Date.mockAny(),
+            "attachments": ["attachment"],
+            "tags_profiler": "tag:tag",
+        ].merging(additionalAttribues, uniquingKeysWith: { $1 })
+
+        DDAssertJSONEqual(event, expected)
+    }
+}
+#endif // !os(watchOS)

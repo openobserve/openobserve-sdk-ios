@@ -1,0 +1,36 @@
+/*
+ * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
+ */
+
+import XCTest
+import TestUtilities
+import OpenObserveInternal
+@_spi(objc)
+@testable import OpenObserveTrace
+
+class DDTraceTests: XCTestCase {
+    private var core: FeatureRegistrationCoreMock! // swiftlint:disable:this implicitly_unwrapped_optional
+
+    override func setUp() {
+        super.setUp()
+        core = FeatureRegistrationCoreMock()
+        CoreRegistry.register(default: core)
+    }
+
+    override func tearDown() {
+        CoreRegistry.unregisterDefault()
+        core = nil
+        super.tearDown()
+    }
+
+    func testWhenNotEnabled() {
+        XCTAssertTrue(objc_Tracer.shared().dd?.swiftTracer is DDNoopTracer)
+    }
+
+    func testWhenEnabled() {
+        objc_Trace.enable(with: objc_TraceConfiguration())
+        XCTAssertTrue(objc_Tracer.shared().dd?.swiftTracer is OpenObserveTracer)
+    }
+}

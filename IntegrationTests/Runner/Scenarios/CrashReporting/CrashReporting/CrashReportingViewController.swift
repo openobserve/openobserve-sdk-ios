@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-Present Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-Present OpenObserve, Inc.
  */
 
 import UIKit
-import DatadogCore
+import OpenObserveCore
 
 internal class CrashReportingViewController: UIViewController {
     @IBOutlet weak var sendingCrashReportLabel: UILabel!
@@ -23,7 +23,7 @@ internal class CrashReportingViewController: UIViewController {
 
 #if DD_SDK_COMPILED_FOR_TESTING
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                Datadog.flushAndDeinitialize()
+                OpenObserve.flushAndDeinitialize()
             }
 #endif
         } else {

@@ -6,16 +6,16 @@ use_modular_headers!
 target 'Runner iOS' do
     platform :ios, '12.0'
 
-    pod 'DatadogCore', :path => '..'
-    pod 'DatadogLogs', :path => '..'
-    pod 'DatadogTrace', :path => '..'
-    pod 'DatadogRUM', :path => '..'
-    pod 'DatadogCrashReporting', :path => '..'
-    pod 'DatadogSessionReplay', :path => '..'
-    pod 'DatadogWebViewTracking', :path => '..'
+    pod 'OpenObserveCore', :path => '..'
+    pod 'OpenObserveLogs', :path => '..'
+    pod 'OpenObserveTrace', :path => '..'
+    pod 'OpenObserveRUM', :path => '..'
+    pod 'OpenObserveCrashReporting', :path => '..'
+    pod 'OpenObserveSessionReplay', :path => '..'
+    pod 'OpenObserveWebViewTracking', :path => '..'
 
     target 'IntegrationScenarios' do
-        pod 'DatadogInternal', :path => '..'
+        pod 'OpenObserveInternal', :path => '..'
         pod 'TestUtilities', :path => '..'
     end
 end

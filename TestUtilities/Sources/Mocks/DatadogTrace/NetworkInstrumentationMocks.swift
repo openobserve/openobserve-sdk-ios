@@ -1,11 +1,11 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at Datadog (https://www.datadoghq.com/).
- * Copyright 2019-2020 Datadog, Inc.
+ * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+ * Copyright 2019-2020 OpenObserve, Inc.
  */
 
 import Foundation
-import DatadogInternal
+import OpenObserveInternal
 
 extension SpanID: AnyMockable, RandomMockable {
     public static func mockAny() -> SpanID {
@@ -128,7 +128,7 @@ extension URLSession {
     }
 }
 
-public final class URLSessionHandlerMock: DatadogURLSessionHandler {
+public final class URLSessionHandlerMock: OpenObserveURLSessionHandler {
     public var firstPartyHosts: FirstPartyHosts
 
     public var modifiedRequest: URLRequest?
@@ -240,11 +240,11 @@ extension ResourceMetrics: AnyMockable {
 }
 
 extension TrackingMode: AnyMockable, RandomMockable {
-    public static func mockAny() -> DatadogInternal.TrackingMode {
+    public static func mockAny() -> OpenObserveInternal.TrackingMode {
         return .automatic
     }
 
-    public static func mockRandom() -> DatadogInternal.TrackingMode {
+    public static func mockRandom() -> OpenObserveInternal.TrackingMode {
         return [.automatic, .registeredDelegate].randomElement()!
     }
 }

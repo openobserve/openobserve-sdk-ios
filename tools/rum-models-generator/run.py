@@ -3,8 +3,8 @@
 
 # -----------------------------------------------------------
 # Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-# This product includes software developed at Datadog (https://www.datadoghq.com/).
-# Copyright 2019-Present Datadog, Inc.
+# This product includes software developed at OpenObserve (https://www.openobserve.ai/).
+# Copyright 2019-Present OpenObserve, Inc.
 # -----------------------------------------------------------
 
 import os
@@ -22,9 +22,9 @@ RUM_SCHEMA_PATH = '/rum-events-format/schemas/rum-events-mobile-schema.json'
 SR_SCHEMA_PATH = '/rum-events-format/schemas/session-replay-mobile-schema.json'
 
 # Generated file paths (relative to repository root)
-RUM_SWIFT_GENERATED_FILE_PATH = '/DatadogInternal/Sources/Models/RUM/RUMDataModels.swift'
-RUM_OBJC_GENERATED_FILE_PATH = '/DatadogRUM/Sources/DataModels/RUMDataModels+objc.swift'
-SR_SWIFT_GENERATED_FILE_PATH = '/DatadogSessionReplay/Sources/Models/SRDataModels.swift'
+RUM_SWIFT_GENERATED_FILE_PATH = '/OpenObserveInternal/Sources/Models/RUM/RUMDataModels.swift'
+RUM_OBJC_GENERATED_FILE_PATH = '/OpenObserveRUM/Sources/DataModels/RUMDataModels+objc.swift'
+SR_SWIFT_GENERATED_FILE_PATH = '/OpenObserveSessionReplay/Sources/Models/SRDataModels.swift'
 
 @dataclass
 class Context:
