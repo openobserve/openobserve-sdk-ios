@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "OpenObserveInternal"
-  s.version      = "3.11.0"
+  s.version      = "0.1.0-alpha.1"
   s.summary      = "OpenObserve Internal Package. This module is not for public use."
 
   s.homepage     = "https://www.openobserve.ai"

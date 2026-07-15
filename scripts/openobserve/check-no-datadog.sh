@@ -3,7 +3,7 @@
 # carry a Datadog identity/wire token. Excludes rebrand tooling, .build, and
 # Apache-2.0 §4 per-file attribution headers (retained, verified by check-attribution).
 set -euo pipefail
-cd "$(dirname "$0")/../.."
+cd "$(git rev-parse --show-toplevel)"
 PATHS=$(git ls-files 'OpenObserve*/Sources/*' 'Sources/*' 2>/dev/null || true)
 [ -n "$PATHS" ] || { echo "no shipped sources?"; exit 1; }
 HITS=$(echo "$PATHS" | xargs grep -nE \

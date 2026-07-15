@@ -16,7 +16,7 @@
 # REQUIRED ENV (only when --publish): COCOAPODS_TRUNK_TOKEN
 # REQUIRED TOOLCHAIN: Xcode + `pod` (CocoaPods), git push access.
 set -euo pipefail
-cd "$(dirname "$0")/../.."
+cd "$(git rev-parse --show-toplevel)"
 
 VERSION="" ; PUBLISH=0 ; SPM_ONLY=0
 while [ $# -gt 0 ]; do case "$1" in
