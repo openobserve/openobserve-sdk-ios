@@ -37,9 +37,9 @@ internal struct RecordingComponents {
         core: OpenObserveCoreProtocol,
         configuration: SessionReplay.Configuration
     ) throws -> Self {
-        let processorsQueue = BackgroundAsyncQueue(label: "io.openobserve.session-replay.processors", qos: .utility)
+        let processorsQueue = BackgroundAsyncQueue(label: "ai.openobserve.session-replay.processors", qos: .utility)
         // The telemetry queue targets the processors queue with a lower qos.
-        let telemetryQueue = BackgroundAsyncQueue(label: "io.openobserve.session-replay.telemetry", qos: .background, target: processorsQueue)
+        let telemetryQueue = BackgroundAsyncQueue(label: "ai.openobserve.session-replay.telemetry", qos: .background, target: processorsQueue)
 
         let telemetry = SessionReplayTelemetry(
             telemetry: core.telemetry,

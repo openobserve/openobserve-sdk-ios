@@ -100,7 +100,7 @@ class DebugLoggingViewController: UIViewController {
         }
 
         queues = (0..<5).map { index in
-            return DispatchQueue(label: "io.openobserve.example.stress-testing-queue\(index)")
+            return DispatchQueue(label: "ai.openobserve.example.stress-testing-queue\(index)")
         }
 
         let endDate = Date(timeIntervalSinceNow: 10) // 10s

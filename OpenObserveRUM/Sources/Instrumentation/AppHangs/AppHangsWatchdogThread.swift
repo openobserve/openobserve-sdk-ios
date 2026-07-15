@@ -100,7 +100,7 @@ internal final class AppHangsWatchdogThread: Thread, AppHangsObservingThread {
         self.telemetry = telemetry
 
         super.init()
-        self.name = "io.openobserve.app-hang-watchdog"
+        self.name = "ai.openobserve.app-hang-watchdog"
 
         if Thread.isMainThread {
             // When initialization happens on the main thread, we can get its `ThreadID` right away, so startup hangs are covered

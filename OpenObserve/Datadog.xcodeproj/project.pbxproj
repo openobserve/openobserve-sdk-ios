@@ -9535,7 +9535,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveWebViewTracking;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveWebViewTracking;
 				PRODUCT_NAME = OpenObserveWebViewTracking;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -9566,7 +9566,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveWebViewTracking;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveWebViewTracking;
 				PRODUCT_NAME = OpenObserveWebViewTracking;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -9597,7 +9597,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveWebViewTracking;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveWebViewTracking;
 				PRODUCT_NAME = OpenObserveWebViewTracking;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -9623,7 +9623,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveWebViewTrackingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveWebViewTrackingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -9648,7 +9648,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveWebViewTrackingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveWebViewTrackingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -9672,7 +9672,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveWebViewTrackingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveWebViewTrackingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -9704,7 +9704,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveFlags;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveFlags;
 				PRODUCT_NAME = OpenObserveFlags;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -9737,7 +9737,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveFlags;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveFlags;
 				PRODUCT_NAME = OpenObserveFlags;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -9770,7 +9770,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveFlags;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveFlags;
 				PRODUCT_NAME = OpenObserveFlags;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -9792,7 +9792,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveFlagsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveFlagsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -9812,7 +9812,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveFlagsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveFlagsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -9832,7 +9832,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveFlagsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveFlagsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -10079,7 +10079,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveSessionReplay;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveSessionReplay;
 				PRODUCT_NAME = OpenObserveSessionReplay;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -10111,7 +10111,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveSessionReplay;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveSessionReplay;
 				PRODUCT_NAME = OpenObserveSessionReplay;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -10142,7 +10142,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveSessionReplay;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveSessionReplay;
 				PRODUCT_NAME = OpenObserveSessionReplay;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -10168,7 +10168,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveSessionReplayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveSessionReplayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = NO;
@@ -10194,7 +10194,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveSessionReplayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveSessionReplayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = NO;
@@ -10219,7 +10219,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveSessionReplayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveSessionReplayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = NO;
@@ -10587,7 +10587,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveLogs;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveLogs;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
 				PRODUCT_NAME = OpenObserveLogs;
 				SKIP_INSTALL = YES;
@@ -10620,7 +10620,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveLogs;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveLogs;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
 				PRODUCT_NAME = OpenObserveLogs;
 				SKIP_INSTALL = YES;
@@ -10653,7 +10653,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveLogs;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveLogs;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
 				PRODUCT_NAME = OpenObserveLogs;
 				SKIP_INSTALL = YES;
@@ -10675,7 +10675,7 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveLogsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveLogsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -10694,7 +10694,7 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveLogsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveLogsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -10713,7 +10713,7 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveLogsTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveLogsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -10746,7 +10746,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveProfiling;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveProfiling;
 				PRODUCT_NAME = OpenObserveProfiling;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator xros xrsimulator";
@@ -10781,7 +10781,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveProfiling;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveProfiling;
 				PRODUCT_NAME = OpenObserveProfiling;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator xros xrsimulator";
@@ -10816,7 +10816,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveProfiling;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveProfiling;
 				PRODUCT_NAME = OpenObserveProfiling;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator xros xrsimulator";
@@ -10849,7 +10849,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveInternal;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveInternal;
 				PRODUCT_NAME = OpenObserveInternal;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -10882,7 +10882,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveInternal;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveInternal;
 				PRODUCT_NAME = OpenObserveInternal;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -10914,7 +10914,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveInternal;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveInternal;
 				PRODUCT_NAME = OpenObserveInternal;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -10949,7 +10949,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.TestUtilities;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.TestUtilities;
 				PRODUCT_NAME = TestUtilities;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -10984,7 +10984,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.TestUtilities;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.TestUtilities;
 				PRODUCT_NAME = TestUtilities;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11019,7 +11019,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.TestUtilities;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.TestUtilities;
 				PRODUCT_NAME = TestUtilities;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11050,7 +11050,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveTrace;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveTrace;
 				PRODUCT_NAME = OpenObserveTrace;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11081,7 +11081,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveTrace;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveTrace;
 				PRODUCT_NAME = OpenObserveTrace;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11112,7 +11112,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveTrace;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveTrace;
 				PRODUCT_NAME = OpenObserveTrace;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11132,7 +11132,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveTraceTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveTraceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11150,7 +11150,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveTraceTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveTraceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11168,7 +11168,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveTraceTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveTraceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11198,7 +11198,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveRUM;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveRUM;
 				PRODUCT_NAME = OpenObserveRUM;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11229,7 +11229,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveRUM;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveRUM;
 				PRODUCT_NAME = OpenObserveRUM;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11260,7 +11260,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveRUM;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveRUM;
 				PRODUCT_NAME = OpenObserveRUM;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
@@ -11280,7 +11280,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveRUMTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveRUMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11298,7 +11298,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveRUMTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveRUMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11316,7 +11316,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveRUMTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveRUMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11340,7 +11340,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveProfilingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveProfilingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11368,7 +11368,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveProfilingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveProfilingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11393,7 +11393,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveProfilingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveProfilingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11419,7 +11419,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveInternalTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveInternalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11444,7 +11444,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveInternalTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveInternalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -11468,7 +11468,7 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.openobserve.OpenObserveInternalTests;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.openobserve.OpenObserveInternalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator watchos watchsimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;

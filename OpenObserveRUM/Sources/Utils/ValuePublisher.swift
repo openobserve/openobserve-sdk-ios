@@ -34,7 +34,7 @@ internal final class ValuePublisher<Value> {
     /// The queue used to synchronize the access to the `unsafeValue`.
     /// Concurrent queue is used for performant reads, `.barrier` must be used to make writes exclusive.
     private let concurrentQueue = DispatchQueue(
-        label: "io.openobserve.value-publisher-\(type(of: Value.self))",
+        label: "ai.openobserve.value-publisher-\(type(of: Value.self))",
         attributes: .concurrent
     )
     /// The array of value observers - must be accessed from the `queue`.

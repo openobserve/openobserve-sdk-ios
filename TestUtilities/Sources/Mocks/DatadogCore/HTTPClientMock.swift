@@ -9,7 +9,7 @@ import Foundation
 
 public class HTTPClientMock: HTTPClient {
     /// The queue to synchronise access to tracked requests.
-    private let queue = DispatchQueue(label: "io.openobserve.HTTPClientMock-\(UUID().uuidString)")
+    private let queue = DispatchQueue(label: "ai.openobserve.HTTPClientMock-\(UUID().uuidString)")
     /// Keeps track of sent requests.
     private var requests: [URLRequest] = []
     /// Closure providing the result for each request.

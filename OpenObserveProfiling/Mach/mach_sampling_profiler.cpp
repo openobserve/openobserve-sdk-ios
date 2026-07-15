@@ -473,7 +473,7 @@ mach_sampling_profiler::~mach_sampling_profiler() {
  * Static entry point for the sampling thread.
  */
 void* mach_sampling_profiler::sampling_thread_entry(void* arg) {
-    pthread_setname_np("io.openobserve.profiler.sampling");
+    pthread_setname_np("ai.openobserve.profiler.sampling");
     static_cast<mach_sampling_profiler*>(arg)->main();
     return nullptr;
 }

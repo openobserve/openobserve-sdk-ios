@@ -24,7 +24,7 @@ internal final class NetworkInstrumentationFeature: OpenObserveFeature {
     /// Network Instrumentation serial queue for safe and serialized access to the
     /// `URLSessionTask` interceptions.
     private let queue = DispatchQueue(
-        label: "io.openobserve.network-instrumentation",
+        label: "ai.openobserve.network-instrumentation",
         target: .global(qos: .utility)
     )
 

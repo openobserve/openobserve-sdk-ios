@@ -17,7 +17,7 @@ internal final class Vitals {
 
     private lazy var meter: MeterSdk = provider.get(name: "vitals")
 
-    let queue = DispatchQueue(label: "io.openobserve.benchmarks.vitals", target: .global(qos: .utility))
+    let queue = DispatchQueue(label: "ai.openobserve.benchmarks.vitals", target: .global(qos: .utility))
 
     init(provider: MeterProviderSdk) {
         self.provider = provider

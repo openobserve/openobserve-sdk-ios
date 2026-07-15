@@ -18,9 +18,9 @@ class DebugTracingViewController: UIViewController {
     @IBOutlet weak var sendComplexSpanButton: UIButton!
     @IBOutlet weak var consoleTextView: UITextView!
 
-    private let queue1 = DispatchQueue(label: "io.openobserve.debug-tracing1")
-    private let queue2 = DispatchQueue(label: "io.openobserve.debug-tracing2")
-    private let queue3 = DispatchQueue(label: "io.openobserve.debug-tracing3")
+    private let queue1 = DispatchQueue(label: "ai.openobserve.debug-tracing1")
+    private let queue2 = DispatchQueue(label: "ai.openobserve.debug-tracing2")
+    private let queue3 = DispatchQueue(label: "ai.openobserve.debug-tracing3")
 
     override func viewDidLoad() {
         super.viewDidLoad()

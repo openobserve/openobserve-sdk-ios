@@ -28,7 +28,7 @@
     },
     {
       "literal": "com.datadoghq",
-      "to": "io.openobserve",
+      "to": "ai.openobserve",
       "why": "bundle ids / reverse-DNS module ids in Info.plists + podspecs (59 files)"
     },
     {

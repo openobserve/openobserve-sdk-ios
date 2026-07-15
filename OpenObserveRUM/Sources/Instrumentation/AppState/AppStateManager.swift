@@ -19,7 +19,7 @@ internal protocol AppStateManaging {
 /// Manages the app state changes observed during application lifecycle events such as application start, resume and termination.
 internal final class AppStateManager: AppStateManaging {
     internal static let defaultQueue = DispatchQueue(
-        label: "io.openobserve.app-state-manager",
+        label: "ai.openobserve.app-state-manager",
         qos: .utility
     )
 

@@ -61,7 +61,7 @@ internal final class ViewHitchesReader: ViewHitchesModel {
 
     /// Queue used to synchronize the access to hitch information.
     private let queue = DispatchQueue(
-        label: "io.openobserve.view-hitches-reader",
+        label: "ai.openobserve.view-hitches-reader",
         qos: .utility
     )
 

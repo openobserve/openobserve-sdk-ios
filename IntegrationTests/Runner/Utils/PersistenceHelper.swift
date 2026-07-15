@@ -42,7 +42,7 @@ internal struct PersistenceHelpers {
     // MARK: - Private
 
     private static func isFeatureDirectory(_ url: URL) -> Bool {
-        url.absoluteString.contains("io.openobserve")
+        url.absoluteString.contains("ai.openobserve")
     }
 
     private static func isCrashReporterDirectory(_ url: URL) -> Bool {

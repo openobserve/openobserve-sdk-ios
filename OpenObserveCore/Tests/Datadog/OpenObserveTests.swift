@@ -498,7 +498,7 @@ class OpenObserveTests: XCTestCase {
     func testRemoveV1DeprecatedFolders() throws {
         // Given
         let cache = try Directory.cache()
-        let directories = ["io.openobserve.logs", "io.openobserve.traces", "io.openobserve.rum"]
+        let directories = ["ai.openobserve.logs", "ai.openobserve.traces", "ai.openobserve.rum"]
         try directories.forEach {
             _ = try cache.createSubdirectory(path: $0).createFile(named: "test")
         }
@@ -516,9 +516,9 @@ class OpenObserveTests: XCTestCase {
         core.readWriteQueue.sync {}
 
         // Then
-        XCTAssertThrowsError(try cache.subdirectory(path: "io.openobserve.logs"))
-        XCTAssertThrowsError(try cache.subdirectory(path: "io.openobserve.traces"))
-        XCTAssertThrowsError(try cache.subdirectory(path: "io.openobserve.rum"))
+        XCTAssertThrowsError(try cache.subdirectory(path: "ai.openobserve.logs"))
+        XCTAssertThrowsError(try cache.subdirectory(path: "ai.openobserve.traces"))
+        XCTAssertThrowsError(try cache.subdirectory(path: "ai.openobserve.rum"))
     }
 
     func testCustomSDKInstance() throws {

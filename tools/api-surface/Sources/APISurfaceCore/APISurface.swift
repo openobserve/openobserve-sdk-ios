@@ -77,7 +77,7 @@ private final class PatchedPackageWorkspace {
 
         func tempURL() throws -> URL {
             let osTemporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-            let testDirectoryName = "io.openobserve.api-surface-\(UUID().uuidString)"
+            let testDirectoryName = "ai.openobserve.api-surface-\(UUID().uuidString)"
             let url = osTemporaryDirectoryURL.appending(component: testDirectoryName, directoryHint: .isDirectory)
             try fm.createDirectory(at: url, withIntermediateDirectories: true)
             return url

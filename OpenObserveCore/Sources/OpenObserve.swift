@@ -310,7 +310,7 @@ public enum OpenObserve {
     }
 
     private static func deleteV1Folders(in core: OpenObserveCore) {
-        let deprecated = ["io.openobserve.logs", "io.openobserve.traces", "io.openobserve.rum"].compactMap {
+        let deprecated = ["ai.openobserve.logs", "ai.openobserve.traces", "ai.openobserve.rum"].compactMap {
             try? Directory.cache().subdirectory(path: $0) // ignore errors - deprecated paths likely do not exist
         }
 

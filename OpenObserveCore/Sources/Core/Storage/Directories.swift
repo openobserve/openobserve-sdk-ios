@@ -13,7 +13,7 @@ import OpenObserveInternal
 /// of the SDK (`<sdk-instance-uuid>`):
 ///
 /// ```
-/// /Library/Cache/io.openobserve/v2/<sdk-instance-uuid>/
+/// /Library/Cache/ai.openobserve/v2/<sdk-instance-uuid>/
 /// ```
 ///
 /// Note: System may delete data in `/Library/Cache` to free up disk space which reduces the impact on devices working
@@ -22,7 +22,7 @@ import OpenObserveInternal
 internal struct CoreDirectory {
     /// A known OS location the core directory is created within:`/Library/Cache`.
     let osDirectory: Directory
-    /// The core directory specific to this instance of the SDK: `/Library/Cache/io.openobserve/v2/<sdk-instance-uuid>`.
+    /// The core directory specific to this instance of the SDK: `/Library/Cache/ai.openobserve/v2/<sdk-instance-uuid>`.
     let coreDirectory: Directory
 
     /// Obtains subdirectories for managing batch files for given Feature  (creates if don't exist).
@@ -57,7 +57,7 @@ internal extension CoreDirectory {
     ///   - site: The cor instance site.
     init(in osDirectory: Directory, instanceName: String, site: OpenObserveSite) throws {
         let sdkInstanceUUID = sha256("\(instanceName)\(site)")
-        let path = "io.openobserve/v2/\(sdkInstanceUUID)"
+        let path = "ai.openobserve/v2/\(sdkInstanceUUID)"
 
         self.init(
             osDirectory: osDirectory,

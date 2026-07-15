@@ -19,7 +19,7 @@ import Network
 /// This adds the necessary thread-safety and keeps the convenience of pulling.
 internal struct NWPathMonitorPublisher: ContextValuePublisher {
     private static let defaultQueue = DispatchQueue(
-        label: "io.openobserve.nw-path-monitor-publisher",
+        label: "ai.openobserve.nw-path-monitor-publisher",
         target: .global(qos: .utility)
     )
 

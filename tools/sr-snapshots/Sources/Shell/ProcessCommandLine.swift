@@ -18,7 +18,7 @@ public class ProcessCommandLine: CommandLine {
     /// - Returns: The result of the command.
     public func shellResult(_ command: String) throws -> CommandResult {
         var result: Result<CommandResult, Error>? = nil
-        let queue = DispatchQueue(label: "io.openobserve.cli-\(UUID().uuidString)")
+        let queue = DispatchQueue(label: "ai.openobserve.cli-\(UUID().uuidString)")
 
         print("🐚 →   \(command)")
 

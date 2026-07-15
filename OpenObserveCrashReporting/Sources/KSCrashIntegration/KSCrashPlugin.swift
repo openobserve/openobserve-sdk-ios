@@ -102,7 +102,7 @@ extension KSCrashConfiguration {
             throw CrashReportException(description: "Cannot obtain `/Library/Caches/` url.")
         }
 
-        let directory = cache.appendingPathComponent("io.openobserve.crash-reporting/\(version)", isDirectory: true)
+        let directory = cache.appendingPathComponent("ai.openobserve.crash-reporting/\(version)", isDirectory: true)
 
         let config = KSCrashConfiguration()
         config.installPath = directory.path

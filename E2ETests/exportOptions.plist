@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>distributionBundleIdentifier</key>
-	<string>io.openobserve.e2e.Runner</string>
+	<string>ai.openobserve.e2e.Runner</string>
 	<key>method</key>
 	<string>development</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>io.openobserve.e2e.Runner</key>
+		<key>ai.openobserve.e2e.Runner</key>
 		<string>OpenObserve E2E Runner</string>
 	</dict>
 	<key>signingCertificate</key>

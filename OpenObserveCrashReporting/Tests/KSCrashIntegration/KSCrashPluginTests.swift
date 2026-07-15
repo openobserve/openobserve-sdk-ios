@@ -16,7 +16,7 @@ final class KSCrashPluginTests: XCTestCase {
         let config: KSCrashConfiguration = try .datadog()
 
         // Then
-        XCTAssertTrue(config.installPath?.contains("/Library/Caches/io.openobserve.crash-reporting/v2") ?? false)
+        XCTAssertTrue(config.installPath?.contains("/Library/Caches/ai.openobserve.crash-reporting/v2") ?? false)
         XCTAssertEqual(config.reportStoreConfiguration.maxReportCount, 1)
         XCTAssertEqual(config.reportStoreConfiguration.reportCleanupPolicy, .never)
     }

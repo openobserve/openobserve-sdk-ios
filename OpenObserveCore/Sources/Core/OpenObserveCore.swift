@@ -21,7 +21,7 @@ internal final class OpenObserveCore {
 
     /// The storage r/w GDC queue.
     let readWriteQueue = DispatchQueue(
-        label: "io.openobserve.ios-sdk-read-write",
+        label: "ai.openobserve.ios-sdk-read-write",
         autoreleaseFrequency: .workItem,
         target: .global(qos: .utility)
     )

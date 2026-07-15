@@ -75,7 +75,7 @@ final class AppStateManagerTests: XCTestCase {
         // Given
         let dataStore = DataStoreAsyncMock()
         let featureScope = FeatureScopeMock(dataStore: dataStore)
-        let initialStateQueue = DispatchQueue(label: "io.openobserve.tests.initial-state-update")
+        let initialStateQueue = DispatchQueue(label: "ai.openobserve.tests.initial-state-update")
         let initialState = AppStateInfo.mockWith(wasTerminated: false, isActive: true)
         featureScope.rumDataStore.setValue(initialState, forKey: .appStateKey)
         dataStore.flush()

@@ -41,7 +41,7 @@ class TracerTests: XCTestCase {
             source: "abc",
             sdkVersion: "1.2.3",
             ciAppOrigin: nil,
-            applicationBundleIdentifier: "io.openobserve.ios-sdk",
+            applicationBundleIdentifier: "ai.openobserve.ios-sdk",
             device: .mockWith(
                 name: "iPhone",
                 model: "iPhone10,1",

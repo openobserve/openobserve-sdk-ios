@@ -12,7 +12,7 @@ public final class DataStoreAsyncMock: DataStore {
     @ReadWriteLock
     public var storage: [String: DataStoreValueResult]
 
-    private let queue = DispatchQueue(label: "io.openobserve.datastore-async-mock")
+    private let queue = DispatchQueue(label: "ai.openobserve.datastore-async-mock")
 
     public init(storage: [String: DataStoreValueResult] = [:]) {
         self.storage = storage

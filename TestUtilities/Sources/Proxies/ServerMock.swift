@@ -200,7 +200,7 @@ public class ServerMock {
         self.skipIsMainThreadCheck = skipIsMainThreadCheck
         precondition(skipIsMainThreadCheck || Thread.isMainThread, "`ServerMock` should be initialized on the main thread.")
         precondition(ServerMock.activeInstance == nil, "Only one active instance of `ServerMock` is allowed at a time.")
-        self.queue = DispatchQueue(label: "io.openobserve.ServerMock-\(urlSessionUUID.uuidString)")
+        self.queue = DispatchQueue(label: "ai.openobserve.ServerMock-\(urlSessionUUID.uuidString)")
 
         ServerMock.activeInstance = self
     }

@@ -11,7 +11,7 @@ import XCTest
 /// Does not create the subfolder - it must be later created with `.create()`.
 /// It returns different `Directory` each time it is called.
 public func obtainUniqueTemporaryDirectory(uuid: UUID = UUID()) -> URL {
-    let subdirectoryName = "io.openobserve.ios-sdk-tests-\(uuid.uuidString)"
+    let subdirectoryName = "ai.openobserve.ios-sdk-tests-\(uuid.uuidString)"
     let osTemporaryDirectoryURL = URL(
         fileURLWithPath: NSTemporaryDirectory(),
         isDirectory: true

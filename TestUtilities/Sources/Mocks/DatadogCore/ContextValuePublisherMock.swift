@@ -9,7 +9,7 @@ import Foundation
 
 public class ContextValuePublisherMock<Value>: ContextValuePublisher {
     private let queue = DispatchQueue(
-        label: "io.openobserve.context-value-publisher-mock"
+        label: "ai.openobserve.context-value-publisher-mock"
     )
 
     public let initialValue: Value

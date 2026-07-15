@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>distributionBundleIdentifier</key>
-	<string>io.openobserve.benchmarks.Runner</string>
+	<string>ai.openobserve.benchmarks.Runner</string>
 	<key>method</key>
 	<string>development</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>io.openobserve.benchmarks.Runner</key>
+		<key>ai.openobserve.benchmarks.Runner</key>
 		<string>OpenObserve Benchmark Runner</string>
 	</dict>
 	<key>signingCertificate</key>

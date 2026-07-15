@@ -19,7 +19,7 @@ internal protocol CrashContextProvider: AnyObject {
 internal class CrashContextCoreProvider: CrashContextProvider {
     /// Queue for synchronizing `unsafeCrashContext` updates.
     private let queue = DispatchQueue(
-        label: "io.openobserve.crash-context",
+        label: "ai.openobserve.crash-context",
         target: .global(qos: .utility)
     )
 

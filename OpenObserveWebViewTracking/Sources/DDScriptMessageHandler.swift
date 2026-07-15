@@ -16,7 +16,7 @@ internal class DDScriptMessageHandler: NSObject, WKScriptMessageHandler {
     let emitter: MessageEmitter
 
     let queue = DispatchQueue(
-        label: "io.openobserve.JSEventBridge",
+        label: "ai.openobserve.JSEventBridge",
         target: .global(qos: .userInteractive)
     )
 

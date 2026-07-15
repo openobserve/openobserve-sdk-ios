@@ -38,7 +38,7 @@ class LoggerTests: XCTestCase {
             version: "1.0.0",
             buildNumber: "1",
             sdkVersion: "1.2.3",
-            applicationBundleIdentifier: "io.openobserve.ios-sdk",
+            applicationBundleIdentifier: "ai.openobserve.ios-sdk",
             device: .mockWith(
                 name: "Device Name",
                 model: "Model Name",
@@ -89,7 +89,7 @@ class LoggerTests: XCTestCase {
             "type": "other"
           },
           "service" : "default-service-name",
-          "logger.name" : "io.openobserve.ios-sdk",
+          "logger.name" : "ai.openobserve.ios-sdk",
           "logger.version": "1.2.3",
           "logger.thread_name" : "main",
           "date" : "2019-12-15T10:00:00.000Z",

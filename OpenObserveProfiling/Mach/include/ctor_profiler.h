@@ -83,7 +83,7 @@
  */
 
 // UserDefaults constants centralized for Profiling
-#define DD_PROFILING_USER_DEFAULTS_SUITE_NAME "io.openobserve.ios-sdk.profiling"
+#define DD_PROFILING_USER_DEFAULTS_SUITE_NAME "ai.openobserve.ios-sdk.profiling"
 #define DD_PROFILING_IS_ENABLED_KEY "is_profiling_enabled"
 #define DD_PROFILING_SAMPLE_RATE_KEY "profiling_sample_rate"
 
@@ -105,7 +105,7 @@ extern "C" {
  *
  * @return true if profiling is enabled, false otherwise
  *
- * @note Reads from suite "io.openobserve.ios-sdk" with key "is_profiling_enabled"
+ * @note Reads from suite "ai.openobserve.ios-sdk" with key "is_profiling_enabled"
  * @note Returns false if the key doesn't exist or on read errors
  */
 bool is_profiling_enabled();

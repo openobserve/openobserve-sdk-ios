@@ -91,6 +91,6 @@ public extension Directory {
 
 public func uniqueTemporaryDirectoryURL() -> URL {
     let osTemporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-    let testDirectoryName = "io.openobserve.sr-snapshots-tests-\(UUID().uuidString)"
+    let testDirectoryName = "ai.openobserve.sr-snapshots-tests-\(UUID().uuidString)"
     return osTemporaryDirectoryURL.appending(component: testDirectoryName, directoryHint: .isDirectory)
 }

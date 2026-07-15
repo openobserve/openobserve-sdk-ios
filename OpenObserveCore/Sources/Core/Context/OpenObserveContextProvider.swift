@@ -38,7 +38,7 @@ import OpenObserveInternal
 /// All subscriptions will be cancelled when the provider is deallocated.
 internal final class OpenObserveContextProvider {
     static let defaultQueue = DispatchQueue(
-        label: "io.openobserve.core-context",
+        label: "ai.openobserve.core-context",
         qos: .utility
     )
     /// The current `context`.

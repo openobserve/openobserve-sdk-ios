@@ -32,7 +32,7 @@ internal final class CrashReportingFeature: OpenObserveFeature {
         telemetry: Telemetry
     ) {
         self.queue = DispatchQueue(
-            label: "io.openobserve.crash-reporter",
+            label: "ai.openobserve.crash-reporter",
             target: .global(qos: .utility)
         )
         self.plugin = crashReportingPlugin

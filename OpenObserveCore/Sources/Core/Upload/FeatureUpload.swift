@@ -23,7 +23,7 @@ internal struct FeatureUpload {
         telemetry: Telemetry
     ) {
         let uploadQueue = DispatchQueue(
-            label: "io.openobserve.ios-sdk-\(featureName)-upload",
+            label: "ai.openobserve.ios-sdk-\(featureName)-upload",
             autoreleaseFrequency: .workItem,
             target: .global(qos: .utility)
         )

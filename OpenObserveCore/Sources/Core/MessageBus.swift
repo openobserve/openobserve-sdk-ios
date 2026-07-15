@@ -13,7 +13,7 @@ import OpenObserveInternal
 internal final class MessageBus {
     /// The message bus GDC queue.
     let queue = DispatchQueue(
-        label: "io.openobserve.ios-sdk-message-bus",
+        label: "ai.openobserve.ios-sdk-message-bus",
         target: .global(qos: .utility)
     )
 

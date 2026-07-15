@@ -21,7 +21,7 @@ final class WatchdogTerminationMonitorTests: XCTestCase {
         let didSend = self.expectation(description: "Watchdog termination was reported")
 
         // app starts - use a controlled queue so we can flush its state transitions
-        let firstSessionQueue = DispatchQueue(label: "io.openobserve.tests.first-session")
+        let firstSessionQueue = DispatchQueue(label: "ai.openobserve.tests.first-session")
         given(
             isSimulator: false,
             isDebugging: false,

@@ -19,7 +19,7 @@ struct TraceContentView: View {
 
     var tracer: OTTracer { Tracer.shared() }
 
-    private let queue1 = DispatchQueue(label: "io.openobserve.benchmark-tracing1")
+    private let queue1 = DispatchQueue(label: "ai.openobserve.benchmark-tracing1")
 
     init() {
         operationName = "iOS Benchmark span operation"
