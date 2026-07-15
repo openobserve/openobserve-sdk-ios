@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -16,7 +16,7 @@ class DataUploaderTests: XCTestCase {
         let randomResponse: HTTPURLResponse = .mockResponseWith(statusCode: (100...599).randomElement()!)
         let randomRequest: URLRequest = oneOf([
             { .mockWith(headers: [:]) },
-            { .mockWith(headers: ["DD-REQUEST-ID": String.mockRandom()]) }
+            { .mockWith(headers: ["OO-REQUEST-ID": String.mockRandom()]) }
         ])
 
         let uploader = DataUploader(
@@ -35,7 +35,7 @@ class DataUploaderTests: XCTestCase {
         // Then
         let expectedUploadStatus = DataUploadStatus(
             httpResponse: randomResponse,
-            ddRequestID: randomRequest.value(forHTTPHeaderField: "DD-REQUEST-ID"),
+            ooRequestID: randomRequest.value(forHTTPHeaderField: "OO-REQUEST-ID"),
             attempt: 0
         )
 

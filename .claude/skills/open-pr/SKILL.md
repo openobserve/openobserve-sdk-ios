@@ -14,7 +14,7 @@ description: Use when creating a pull request in openobserve-sdk-ios. Use when w
 **Examples:**
 - `[RUM-1234] Add baggage header merging support`
 - `[FFL-213] Add Feature Flags support`
-- `[RUM-14655] Fix WebView log events attaching incomplete ddTags`
+- `[RUM-14655] Fix WebView log events attaching incomplete ooTags`
 
 ## Requirements
 

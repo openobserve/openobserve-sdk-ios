@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import OpenObserveInternal
@@ -9,7 +9,7 @@ import TestUtilities
 import XCTest
 
 final class OpenObserveContextTests: XCTestCase {
-    // MARK: - Test ddtags
+    // MARK: - Test ootags
 
     func testOpenObserveDDTags() throws {
         // Given
@@ -27,18 +27,18 @@ final class OpenObserveContextTests: XCTestCase {
         )
 
         // Then
-        let ddTagsArray = ooContext.ddTags.split(separator: ",")
+        let ooTagsArray = ooContext.ooTags.split(separator: ",")
 
-        let ddTags = ddTagsArray.reduce(into: [:]) {
+        let ooTags = ooTagsArray.reduce(into: [:]) {
             let item = $1.split(separator: ":")
             $0[String(item[0])] = String(item[1])
         }
 
-        XCTAssertEqual(ddTags["service"] as! String, service)
-        XCTAssertEqual(ddTags["env"] as! String, env)
-        XCTAssertEqual(ddTags["version"] as! String, version)
-        XCTAssertEqual(ddTags["sdk_version"] as! String, sdkVersion)
-        XCTAssertEqual(ddTags["variant"] as! String, variant)
+        XCTAssertEqual(ooTags["service"] as! String, service)
+        XCTAssertEqual(ooTags["env"] as! String, env)
+        XCTAssertEqual(ooTags["version"] as! String, version)
+        XCTAssertEqual(ooTags["sdk_version"] as! String, sdkVersion)
+        XCTAssertEqual(ooTags["variant"] as! String, variant)
     }
 
     func testOpenObserveSanitizedDDTags() throws {
@@ -57,18 +57,18 @@ final class OpenObserveContextTests: XCTestCase {
         )
 
         // Then
-        let ddTagsArray = ooContext.ddTags.split(separator: ",")
+        let ooTagsArray = ooContext.ooTags.split(separator: ",")
 
-        let ddTags = ddTagsArray.reduce(into: [:]) {
+        let ooTags = ooTagsArray.reduce(into: [:]) {
             let item = $1.split(separator: ":")
             $0[String(item[0])] = String(item[1])
         }
 
-        XCTAssertEqual(ddTags["service"] as! String, "servicewithcolons")
-        XCTAssertEqual(ddTags["env"] as! String, "proddev")
-        XCTAssertEqual(ddTags["version"] as! String, "123")
-        XCTAssertEqual(ddTags["sdk_version"] as! String, "321")
-        XCTAssertEqual(ddTags["variant"] as! String, "variantwithcommas")
+        XCTAssertEqual(ooTags["service"] as! String, "servicewithcolons")
+        XCTAssertEqual(ooTags["env"] as! String, "proddev")
+        XCTAssertEqual(ooTags["version"] as! String, "123")
+        XCTAssertEqual(ooTags["sdk_version"] as! String, "321")
+        XCTAssertEqual(ooTags["variant"] as! String, "variantwithcommas")
     }
 
     func testOpenObserveDDTagsWithoutVariant() throws {
@@ -86,35 +86,35 @@ final class OpenObserveContextTests: XCTestCase {
         )
 
         // Then
-        let ddTagsArray = ooContext.ddTags.split(separator: ",")
+        let ooTagsArray = ooContext.ooTags.split(separator: ",")
 
-        let ddTags = ddTagsArray.reduce(into: [:]) {
+        let ooTags = ooTagsArray.reduce(into: [:]) {
             let item = $1.split(separator: ":")
             $0[String(item[0])] = String(item[1])
         }
 
-        XCTAssertEqual(ddTags["service"] as! String, service)
-        XCTAssertEqual(ddTags["env"] as! String, env)
-        XCTAssertEqual(ddTags["version"] as! String, version)
-        XCTAssertEqual(ddTags["sdk_version"] as! String, sdkVersion)
-        XCTAssertNil(ddTags["variant"])
+        XCTAssertEqual(ooTags["service"] as! String, service)
+        XCTAssertEqual(ooTags["env"] as! String, env)
+        XCTAssertEqual(ooTags["version"] as! String, version)
+        XCTAssertEqual(ooTags["sdk_version"] as! String, sdkVersion)
+        XCTAssertNil(ooTags["variant"])
     }
 
-    // MARK: - ddTags caching
+    // MARK: - ooTags caching
 
     func testDDTagsUpdatesWhenVersionChanges() throws {
         // Given
         var context: OpenObserveContext = .mockWith(version: "1.0.0")
-        let originalDDTags = context.ddTags
+        let originalDDTags = context.ooTags
         XCTAssertTrue(originalDDTags.contains("version:1.0.0"))
 
         // When
         context.version = "2.0.0"
 
         // Then
-        XCTAssertTrue(context.ddTags.contains("version:2.0.0"))
-        XCTAssertFalse(context.ddTags.contains("version:1.0.0"))
-        XCTAssertNotEqual(context.ddTags, originalDDTags)
+        XCTAssertTrue(context.ooTags.contains("version:2.0.0"))
+        XCTAssertFalse(context.ooTags.contains("version:1.0.0"))
+        XCTAssertNotEqual(context.ooTags, originalDDTags)
     }
 
     func testDDTagsSanitizesVersionOnUpdate() throws {
@@ -126,6 +126,6 @@ final class OpenObserveContextTests: XCTestCase {
 
         // Then
         XCTAssertEqual(context.version, "200")
-        XCTAssertTrue(context.ddTags.contains("version:200"))
+        XCTAssertTrue(context.ooTags.contains("version:200"))
     }
 }

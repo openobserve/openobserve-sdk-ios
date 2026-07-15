@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS)
@@ -48,8 +48,8 @@ class ResourceRequestBuilderTests: XCTestCase {
         XCTAssertEqual(try url(for: .eu1), "https://browser-intake-openobserve.eu/api/v2/replay")
         XCTAssertEqual(try url(for: .ap1), "https://browser-intake-ap1-openobserve.ai/api/v2/replay")
         XCTAssertEqual(try url(for: .ap2), "https://browser-intake-ap2-openobserve.ai/api/v2/replay")
-        XCTAssertEqual(try url(for: .us1_fed), "https://browser-intake-ddog-gov.com/api/v2/replay")
-        XCTAssertEqual(try url(for: .us2_fed), "https://browser-intake-us2-ddog-gov.com/api/v2/replay")
+        XCTAssertEqual(try url(for: .us1_fed), "https://browser-intake-openobserve-gov.com/api/v2/replay")
+        XCTAssertEqual(try url(for: .us2_fed), "https://browser-intake-us2-openobserve-gov.com/api/v2/replay")
     }
 
     func testItSetsCustomIntakeURL() {
@@ -123,11 +123,11 @@ class ResourceRequestBuilderTests: XCTestCase {
             \(randomApplicationName)/\(randomVersion) CFNetwork (\(randomDeviceName); \(randomDeviceOSName)/\(randomDeviceOSVersion))
             """
         )
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN"], randomSource)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomSource)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Encoding"], "It must us no compression, because multipart file is compressed separately")
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     func testItSetsHTTPBodyInExpectedFormat() throws {
@@ -172,7 +172,7 @@ class ResourceRequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: .mockRandom(), execution: execution)
 
         // Then
-        XCTAssertEqual(request.url!.query, "ddtags=retry_count:\(randomAttempt),retry_after:\(randomStatus)")
+        XCTAssertEqual(request.url!.query, "ootags=retry_count:\(randomAttempt),retry_after:\(randomStatus)")
     }
 
     func testItSetsRetryQueryParametersOnNetworkErrorRetry() throws {
@@ -184,7 +184,7 @@ class ResourceRequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: .mockRandom(), execution: execution)
 
         // Then
-        XCTAssertEqual(request.url!.query, "ddtags=retry_count:1") // no retry_after without response code
+        XCTAssertEqual(request.url!.query, "ootags=retry_count:1") // no retry_after without response code
     }
 }
 #endif

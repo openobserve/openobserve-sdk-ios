@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -78,9 +78,9 @@ internal struct WebViewLogReceiver: FeatureMessageReceiver {
 
         core.scope(for: LogsFeature.self).eventWriteContext { context, writer in
             if let tags = event[tagsKey] as? String, !tags.isEmpty {
-                event[tagsKey] = "\(context.ddTags),\(tags)"
+                event[tagsKey] = "\(context.ooTags),\(tags)"
             } else {
-                event[tagsKey] = context.ddTags
+                event[tagsKey] = context.ooTags
             }
 
             if let timestampInMs = event[dateKey] as? Int {

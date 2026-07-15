@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -15,22 +15,22 @@ class RequestBuilderTests: XCTestCase {
         let randomURL: URL = .mockRandom()
         let builder = URLRequestBuilder(
             url: randomURL,
-            queryItems: [.ddsource(source: "abc"), .ddtags(tags: ["abc:def"])],
+            queryItems: [.oosource(source: "abc"), .ootags(tags: ["abc:def"])],
             headers: .mockRandom()
         )
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?ddsource=abc&ddtags=abc:def")
+        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?oosource=abc&ootags=abc:def")
     }
 
     func testWhenBuildingRequestWithURLAndQueryItems_itEscapesWhitespacesInQuery() throws {
         let randomURL: URL = .mockRandom()
         let builder = URLRequestBuilder(
             url: randomURL,
-            queryItems: [.ddsource(source: "source with whitespace"), .ddtags(tags: ["tag with whitespace"])],
+            queryItems: [.oosource(source: "source with whitespace"), .ootags(tags: ["tag with whitespace"])],
             headers: .mockRandom()
         )
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?ddsource=source%20with%20whitespace&ddtags=tag%20with%20whitespace")
+        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?oosource=source%20with%20whitespace&ootags=tag%20with%20whitespace")
     }
 
     // MARK: - Request Headers
@@ -95,40 +95,40 @@ class RequestBuilderTests: XCTestCase {
 
     func testBuildingRequestWithDDAPIKeyHeader() {
         let randomClientToken: String = .mockRandom()
-        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ddAPIKeyHeader(clientToken: randomClientToken)])
+        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooAPIKeyHeader(clientToken: randomClientToken)])
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-API-KEY"], randomClientToken)
     }
 
     func testBuildingRequestWithDDEVPOriginHeader() {
         let randomSource: String = .mockRandom()
-        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ddEVPOriginHeader(source: randomSource)])
+        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooEVPOriginHeader(source: randomSource)])
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN"], randomSource)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomSource)
     }
 
     func testBuildingRequestWithDDEVPOriginVersionHeader() {
         let randomSDKVersion: String = .mockRandom()
-        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ddEVPOriginVersionHeader(sdkVersion: randomSDKVersion)])
+        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooEVPOriginVersionHeader(sdkVersion: randomSDKVersion)])
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
     }
 
     func testBuildingRequestWithDDRequestIDHeader() throws {
-        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ddRequestIDHeader()])
+        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooRequestIDHeader()])
 
         let request1 = builder.uploadRequest(with: .mockRandom())
         let request2 = builder.uploadRequest(with: .mockRandom())
         let request3 = builder.uploadRequest(with: .mockRandom())
 
-        let requestID1 = try XCTUnwrap(request1.allHTTPHeaderFields?["DD-REQUEST-ID"])
-        let requestID2 = try XCTUnwrap(request2.allHTTPHeaderFields?["DD-REQUEST-ID"])
-        let requestID3 = try XCTUnwrap(request3.allHTTPHeaderFields?["DD-REQUEST-ID"])
+        let requestID1 = try XCTUnwrap(request1.allHTTPHeaderFields?["OO-REQUEST-ID"])
+        let requestID2 = try XCTUnwrap(request2.allHTTPHeaderFields?["OO-REQUEST-ID"])
+        let requestID3 = try XCTUnwrap(request3.allHTTPHeaderFields?["OO-REQUEST-ID"])
 
         let allIDs = Set([requestID1, requestID2, requestID3])
-        XCTAssertEqual(allIDs.count, 3, "Each `DD-REQUEST-ID` must produce unique ID")
+        XCTAssertEqual(allIDs.count, 3, "Each `OO-REQUEST-ID` must produce unique ID")
         allIDs.forEach { id in
-            XCTAssertTrue(id.matches(regex: .uuidRegex), "Each `DD-REQUEST-ID` must be an UUID string")
+            XCTAssertTrue(id.matches(regex: .uuidRegex), "Each `OO-REQUEST-ID` must be an UUID string")
         }
     }
 
@@ -139,10 +139,10 @@ class RequestBuilderTests: XCTestCase {
             headers: [
                 .contentTypeHeader(contentType: .textPlainUTF8),
                 .userAgentHeader(appName: .mockAny(), appVersion: .mockAny(), device: .mockAny(), os: .mockAny()),
-                .ddAPIKeyHeader(clientToken: .mockAny()),
-                .ddEVPOriginHeader(source: .mockAny()),
-                .ddEVPOriginVersionHeader(sdkVersion: .mockAny()),
-                .ddRequestIDHeader(),
+                .ooAPIKeyHeader(clientToken: .mockAny()),
+                .ooEVPOriginHeader(source: .mockAny()),
+                .ooEVPOriginVersionHeader(sdkVersion: .mockAny()),
+                .ooRequestIDHeader(),
             ]
         )
 
@@ -150,10 +150,10 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Type"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Encoding"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["User-Agent"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["DD-API-KEY"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["DD-EVP-ORIGIN"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["DD-EVP-ORIGIN-VERSION"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["DD-REQUEST-ID"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-API-KEY"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-REQUEST-ID"])
         XCTAssertEqual(request.allHTTPHeaderFields?.count, 7)
     }
 

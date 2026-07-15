@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -67,8 +67,8 @@ final class FlagAssignmentsRequestTests: XCTestCase {
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/vnd.api+json")
         XCTAssertEqual(request.value(forHTTPHeaderField: "Accept-Encoding"), "gzip, deflate, br")
-        XCTAssertEqual(request.value(forHTTPHeaderField: "dd-client-token"), "test-token")
-        XCTAssertEqual(request.value(forHTTPHeaderField: "dd-application-id"), "test-app-id")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "oo-client-token"), "test-token")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "oo-application-id"), "test-app-id")
         XCTAssertEqual(request.value(forHTTPHeaderField: "X-Custom-Header"), "custom-value")
         let actualBody = try XCTUnwrap(request.httpBody.flatMap { String(data: $0, encoding: .utf8) })
         XCTAssertEqual(actualBody.normalizedJSON, expectedBody.normalizedJSON)

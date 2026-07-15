@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -9,9 +9,9 @@ import OpenObserveInternal
 
 internal final class DDSpan: OTSpan {
     /// The `Tracer` which created this span.
-    private let ddTracer: OpenObserveTracer
+    private let ooTracer: OpenObserveTracer
     /// Span context.
-    internal let ddContext: DDSpanContext
+    internal let ooContext: DDSpanContext
     /// Span creation date
     internal let startTime: Date
     /// Writes span logs to Logging Feature. `nil` if Logging feature is disabled.
@@ -45,8 +45,8 @@ internal final class DDSpan: OTSpan {
         eventBuilder: SpanEventBuilder,
         eventWriter: SpanWriteContext
     ) {
-        self.ddTracer = tracer
-        self.ddContext = context
+        self.ooTracer = tracer
+        self.ooContext = context
         self.startTime = startTime
         self.loggingIntegration = tracer.loggingIntegration
         self.operationName = operationName
@@ -60,11 +60,11 @@ internal final class DDSpan: OTSpan {
     // MARK: - Open Tracing interface
 
     var context: OTSpanContext {
-        return ddContext
+        return ooContext
     }
 
     func tracer() -> OTTracer {
-        return ddTracer
+        return ooTracer
     }
 
     func setOperationName(_ operationName: String) {
@@ -79,7 +79,7 @@ internal final class DDSpan: OTSpan {
             return
         }
 
-        if ddContext.span(self, willSetTagWithKey: key, value: value) {
+        if ooContext.span(self, willSetTagWithKey: key, value: value) {
             _tags.mutate { $0[key] = value }
         }
     }
@@ -88,21 +88,21 @@ internal final class DDSpan: OTSpan {
         if warnIfFinished("setBaggageItem(key:value:)") {
             return
         }
-        ddContext.baggageItems.set(key: key, value: value)
+        ooContext.baggageItems.set(key: key, value: value)
     }
 
     func baggageItem(withKey key: String) -> String? {
         if warnIfFinished("baggageItem(withKey:)") {
             return nil
         }
-        return ddContext.baggageItems.get(key: key)
+        return ooContext.baggageItems.get(key: key)
     }
 
     @discardableResult
     func setActive() -> OTSpan {
         activityReference = ActivityReference()
         if let activityReference = activityReference {
-            ddTracer.addSpan(span: self, activityReference: activityReference)
+            ooTracer.addSpan(span: self, activityReference: activityReference)
         }
         return self
     }
@@ -126,10 +126,10 @@ internal final class DDSpan: OTSpan {
         isFinished = true
 
         if let activity = activityReference {
-            ddTracer.removeSpan(span: self)
+            ooTracer.removeSpan(span: self)
             activity.leave()
         }
-        if self.ddContext.samplingDecision.samplingPriority.isKept {
+        if self.ooContext.samplingDecision.samplingPriority.isKept {
             sendSpan(finishTime: time)
         }
     }
@@ -141,17 +141,17 @@ internal final class DDSpan: OTSpan {
         eventWriter.spanWriteContext { context, writer in
             let event = self.eventBuilder.createSpanEvent(
                 context: context,
-                traceID: self.ddContext.traceID,
-                spanID: self.ddContext.spanID,
-                parentSpanID: self.ddContext.parentSpanID,
+                traceID: self.ooContext.traceID,
+                spanID: self.ooContext.spanID,
+                parentSpanID: self.ooContext.parentSpanID,
                 operationName: self.operationName,
                 startTime: self.startTime,
                 finishTime: finishTime,
-                samplingRate: self.ddContext.sampleRate / 100.0,
-                samplingPriority: self.ddContext.samplingDecision.samplingPriority,
-                samplingDecisionMaker: self.ddContext.samplingDecision.decisionMaker,
+                samplingRate: self.ooContext.sampleRate / 100.0,
+                samplingPriority: self.ooContext.samplingDecision.samplingPriority,
+                samplingDecisionMaker: self.ooContext.samplingDecision.decisionMaker,
                 tags: self.tags,
-                baggageItems: self.ddContext.baggageItems.all,
+                baggageItems: self.ooContext.baggageItems.all,
                 logFields: self.logFields
             )
 
@@ -161,7 +161,7 @@ internal final class DDSpan: OTSpan {
     }
 
     private func sendSpanLogs(message: String?, fields: [String: Encodable], date: Date) {
-        loggingIntegration.writeLog(withSpanContext: ddContext, message: message, fields: fields, date: date, else: {
+        loggingIntegration.writeLog(withSpanContext: ooContext, message: message, fields: fields, date: date, else: {
             DD.logger.warn("The log for span \"\(self.operationName)\" will not be send, because the Logs feature is not enabled.")
         })
     }

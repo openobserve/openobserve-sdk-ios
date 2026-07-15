@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS) || os(visionOS)
@@ -119,17 +119,17 @@ class UIScrollViewDelegateProxyTests: XCTestCase {
         // DelegateProxy) mutually reference each other, `responds(to:)` must not infinitely recurse.
         //
         // Circular chain:
-        //   ddProxy.originalDelegate  = thirdPartyProxy
-        //   thirdPartyProxy.forwardTo = ddProxy
+        //   ooProxy.originalDelegate  = thirdPartyProxy
+        //   thirdPartyProxy.forwardTo = ooProxy
 
         // Given
         let thirdPartyProxy = ThirdPartyDelegateProxy()
-        let ddProxy = UIScrollViewDelegateProxy(originalDelegate: thirdPartyProxy, handler: handler)
-        thirdPartyProxy.forwardToDelegate = ddProxy
+        let ooProxy = UIScrollViewDelegateProxy(originalDelegate: thirdPartyProxy, handler: handler)
+        thirdPartyProxy.forwardToDelegate = ooProxy
 
         // When / Then - must return without stack-overflowing
         let selector = #selector(UIScrollViewDelegate.scrollViewDidScroll(_:))
-        XCTAssertFalse(ddProxy.responds(to: selector))
+        XCTAssertFalse(ooProxy.responds(to: selector))
     }
 }
 

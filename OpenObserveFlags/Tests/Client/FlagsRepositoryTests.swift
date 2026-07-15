@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -447,7 +447,7 @@ final class FlagsRepositoryTests: XCTestCase {
         }
 
         // Then — state must already be .ready when completion is called
-        // (dd-openfeature-provider-swift depends on this ordering)
+        // (oo-openfeature-provider-swift depends on this ordering)
         waitForExpectations(timeout: 0)
         XCTAssertEqual(stateInCompletion, .ready)
     }
@@ -472,7 +472,7 @@ final class FlagsRepositoryTests: XCTestCase {
         }
 
         // Then — state must already be .error when completion is called (no cached flags)
-        // (dd-openfeature-provider-swift depends on this ordering)
+        // (oo-openfeature-provider-swift depends on this ordering)
         waitForExpectations(timeout: 0)
         XCTAssertEqual(stateInCompletion, .error)
     }

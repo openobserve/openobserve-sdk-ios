@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/)
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/)
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -89,8 +89,8 @@ class EvaluationLoggingTests: XCTestCase {
         XCTAssertEqual(url(for: .eu1), "https://browser-intake-openobserve.eu/api/v2/flagevaluation")
         XCTAssertEqual(url(for: .ap1), "https://browser-intake-ap1-openobserve.ai/api/v2/flagevaluation")
         XCTAssertEqual(url(for: .ap2), "https://browser-intake-ap2-openobserve.ai/api/v2/flagevaluation")
-        XCTAssertEqual(url(for: .us1_fed), "https://browser-intake-ddog-gov.com/api/v2/flagevaluation")
-        XCTAssertEqual(url(for: .us2_fed), "https://browser-intake-us2-ddog-gov.com/api/v2/flagevaluation")
+        XCTAssertEqual(url(for: .us1_fed), "https://browser-intake-openobserve-gov.com/api/v2/flagevaluation")
+        XCTAssertEqual(url(for: .us2_fed), "https://browser-intake-us2-openobserve-gov.com/api/v2/flagevaluation")
 
         // Then - Verify Content-Type and batched schema
         let contextWithRUM = OpenObserveContext.mockWith(

@@ -255,7 +255,7 @@ if [ "$shopist" = "true" ]; then
     update_dependent_pbxproj_branch "$CLONE_PATH/Shopist/Shopist.xcodeproj/project.pbxproj"
 
     echo_info "▸ Exporting 'GITHUB_TOKEN' for CI"
-    export GITHUB_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/shopist-ios --policy openobserve-sdk-ios.gitlab.pr)
+    export GITHUB_TOKEN=$(oo-octo-sts --disable-tracing token --scope DataDog/shopist-ios --policy openobserve-sdk-ios.gitlab.pr)
     verify_gh_auth
 
     # Push & create PR:
@@ -263,7 +263,7 @@ if [ "$shopist" = "true" ]; then
     push_repo $CLONE_PATH
     create_pr $CLONE_PATH $CHANGELOG $DEFAULT_BRANCH
 
-    dd-octo-sts --disable-tracing revoke
+    oo-octo-sts --disable-tracing revoke
 fi
 
 if [ "$datadog_app" = "true" ]; then
@@ -282,12 +282,12 @@ if [ "$datadog_app" = "true" ]; then
     update_dependent_sdk_version "$CLONE_PATH/Targets/Platform/OpenObserveObservability/DogfoodingConfig.swift"
 
     echo_info "▸ Exporting 'GITHUB_TOKEN' for CI"
-    export GITHUB_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/datadog-ios --policy openobserve-sdk-ios.gitlab.pr)
+    export GITHUB_TOKEN=$(oo-octo-sts --disable-tracing token --scope DataDog/datadog-ios --policy openobserve-sdk-ios.gitlab.pr)
     verify_gh_auth
 
     # Push & create PR:
     commit_repo $CLONE_PATH
     push_repo $CLONE_PATH
     create_pr $CLONE_PATH $CHANGELOG $DEFAULT_BRANCH
-    dd-octo-sts --disable-tracing revoke
+    oo-octo-sts --disable-tracing revoke
 fi

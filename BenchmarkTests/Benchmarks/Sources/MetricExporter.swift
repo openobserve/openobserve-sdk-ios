@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -143,10 +143,10 @@ final class MetricExporter: OpenTelemetrySdk.MetricExporter {
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json",
-            "DD-API-KEY": configuration.apiKey,
-            "DD-EVP-ORIGIN": "ios",
-            "DD-EVP-ORIGIN-VERSION": configuration.version,
-            "DD-REQUEST-ID": UUID().uuidString,
+            "OO-API-KEY": configuration.apiKey,
+            "OO-EVP-ORIGIN": "ios",
+            "OO-EVP-ORIGIN-VERSION": configuration.version,
+            "OO-REQUEST-ID": UUID().uuidString,
         ]
 
         request.httpBody = prefix + data + suffix

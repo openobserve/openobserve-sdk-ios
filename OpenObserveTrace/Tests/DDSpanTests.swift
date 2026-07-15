@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -93,7 +93,7 @@ class DDSpanTests: XCTestCase {
             core: PassthroughCoreMock(),
             context: .mockWith(baggageItems: BaggageItems())
         )
-        XCTAssertEqual(span.ddContext.baggageItems.all, [:])
+        XCTAssertEqual(span.ooContext.baggageItems.all, [:])
 
         // When
         span.setBaggageItem(key: "foo", value: "bar")
@@ -102,7 +102,7 @@ class DDSpanTests: XCTestCase {
         // Then
         XCTAssertEqual(span.baggageItem(withKey: "foo"), "bar")
         XCTAssertEqual(span.baggageItem(withKey: "bizz"), "buzz")
-        XCTAssertEqual(span.ddContext.baggageItems.all, ["foo": "bar", "bizz": "buzz"])
+        XCTAssertEqual(span.ooContext.baggageItems.all, ["foo": "bar", "bizz": "buzz"])
     }
 
     // MARK: - Thread Safety

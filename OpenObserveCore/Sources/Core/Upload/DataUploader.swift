@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -52,7 +52,7 @@ internal final class DataUploader: DataUploaderType {
         let execution: ExecutionContext = .init(previousResponseCode: previous?.responseCode, attempt: attempt)
         let request = try requestBuilder.request(for: events, with: context, execution: execution)
 
-        let requestID = request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ddRequestIDHeaderField)
+        let requestID = request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooRequestIDHeaderField)
 
         var uploadStatus: DataUploadStatus?
 
@@ -69,7 +69,7 @@ internal final class DataUploader: DataUploaderType {
             case .success(let httpResponse):
                 uploadStatus = DataUploadStatus(
                     httpResponse: httpResponse,
-                    ddRequestID: requestID,
+                    ooRequestID: requestID,
                     attempt: attempt
                 )
             case .failure(let error):

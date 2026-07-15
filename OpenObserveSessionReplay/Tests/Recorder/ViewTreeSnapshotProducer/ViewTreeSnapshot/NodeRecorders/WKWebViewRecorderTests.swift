@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -78,10 +78,10 @@ class WKWebViewRecorderTests: XCTestCase {
         XCTAssertEqual(wireframe.id, Int64(webView.hash))
         XCTAssertEqual(wireframe.slotId, String(webView.hash))
         XCTAssertNil(wireframe.clip)
-        XCTAssertEqual(wireframe.x, Int64.ddWithNoOverflow( attributes.frame.minX))
-        XCTAssertEqual(wireframe.y, Int64.ddWithNoOverflow( attributes.frame.minY))
-        XCTAssertEqual(wireframe.width, Int64.ddWithNoOverflow( attributes.frame.width))
-        XCTAssertEqual(wireframe.height, Int64.ddWithNoOverflow( attributes.frame.height))
+        XCTAssertEqual(wireframe.x, Int64.ooWithNoOverflow( attributes.frame.minX))
+        XCTAssertEqual(wireframe.y, Int64.ooWithNoOverflow( attributes.frame.minY))
+        XCTAssertEqual(wireframe.width, Int64.ooWithNoOverflow( attributes.frame.width))
+        XCTAssertEqual(wireframe.height, Int64.ooWithNoOverflow( attributes.frame.height))
         XCTAssertTrue(wireframe.isVisible ?? false)
         XCTAssertTrue(builder.hiddenWebViewWireframes().isEmpty, "webview slot should be removed from builder")
     }

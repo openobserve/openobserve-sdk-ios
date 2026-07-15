@@ -35,7 +35,7 @@ REPO_ROOT=$(realpath .)
 
 SNAPSHOTS_CLI_PATH="$REPO_ROOT/tools/sr-snapshots"
 SNAPSHOTS_DIR="$REPO_ROOT/OpenObserveSessionReplay/SRSnapshotTests/SRSnapshotTests/_snapshots_"
-SNAPSHOTS_REPO_PATH="$REPO_ROOT/../dd-mobile-session-replay-snapshots"
+SNAPSHOTS_REPO_PATH="$REPO_ROOT/../oo-mobile-session-replay-snapshots"
 
 TEST_SCHEME="SRSnapshotTests"
 TEST_WORKSPACE="$REPO_ROOT/OpenObserveSessionReplay/SRSnapshotTests/SRSnapshotTests.xcworkspace"
@@ -43,9 +43,9 @@ TEST_ARTIFACTS_PATH="$REPO_ROOT/$artifacts_path/sr-snapshot-tests"
 
 # On CI, get GitHub token for accessing snapshots repository
 if [ "$CI" = "true" ]; then
-    export GH_TOKEN=$(dd-octo-sts --disable-tracing token --scope DataDog/dd-mobile-session-replay-snapshots --policy openobserve-sdk-ios)
+    export GH_TOKEN=$(oo-octo-sts --disable-tracing token --scope DataDog/oo-mobile-session-replay-snapshots --policy openobserve-sdk-ios)
     # Set up trap to always revoke token on script exit (success, failure, or interruption)
-    trap 'dd-octo-sts --disable-tracing revoke --token $GH_TOKEN' EXIT
+    trap 'oo-octo-sts --disable-tracing revoke --token $GH_TOKEN' EXIT
 fi
 
 pull_snapshots() {

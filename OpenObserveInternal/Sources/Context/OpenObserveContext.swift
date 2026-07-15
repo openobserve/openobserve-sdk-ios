@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -30,7 +30,7 @@ public struct OpenObserveContext {
                 return
             }
             version = version.sanitizedToDDTags()
-            ddTags = buildDDTags()
+            ooTags = buildDDTags()
         }
     }
 
@@ -63,7 +63,7 @@ public struct OpenObserveContext {
     public var serverTimeOffset: TimeInterval = .zero
 
     /// Cached OpenObserve tags to send in the events. Recomputed when `version` changes.
-    public private(set) var ddTags: String = ""
+    public private(set) var ooTags: String = ""
 
     // MARK: - Application Specific
 
@@ -198,7 +198,7 @@ public struct OpenObserveContext {
         self.brightnessLevel = brightnessLevel
         self.isLowPowerModeEnabled = isLowPowerModeEnabled
         self.additionalContext = additionalContext
-        self.ddTags = buildDDTags()
+        self.ooTags = buildDDTags()
     }
     // swiftlint:enable function_default_parameter_at_end
 
@@ -211,7 +211,7 @@ public struct OpenObserveContext {
     }
 }
 
-/// Shared key names used in `ddTags` strings across the SDK.
+/// Shared key names used in `ooTags` strings across the SDK.
 public enum DDTag {
     public static let service = "service"
     public static let version = "version"

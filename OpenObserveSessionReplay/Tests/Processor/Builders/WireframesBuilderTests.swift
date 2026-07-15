@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS)
@@ -28,11 +28,11 @@ class WireframesBuilderTests: XCTestCase {
             XCTAssertTrue(wireframe.isVisible ?? false)
             XCTAssertNil(wireframe.border)
             XCTAssertNil(wireframe.clip)
-            XCTAssertEqual(wireframe.height, Int64.ddWithNoOverflow( frame.height))
+            XCTAssertEqual(wireframe.height, Int64.ooWithNoOverflow( frame.height))
             XCTAssertNil(wireframe.shapeStyle)
-            XCTAssertEqual(wireframe.width, Int64.ddWithNoOverflow( frame.size.width))
-            XCTAssertEqual(wireframe.x, Int64.ddWithNoOverflow( frame.minX))
-            XCTAssertEqual(wireframe.y, Int64.ddWithNoOverflow( frame.minY))
+            XCTAssertEqual(wireframe.width, Int64.ooWithNoOverflow( frame.size.width))
+            XCTAssertEqual(wireframe.x, Int64.ooWithNoOverflow( frame.minX))
+            XCTAssertEqual(wireframe.y, Int64.ooWithNoOverflow( frame.minY))
         }
 
         XCTAssertTrue(builder.hiddenWebViewWireframes().isEmpty)
@@ -82,11 +82,11 @@ class WireframesBuilderTests: XCTestCase {
         XCTAssertEqual(wireframe.id, id)
         XCTAssertNil(wireframe.border)
         XCTAssertEqual(wireframe.clip, .init(bottom: 1, left: 1, right: 1, top: 1))
-        XCTAssertEqual(wireframe.height, Int64.ddWithNoOverflow( frame.height))
+        XCTAssertEqual(wireframe.height, Int64.ooWithNoOverflow( frame.height))
         XCTAssertNil(wireframe.shapeStyle)
-        XCTAssertEqual(wireframe.width, Int64.ddWithNoOverflow( frame.width))
-        XCTAssertEqual(wireframe.x, Int64.ddWithNoOverflow( frame.minX))
-        XCTAssertEqual(wireframe.y, Int64.ddWithNoOverflow( frame.minY))
+        XCTAssertEqual(wireframe.width, Int64.ooWithNoOverflow( frame.width))
+        XCTAssertEqual(wireframe.x, Int64.ooWithNoOverflow( frame.minX))
+        XCTAssertEqual(wireframe.y, Int64.ooWithNoOverflow( frame.minY))
         XCTAssertEqual(builder.resources.first?.calculateIdentifier(), resource.identifier)
         XCTAssertEqual(builder.resources.first?.calculateData(), resource.data)
     }
@@ -127,8 +127,8 @@ class WireframesBuilderTests: XCTestCase {
             intersecting: frame.offsetBy(dx: frame.width, dy: frame.height)
         )
 
-        XCTAssertEqual(clip?.top, Int64.ddWithNoOverflow( frame.height))
-        XCTAssertEqual(clip?.left, Int64.ddWithNoOverflow( frame.width))
+        XCTAssertEqual(clip?.top, Int64.ooWithNoOverflow( frame.height))
+        XCTAssertEqual(clip?.left, Int64.ooWithNoOverflow( frame.width))
         XCTAssertNil(clip?.bottom)
         XCTAssertNil(clip?.right)
     }

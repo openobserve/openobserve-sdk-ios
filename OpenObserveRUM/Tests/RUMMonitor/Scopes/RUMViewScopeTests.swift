@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -2520,7 +2520,7 @@ class RUMViewScopeTests: XCTestCase {
         (0...Int.mockRandom(min: 0, max: 1_000)).forEach {
             hitches.append((start: TimeInterval($0).dd.toInt64Nanoseconds, duration: 0.016.dd.toInt64Nanoseconds))
         }
-        let hitchesDuration = TimeInterval.ddFromNanoseconds( hitches.map { $0.duration }.reduce(0, +))
+        let hitchesDuration = TimeInterval.ooFromNanoseconds( hitches.map { $0.duration }.reduce(0, +))
         let viewHitchesReaderFactory = { ViewHitchesMock(hitchesDataModel: (hitches: hitches, hitchesDuration: hitchesDuration)) }
         let scope = RUMViewScope(
             isInitialView: .mockRandom(),
@@ -2641,7 +2641,7 @@ class RUMViewScopeTests: XCTestCase {
         (0...Int.mockRandom(min: 0, max: 1_000)).forEach {
             hitches.append((start: TimeInterval($0).dd.toInt64Nanoseconds, duration: 0.016.dd.toInt64Nanoseconds))
         }
-        let hitchesDuration = TimeInterval.ddFromNanoseconds( hitches.map { $0.duration }.reduce(0, +))
+        let hitchesDuration = TimeInterval.ooFromNanoseconds( hitches.map { $0.duration }.reduce(0, +))
         let viewHitchesReaderFactory = { ViewHitchesMock(hitchesDataModel: (hitches: hitches, hitchesDuration: hitchesDuration)) }
         let scope = RUMViewScope(
             isInitialView: .mockRandom(),
@@ -2689,7 +2689,7 @@ class RUMViewScopeTests: XCTestCase {
         (0..<10).forEach {
             hitches.append((start: TimeInterval($0).dd.toInt64Nanoseconds, duration: 0.016.dd.toInt64Nanoseconds))
         }
-        let hitchesDuration = TimeInterval.ddFromNanoseconds( hitches.map { $0.duration }.reduce(0, +))
+        let hitchesDuration = TimeInterval.ooFromNanoseconds( hitches.map { $0.duration }.reduce(0, +))
         let viewHitchesReaderFactory = { ViewHitchesMock(hitchesDataModel: (hitches: hitches, hitchesDuration: hitchesDuration)) }
         let scope = RUMViewScope(
             isInitialView: .mockRandom(),

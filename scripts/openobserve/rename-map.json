@@ -67,6 +67,41 @@
       "why": "lowercase camelCase identifiers (rare in Swift, present in some helpers). Word-boundary guarded so it never matches x-datadog-* wire values."
     },
     {
+      "literal": "ddog-gov",
+      "to": "openobserve-gov",
+      "why": "REQ#1 fail-closed: US1_FED/US2_FED intake hosts browser-intake-ddog-gov.com (Datadog FedRAMP) -> non-Datadog. So no OpenObserveSite value can construct a Datadog host; with the RN customEndpoint the SDK can only reach OpenObserve."
+    },
+    {
+      "literal": "datad0g",
+      "to": "openobserve",
+      "why": "REQ#1 fail-closed: the STAGING intake host browser-intake-datad0g.com (Datadog staging) -> non-Datadog."
+    },
+    {
+      "literal": "ddsource",
+      "to": "oosource",
+      "why": "REQ#2 wire prefix: the ?ddsource= intake query param + source field (URLRequestBuilder, CrossPlatformAttributes). RN bridge does not pass this key, so native-side rename is safe."
+    },
+    {
+      "literal": "ddtags",
+      "to": "ootags",
+      "why": "REQ#2 wire prefix: the ?ddtags= intake query param + tags field. Backend reads ootags/o2tags (doc 02)."
+    },
+    {
+      "regex": "\\bdd([A-Z][A-Za-z0-9]*)",
+      "to": "oo$1",
+      "why": "REQ#2: dd-prefixed Swift identifiers for the intake headers (ddAPIKeyHeader, ddEVPOriginHeader, ddEVPOriginVersionHeader, ddRequestID, ddRequestIDHeaderField, ddIdempotencyKey). \\b guards add/odd."
+    },
+    {
+      "regex": "\\bDD-",
+      "to": "OO-",
+      "why": "REQ#2 wire prefix: intake HTTP header NAMES (DD-API-KEY, DD-EVP-ORIGIN, DD-EVP-ORIGIN-VERSION, DD-REQUEST-ID, DD-IDEMPOTENCY-KEY). Case-insensitive, so OO-API-KEY matches the backend's oo-api-key. \\b guards ADD-/ODD-."
+    },
+    {
+      "regex": "\\bdd-",
+      "to": "oo-",
+      "why": "REQ#2 wire prefix: lowercase intake header names dd-client-token, dd-application-id -> oo-*. \\b guards add-/odd-. Does not touch x-datadog-* (datadog-, not dd-)."
+    },
+    {
       "regex": "\\b_dd\\b",
       "to": "_oo",
       "why": "internal telemetry namespace field (matches the schema fork)"

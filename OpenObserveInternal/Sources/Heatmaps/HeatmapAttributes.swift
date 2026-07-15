@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -26,9 +26,9 @@ public struct HeatmapAttributes: Equatable {
     ///   - location: The tap location relative to the target, in points.
     public init(identifier: HeatmapIdentifier, size: CGSize, location: CGPoint) {
         self.targetPermanentID = identifier.rawValue
-        self.targetWidth = Int64.ddWithNoOverflow(size.width)
-        self.targetHeight = Int64.ddWithNoOverflow(size.height)
-        self.positionX = Int64.ddWithNoOverflow(location.x)
-        self.positionY = Int64.ddWithNoOverflow(location.y)
+        self.targetWidth = Int64.ooWithNoOverflow(size.width)
+        self.targetHeight = Int64.ooWithNoOverflow(size.height)
+        self.positionX = Int64.ooWithNoOverflow(location.x)
+        self.positionY = Int64.ooWithNoOverflow(location.y)
     }
 }

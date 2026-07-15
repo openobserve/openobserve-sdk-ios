@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -328,7 +328,7 @@ class ViewLoadingMetricsTests: XCTestCase {
 
         let nextViewEvent = try XCTUnwrap(session.views.first(where: { $0.name == "NextView" })?.viewEvents.last)
         let actualINV = try XCTUnwrap(nextViewEvent.view.interactionToNextViewTime)
-        XCTAssertEqual(TimeInterval.ddFromNanoseconds(actualINV), expectedINV, accuracy: 0.01)
+        XCTAssertEqual(TimeInterval.ooFromNanoseconds(actualINV), expectedINV, accuracy: 0.01)
     }
 
     func testWhenActionOccursInPreviousView_andNextViewStartsAfterThreshold_thenINVIsNotTrackedForNextView() throws {
@@ -393,7 +393,7 @@ class ViewLoadingMetricsTests: XCTestCase {
 
         let nextViewEvent = try XCTUnwrap(session.views.first(where: { $0.name == "NextView" })?.viewEvents.last)
         let actualINV = try XCTUnwrap(nextViewEvent.view.interactionToNextViewTime)
-        XCTAssertEqual(TimeInterval.ddFromNanoseconds(actualINV), expectedINV, accuracy: 0.01)
+        XCTAssertEqual(TimeInterval.ooFromNanoseconds(actualINV), expectedINV, accuracy: 0.01)
     }
 
     func testWhenActionInPreviousViewIsDropped_thenINVIsNotTracked() throws {
@@ -516,7 +516,7 @@ class ViewLoadingMetricsTests: XCTestCase {
         // Check the INV metric
         let actualINV = try XCTUnwrap(nextViewEvent.view.interactionToNextViewTime)
         XCTAssertEqual(
-            TimeInterval.ddFromNanoseconds(actualINV),
+            TimeInterval.ooFromNanoseconds(actualINV),
             expectedINV,
             accuracy: 0.01,
             "The INV value should be computed from the last 'Sign Up' action that leads to 'WelcomeView'."

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -12,7 +12,7 @@ class TimeIntervalExtensionTests: XCTestCase {
     func testTimeIntervalFromMilliseconds() {
         let milliseconds: Int64 = 1_576_404_000_000
 
-        let timeInterval = TimeInterval.ddFromMilliseconds(milliseconds)
+        let timeInterval = TimeInterval.ooFromMilliseconds(milliseconds)
         let date = Date(timeIntervalSince1970: timeInterval)
         XCTAssertEqual(date, Date.mockDecember15th2019At10AMUTC())
     }
@@ -65,14 +65,14 @@ class IntegerOverflowExtensionTests: XCTestCase {
     func testHappyPath() {
         let reasonableDouble = Double(1_000.123456)
 
-        XCTAssertNoThrow(try UInt64.ddWithReportingOverflow(reasonableDouble))
-        XCTAssertEqual(try UInt64.ddWithReportingOverflow(reasonableDouble), 1_000)
+        XCTAssertNoThrow(try UInt64.ooWithReportingOverflow(reasonableDouble))
+        XCTAssertEqual(try UInt64.ooWithReportingOverflow(reasonableDouble), 1_000)
     }
 
     func testNegative() {
         let negativeDouble = Double(-1_000.123456)
 
-        XCTAssertThrowsError(try UInt64.ddWithReportingOverflow(negativeDouble)) { error in
+        XCTAssertThrowsError(try UInt64.ooWithReportingOverflow(negativeDouble)) { error in
             XCTAssertTrue(error is FixedWidthIntegerError<Double>)
             if case let FixedWidthIntegerError.overflow(overflowingValue) = (error as! FixedWidthIntegerError<Double>) {
                 XCTAssertEqual(overflowingValue, negativeDouble)
@@ -83,14 +83,14 @@ class IntegerOverflowExtensionTests: XCTestCase {
     func testFloat() {
         let simpleFloat = Float(222.123456)
 
-        XCTAssertNoThrow(try UInt8.ddWithReportingOverflow(simpleFloat))
-        XCTAssertEqual(try UInt8.ddWithReportingOverflow(simpleFloat), 222)
+        XCTAssertNoThrow(try UInt8.ooWithReportingOverflow(simpleFloat))
+        XCTAssertEqual(try UInt8.ooWithReportingOverflow(simpleFloat), 222)
     }
 
     func testGreatestFiniteMagnitude() {
         let almostInfinity = Double.greatestFiniteMagnitude
 
-        XCTAssertThrowsError(try UInt64.ddWithReportingOverflow(almostInfinity)) { error in
+        XCTAssertThrowsError(try UInt64.ooWithReportingOverflow(almostInfinity)) { error in
             XCTAssertTrue(error is FixedWidthIntegerError<Double>)
         }
     }
@@ -98,7 +98,7 @@ class IntegerOverflowExtensionTests: XCTestCase {
     func testInfinity() {
         let infinityAndBeyond = Double.infinity
 
-        XCTAssertThrowsError(try UInt64.ddWithReportingOverflow(infinityAndBeyond)) { error in
+        XCTAssertThrowsError(try UInt64.ooWithReportingOverflow(infinityAndBeyond)) { error in
             XCTAssertTrue(error is FixedWidthIntegerError<Double>)
         }
     }
@@ -106,7 +106,7 @@ class IntegerOverflowExtensionTests: XCTestCase {
     func testCornerCase() {
         let uInt64Max = Double(UInt64.max)
 
-        XCTAssertThrowsError(try UInt64.ddWithReportingOverflow(uInt64Max)) { error in
+        XCTAssertThrowsError(try UInt64.ooWithReportingOverflow(uInt64Max)) { error in
             XCTAssertTrue(error is FixedWidthIntegerError<Double>)
             if case let FixedWidthIntegerError.overflow(overflowingValue) = (error as! FixedWidthIntegerError<Double>) {
                 XCTAssertEqual(overflowingValue, uInt64Max)

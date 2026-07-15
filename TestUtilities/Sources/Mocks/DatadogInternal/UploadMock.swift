@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -68,14 +68,14 @@ public struct FailingRequestBuilderMock: FeatureRequestBuilder {
 extension URLRequestBuilder.QueryItem: RandomMockable, AnyMockable {
     public static func mockRandom() -> Self {
         let all: [URLRequestBuilder.QueryItem] = [
-            .ddsource(source: .mockRandom()),
-            .ddtags(tags: .mockRandom()),
+            .oosource(source: .mockRandom()),
+            .ootags(tags: .mockRandom()),
         ]
         return all.randomElement()!
     }
 
     public static func mockAny() -> Self {
-        return .ddsource(source: .mockRandom(among: .alphanumerics))
+        return .oosource(source: .mockRandom(among: .alphanumerics))
     }
 }
 
@@ -89,16 +89,16 @@ extension URLRequestBuilder.HTTPHeader: RandomMockable, AnyMockable {
                 device: .mockAny(),
                 os: .mockAny()
             ),
-            .ddAPIKeyHeader(clientToken: .mockRandom(among: .alphanumerics)),
-            .ddEVPOriginHeader(source: .mockRandom(among: .alphanumerics)),
-            .ddEVPOriginVersionHeader(sdkVersion: .mockRandom(among: .alphanumerics)),
-            .ddRequestIDHeader()
+            .ooAPIKeyHeader(clientToken: .mockRandom(among: .alphanumerics)),
+            .ooEVPOriginHeader(source: .mockRandom(among: .alphanumerics)),
+            .ooEVPOriginVersionHeader(sdkVersion: .mockRandom(among: .alphanumerics)),
+            .ooRequestIDHeader()
         ]
         return all.randomElement()!
     }
 
     public static func mockAny() -> Self {
-        return .ddEVPOriginVersionHeader(sdkVersion: "1.2.3")
+        return .ooEVPOriginVersionHeader(sdkVersion: "1.2.3")
     }
 }
 

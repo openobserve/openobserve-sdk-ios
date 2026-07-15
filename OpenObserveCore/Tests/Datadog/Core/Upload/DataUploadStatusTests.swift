@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -33,14 +33,14 @@ class DataUploadStatusTests: XCTestCase {
 
     func testWhenUploadFinishesWithResponse_andStatusCodeNeedsNoRetry_itSetsNeedsRetryFlagToFalse() {
         statusCodesExpectingNoRetry.forEach { statusCode, _ in
-            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ddRequestID: .mockAny(), attempt: 0)
+            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ooRequestID: .mockAny(), attempt: 0)
             XCTAssertFalse(status.needsRetry, "Upload should not be retried for status code \(statusCode)")
         }
     }
 
     func testWhenUploadFinishesWithResponse_andStatusCodeNeedsRetry_itSetsNeedsRetryFlagToTrue() {
         statusCodesExpectingRetry.forEach { statusCode, _ in
-            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ddRequestID: .mockAny(), attempt: 0)
+            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ooRequestID: .mockAny(), attempt: 0)
             XCTAssertTrue(status.needsRetry, "Upload should be retried for status code \(statusCode)")
         }
     }
@@ -50,7 +50,7 @@ class DataUploadStatusTests: XCTestCase {
         let unexpectedStatusCodes = allStatusCodes.subtracting(Set(expectedStatusCodes.keys))
 
         unexpectedStatusCodes.forEach { statusCode in
-            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ddRequestID: .mockAny(), attempt: 0)
+            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ooRequestID: .mockAny(), attempt: 0)
             XCTAssertFalse(status.needsRetry, "Upload should not be retried for status code \(statusCode)")
         }
     }
@@ -65,14 +65,14 @@ class DataUploadStatusTests: XCTestCase {
     func testWhenUploadFinishesWithResponse_andRequestIDIsAvailable_itCreatesUserDebugDescription() {
         expectedStatusCodes.forEach { statusCode, message in
             let requestID: String = .mockRandom(among: .alphanumerics)
-            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ddRequestID: requestID, attempt: 0)
+            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ooRequestID: requestID, attempt: 0)
             XCTAssertEqual(status.userDebugDescription, "[response code: \(statusCode) (\(message)), request ID: \(requestID)")
         }
     }
 
     func testWhenUploadFinishesWithResponse_andRequestIDIsNotAvailable_itCreatesUserDebugDescription() {
         expectedStatusCodes.forEach { statusCode, message in
-            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ddRequestID: nil, attempt: 0)
+            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ooRequestID: nil, attempt: 0)
             XCTAssertEqual(status.userDebugDescription, "[response code: \(statusCode) (\(message)), request ID: (???)")
         }
     }
@@ -100,13 +100,13 @@ class DataUploadStatusTests: XCTestCase {
     ]
 
     func testWhenUploadFinishesWithResponse_andStatusCodeIs401_itCreatesError() {
-        let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: 401), ddRequestID: nil, attempt: 0)
+        let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: 401), ooRequestID: nil, attempt: 0)
         XCTAssertEqual(status.error, DataUploadError.httpError(statusCode: .unauthorized))
     }
 
     func testWhenUploadFinishesWithErrorStatusCode_itCreatesAnError() {
         errorStatusCodes.forEach { statusCode in
-            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ddRequestID: nil, attempt: 0)
+            let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: statusCode), ooRequestID: nil, attempt: 0)
             guard case let .httpError(statusCode: receivedStatusCode) = status.error else {
                 return XCTFail("Upload status error should be created for status code: \(statusCode)")
             }
@@ -130,7 +130,7 @@ class DataUploadStatusTests: XCTestCase {
 
     func testWhenUploadFinishesWithResponse_itSetsResponseCode() {
         let randomCode: Int = .mockRandom(min: 1, max: 999)
-        let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: randomCode), ddRequestID: nil, attempt: 0)
+        let status = DataUploadStatus(httpResponse: .mockResponseWith(statusCode: randomCode), ooRequestID: nil, attempt: 0)
         XCTAssertEqual(status.responseCode, randomCode)
     }
 }

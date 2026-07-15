@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -269,7 +269,7 @@ extension RUMViewEvent: RandomMockable {
             container: nil,
             context: .mockRandom(),
             date: date,
-            ddtags: .mockRandomDDTags(),
+            ootags: .mockRandomDDTags(),
             device: .mockRandom(),
             display: nil,
             featureFlags: featureFlags,
@@ -378,7 +378,7 @@ extension RUMResourceEvent: RandomMockable {
             container: nil,
             context: .mockRandom(),
             date: .mockRandom(),
-            ddtags: .mockRandomDDTags(),
+            ootags: .mockRandomDDTags(),
             device: .mockRandom(),
             display: nil,
             os: .mockRandom(),
@@ -480,7 +480,7 @@ extension RUMActionEvent: AnyMockable {
             container: nil,
             context: .mockRandom(),
             date: .mockRandom(),
-            ddtags: .mockRandomDDTags(),
+            ootags: .mockRandomDDTags(),
             device: .mockRandom(),
             display: nil,
             os: .mockRandom(),
@@ -617,7 +617,7 @@ extension RUMLongTaskEvent: RandomMockable {
             container: nil,
             context: .mockRandom(),
             date: .mockRandom(),
-            ddtags: .mockRandomDDTags(),
+            ootags: .mockRandomDDTags(),
             device: .mockRandom(),
             display: nil,
             longTask: .init(

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -85,7 +85,7 @@ internal struct FatalErrorBuilder {
                 contextInfo: contextInfo
             ),
             date: errorDate.timeIntervalSince1970.dd.toInt64Milliseconds,
-            ddtags: context.ddTags,
+            ootags: context.ooTags,
             device: lastRUMView.device,
             display: nil,
             error: .init(
@@ -165,7 +165,7 @@ internal struct FatalErrorBuilder {
             container: original.container,
             context: original.context,
             date: errorDate.timeIntervalSince1970.dd.toInt64Milliseconds - 1, // -1ms to put the fatal error after view in RUM session
-            ddtags: context.ddTags,
+            ootags: context.ooTags,
             device: original.device,
             display: original.display,
             featureFlags: original.featureFlags,

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-2020 OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-2020 Datadog, Inc.
  */
 
 import Foundation
@@ -325,10 +325,10 @@ internal final class RUMFeature: OpenObserveRemoteFeature {
             appHangThreshold: configuration.appHangThreshold?.dd.toInt64Milliseconds,
             invTimeThresholdMs: configuration.nextViewActionPredicate?.invTimeThresholdMs,
             mobileVitalsUpdatePeriod: configuration.vitalsUpdateFrequency?.timeInterval.dd.toInt64Milliseconds,
-            sessionSampleRate: Int64.ddWithNoOverflow(configuration.debugSDK ? 100 : configuration.sessionSampleRate),
-            telemetrySampleRate: Int64.ddWithNoOverflow(configuration.debugSDK ? 100 : configuration.telemetrySampleRate),
+            sessionSampleRate: Int64.ooWithNoOverflow(configuration.debugSDK ? 100 : configuration.sessionSampleRate),
+            telemetrySampleRate: Int64.ooWithNoOverflow(configuration.debugSDK ? 100 : configuration.telemetrySampleRate),
             tnsTimeThresholdMs: configuration.networkSettledResourcePredicate.tnsTimeThresholdMs,
-            traceSampleRate: configuration.urlSessionTracking?.firstPartyHostsTracing.map { Int64.ddWithNoOverflow($0.sampleRate) },
+            traceSampleRate: configuration.urlSessionTracking?.firstPartyHostsTracing.map { Int64.ooWithNoOverflow($0.sampleRate) },
             swiftUIViewTrackingEnabled: swiftUIViewTrackingEnabled,
             swiftUIActionTrackingEnabled: swiftUIActionTrackingEnabled,
             trackBackgroundEvents: configuration.trackBackgroundEvents,

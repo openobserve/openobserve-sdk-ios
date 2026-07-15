@@ -1,3 +1,6 @@
+> **OpenObserve fork.** This project is a fork of the corresponding Datadog SDK,
+> distributed under the Apache License 2.0 and modified by OpenObserve, Inc.
+> See [`NOTICE`](./NOTICE) for attribution and [`LICENSE`](./LICENSE) for terms.
 <p>
     <a href="https://swiftpackageindex.com/DataDog/dd-sdk-ios">
         <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FDataDog%2Fdd-sdk-ios%2Fbadge%3Ftype%3Dplatforms" />

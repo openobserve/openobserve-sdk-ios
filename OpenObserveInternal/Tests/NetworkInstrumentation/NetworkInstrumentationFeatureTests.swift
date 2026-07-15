@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -1787,16 +1787,16 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         // Create a real URLSession
         let session = URLSession(configuration: .ephemeral)
 
-        // Track if any requests with DD-API-KEY are intercepted
+        // Track if any requests with OO-API-KEY are intercepted
         var interceptedSDKRequests: [URLSessionTaskInterception] = []
         handler.onInterceptionDidStart = { interception in
             interceptedSDKRequests.append(interception)
         }
 
-        // When - Make a request to a custom endpoint with DD-API-KEY header (simulating SDK internal request)
+        // When - Make a request to a custom endpoint with OO-API-KEY header (simulating SDK internal request)
         let customEndpointURL = URL(string: "http://custom-endpoint.example.com/api/v2/intake")!
         var request = URLRequest(url: customEndpointURL)
-        request.setValue(.mockRandom(), forHTTPHeaderField: "DD-API-KEY")
+        request.setValue(.mockRandom(), forHTTPHeaderField: "OO-API-KEY")
 
         let taskCompleted = expectation(description: "Task completed")
         let task = session.dataTask(with: request) { _, _, _ in
@@ -1807,8 +1807,8 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         // Wait for task to complete
         wait(for: [taskCompleted], timeout: 10)
 
-        // Then - Verify SDK request with DD-API-KEY was not intercepted
-        XCTAssertEqual(interceptedSDKRequests.count, 0, "Should not intercept SDK requests with DD-API-KEY header, even to custom endpoints")
+        // Then - Verify SDK request with OO-API-KEY was not intercepted
+        XCTAssertEqual(interceptedSDKRequests.count, 0, "Should not intercept SDK requests with OO-API-KEY header, even to custom endpoints")
     }
 
     func testAutomaticMode_doesNotTrackOpenObserveSDKTestingRequests() throws {
@@ -1821,10 +1821,10 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         handler.onInterceptionDidStart = { intercepted.append($0) }
 
         // When - Simulate `OpenObserveSDKTesting`'s CI Visibility upload: it hits citestcycle intake
-        // authenticated with `DD-API-KEY` but without our SDK's internal `DD-REQUEST-ID` header.
+        // authenticated with `OO-API-KEY` but without our SDK's internal `OO-REQUEST-ID` header.
         let citestcycleURL = URL(string: "https://citestcycle-intake.openobserve.ai/api/v2/citestcycle")!
         var request = URLRequest(url: citestcycleURL)
-        request.setValue(.mockRandom(), forHTTPHeaderField: "DD-API-KEY")
+        request.setValue(.mockRandom(), forHTTPHeaderField: "OO-API-KEY")
 
         let taskCompleted = expectation(description: "Task completed")
         let task = session.dataTask(with: request) { _, _, _ in taskCompleted.fulfill() }
@@ -1834,7 +1834,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         wait(for: [taskCompleted], timeout: 5)
 
         // Then
-        XCTAssertEqual(intercepted.count, 0, "Should not intercept OpenObserveSDKTesting CI Visibility uploads (DD-API-KEY without DD-REQUEST-ID)")
+        XCTAssertEqual(intercepted.count, 0, "Should not intercept OpenObserveSDKTesting CI Visibility uploads (OO-API-KEY without OO-REQUEST-ID)")
     }
 
     /// Regression test: the resume swizzle is process-global, so foreign URLSession activity in

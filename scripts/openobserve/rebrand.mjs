@@ -58,8 +58,22 @@ function topLevelMoves(rule) {
 }
 
 const compiled = rules.map((r) => ({ ...r, matcher: r.regex ? new RegExp(r.regex, 'g') : null }))
+// Apache-2.0 §4(b)/(c): never rewrite upstream attribution lines — the per-file
+// license header (in ANY comment style: /* */, #, <!-- ~ -->) and the third-party
+// copyright manifest (LICENSE-3rdparty.csv). Matched by CONTENT, per line, so the
+// Datadog->OpenObserve rules only touch code. Datadog's copyright/attribution stays
+// verbatim; the OpenObserve modification statement lives in NOTICE + README (kept
+// via keep-ours.txt).
+const ATTRIBUTION_RE = /software developed at Datadog \(https:\/\/www\.datadoghq\.com\/\)|Copyright\b[^\n]*\bDatadog, Inc\./
 const applyRules = (s) =>
-  compiled.reduce((out, r) => (r.matcher ? out.replace(r.matcher, r.to) : out.split(r.literal).join(r.to)), s)
+  s
+    .split('\n')
+    .map((line) =>
+      ATTRIBUTION_RE.test(line)
+        ? line
+        : compiled.reduce((out, r) => (r.matcher ? out.replace(r.matcher, r.to) : out.split(r.literal).join(r.to)), line)
+    )
+    .join('\n')
 
 // ---- Phase 1: path renames --------------------------------------------------
 let totalMoves = 0

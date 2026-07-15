@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -577,7 +577,7 @@ extension RUMSessionMatcher.View {
     public var durationNs: Int64? { viewEvents.last?.view.timeSpent }
 
     /// The duration of this view, in seconds.
-    public var duration: TimeInterval? { durationNs.map { TimeInterval.ddFromNanoseconds( $0) } }
+    public var duration: TimeInterval? { durationNs.map { TimeInterval.ooFromNanoseconds( $0) } }
 }
 
 extension RUMSessionMatcher: CustomStringConvertible {
@@ -603,7 +603,7 @@ extension RUMSessionMatcher: CustomStringConvertible {
     }
 
     /// The duration of this session, in seconds.
-    public var duration: TimeInterval? { durationNs.map { TimeInterval.ddFromNanoseconds( $0) } }
+    public var duration: TimeInterval? { durationNs.map { TimeInterval.ooFromNanoseconds( $0) } }
 
     /// The application start action.
     public var ttidEvent: RUMVitalAppLaunchEvent? {
@@ -615,7 +615,7 @@ extension RUMSessionMatcher: CustomStringConvertible {
     /// The application startup time (nanoseconds).
     public var timeToInitialDisplay: TimeInterval? {
         if let ttidEvent {
-            return TimeInterval.ddFromNanoseconds(Int64(ttidEvent.vital.duration))
+            return TimeInterval.ooFromNanoseconds(Int64(ttidEvent.vital.duration))
         }
         return nil
     }

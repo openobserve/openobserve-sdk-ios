@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -220,7 +220,7 @@ extension RemoteLogger: InternalLoggerProtocol {
         stackTrace: String?,
         attributes: [String: Encodable]?
     ) {
-        var ddError: DDError?
+        var ooError: DDError?
         // Find and remove source_type if it's in the attributes
         var logAttributes = attributes
         let sourceType = logAttributes?.removeValue(forKey: CrossPlatformAttributes.errorSourceType) as? String
@@ -228,10 +228,10 @@ extension RemoteLogger: InternalLoggerProtocol {
         if errorKind != nil || errorMessage != nil || stackTrace != nil {
             // Cross platform frameworks don't necessarily send all values for errors. Send empty strings
             // for any values that are empty.
-            ddError = DDError(type: errorKind ?? "", message: errorMessage ?? "", stack: stackTrace ?? "", sourceType: sourceType ?? "ios")
+            ooError = DDError(type: errorKind ?? "", message: errorMessage ?? "", stack: stackTrace ?? "", sourceType: sourceType ?? "ios")
         }
 
-        internalLog(level: level, message: message, error: ddError, attributes: logAttributes)
+        internalLog(level: level, message: message, error: ooError, attributes: logAttributes)
     }
 
     func critical(

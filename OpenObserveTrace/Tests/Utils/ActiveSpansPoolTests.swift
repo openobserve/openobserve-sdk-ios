@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -28,7 +28,7 @@ class ActiveSpansPoolTests: XCTestCase {
         XCTAssertNil(previousSpan)
 
         let oneSpan = tracer.startSpan(operationName: .mockAny()).setActive()
-        XCTAssert(tracer.activeSpan?.dd.ddContext.spanID == oneSpan.dd.ddContext.spanID)
+        XCTAssert(tracer.activeSpan?.dd.ooContext.spanID == oneSpan.dd.ooContext.spanID)
         oneSpan.finish()
         XCTAssertNil(tracer.activeSpan)
         XCTAssertTrue(tracer.activeSpansPool.isEmpty)
@@ -39,7 +39,7 @@ class ActiveSpansPoolTests: XCTestCase {
         XCTAssertNil(tracer.activeSpan)
 
         let oneSpan = tracer.startSpan(operationName: .mockAny()).setActive()
-        XCTAssert(tracer.activeSpan?.dd.ddContext.spanID == oneSpan.dd.ddContext.spanID)
+        XCTAssert(tracer.activeSpan?.dd.ooContext.spanID == oneSpan.dd.ooContext.spanID)
 
         oneSpan.finish()
         XCTAssertNil(tracer.activeSpan)
@@ -53,12 +53,12 @@ class ActiveSpansPoolTests: XCTestCase {
         let previousActiveSpan = tracer.activeSpan
         let secondSpan = tracer.startSpan(operationName: .mockAny())
         secondSpan.setActive()
-        XCTAssertEqual(secondSpan.dd.ddContext.parentSpanID, previousActiveSpan?.dd.ddContext.spanID)
-        XCTAssertEqual(secondSpan.dd.ddContext.spanID,  tracer.activeSpan?.dd.ddContext.spanID)
-        XCTAssertEqual(secondSpan.dd.ddContext.parentSpanID, firstSpan.dd.ddContext.spanID)
+        XCTAssertEqual(secondSpan.dd.ooContext.parentSpanID, previousActiveSpan?.dd.ooContext.spanID)
+        XCTAssertEqual(secondSpan.dd.ooContext.spanID,  tracer.activeSpan?.dd.ooContext.spanID)
+        XCTAssertEqual(secondSpan.dd.ooContext.parentSpanID, firstSpan.dd.ooContext.spanID)
 
         secondSpan.finish()
-        XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, firstSpan.dd.ddContext.spanID)
+        XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, firstSpan.dd.ooContext.spanID)
         firstSpan.finish()
         XCTAssertNil(tracer.activeSpan)
         XCTAssertTrue(tracer.activeSpansPool.isEmpty)
@@ -71,9 +71,9 @@ class ActiveSpansPoolTests: XCTestCase {
 
         let spanWithParent = tracer.startSpan(operationName: .mockAny(), childOf: oneSpan.context)
 
-        XCTAssertEqual(spanWithParent.dd.ddContext.parentSpanID, oneSpan.dd.ddContext.spanID)
+        XCTAssertEqual(spanWithParent.dd.ooContext.parentSpanID, oneSpan.dd.ooContext.spanID)
         spanWithParent.finish()
-        XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, otherSpan.dd.ddContext.spanID)
+        XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, otherSpan.dd.ooContext.spanID)
         oneSpan.finish()
         otherSpan.finish()
         XCTAssertNil(tracer.activeSpan)
@@ -91,19 +91,19 @@ class ActiveSpansPoolTests: XCTestCase {
 
         DispatchQueue.global(qos: .default).async {
             firstSpan = tracer.startSpan(operationName: .mockAny()).setActive()
-            XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, firstSpan!.dd.ddContext.spanID)
+            XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, firstSpan!.dd.ooContext.spanID)
             expectation1.fulfill()
         }
 
         DispatchQueue.global(qos: .default).async {
             Thread.sleep(forTimeInterval: 0.5)
-            XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, oneSpan.dd.ddContext.spanID)
+            XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, oneSpan.dd.ooContext.spanID)
             secondSpan = tracer.startSpan(operationName: .mockAny()).setActive()
-            XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, secondSpan!.dd.ddContext.spanID)
+            XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, secondSpan!.dd.ooContext.spanID)
             expectation2.fulfill()
         }
 
-        XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, oneSpan.dd.ddContext.spanID)
+        XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, oneSpan.dd.ooContext.spanID)
         waitForExpectations(timeout: 5, handler: nil)
         oneSpan.finish()
         firstSpan?.finish()
@@ -121,7 +121,7 @@ class ActiveSpansPoolTests: XCTestCase {
             span.setActive()
         }
 
-        XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, span.dd.ddContext.spanID)
+        XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, span.dd.ooContext.spanID)
 
         span.finish()
 
@@ -142,12 +142,12 @@ class ActiveSpansPoolTests: XCTestCase {
         firstSpan.setActive()
         secondSpan.setActive()
 
-        XCTAssertEqual(secondSpan.dd.ddContext.parentSpanID, previousActiveSpan?.dd.ddContext.spanID)
-        XCTAssertEqual(secondSpan.dd.ddContext.spanID,  tracer.activeSpan?.dd.ddContext.spanID)
-        XCTAssertEqual(secondSpan.dd.ddContext.parentSpanID, firstSpan.dd.ddContext.spanID)
+        XCTAssertEqual(secondSpan.dd.ooContext.parentSpanID, previousActiveSpan?.dd.ooContext.spanID)
+        XCTAssertEqual(secondSpan.dd.ooContext.spanID,  tracer.activeSpan?.dd.ooContext.spanID)
+        XCTAssertEqual(secondSpan.dd.ooContext.parentSpanID, firstSpan.dd.ooContext.spanID)
 
         secondSpan.finish()
-        XCTAssertEqual(tracer.activeSpan?.dd.ddContext.spanID, firstSpan.dd.ddContext.spanID)
+        XCTAssertEqual(tracer.activeSpan?.dd.ooContext.spanID, firstSpan.dd.ooContext.spanID)
         firstSpan.finish()
         XCTAssertNil(tracer.activeSpan)
         XCTAssertTrue(tracer.activeSpansPool.isEmpty)
@@ -165,10 +165,10 @@ class ActiveSpansPoolTests: XCTestCase {
         child2Span.finish()
         parentSpan.finish()
 
-        XCTAssertEqual(child1Span.dd.ddContext.traceID, parentSpan.dd.ddContext.traceID)
-        XCTAssertEqual(child1Span.dd.ddContext.parentSpanID, parentSpan.dd.ddContext.spanID)
-        XCTAssertEqual(child2Span.dd.ddContext.traceID, parentSpan.dd.ddContext.traceID)
-        XCTAssertEqual(child2Span.dd.ddContext.parentSpanID, parentSpan.dd.ddContext.spanID)
+        XCTAssertEqual(child1Span.dd.ooContext.traceID, parentSpan.dd.ooContext.traceID)
+        XCTAssertEqual(child1Span.dd.ooContext.parentSpanID, parentSpan.dd.ooContext.spanID)
+        XCTAssertEqual(child2Span.dd.ooContext.traceID, parentSpan.dd.ooContext.traceID)
+        XCTAssertEqual(child2Span.dd.ooContext.parentSpanID, parentSpan.dd.ooContext.spanID)
 
         XCTAssertNil(tracer.activeSpan)
         XCTAssertTrue(tracer.activeSpansPool.isEmpty)
@@ -188,8 +188,8 @@ class ActiveSpansPoolTests: XCTestCase {
             XCTAssertNil(provider.activeSpanContext())
 
             let oneSpan = tracer.startSpan(operationName: .mockAny()).setActive()
-            XCTAssertEqual(provider.activeSpanContext()?.activeSpanID, oneSpan.dd.ddContext.spanID)
-            XCTAssertEqual(provider.activeSpanContext()?.traceID, oneSpan.dd.ddContext.traceID)
+            XCTAssertEqual(provider.activeSpanContext()?.activeSpanID, oneSpan.dd.ooContext.spanID)
+            XCTAssertEqual(provider.activeSpanContext()?.traceID, oneSpan.dd.ooContext.traceID)
 
             oneSpan.finish()
             XCTAssertNil(provider.activeSpanContext())

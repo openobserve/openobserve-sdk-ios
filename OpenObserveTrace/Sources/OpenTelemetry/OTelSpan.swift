@@ -1,7 +1,7 @@
 /*
 * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
-* This product includes software developed at OpenObserve (https://www.openobserve.ai/).
-* Copyright 2019-Present OpenObserve, Inc.
+* This product includes software developed at Datadog (https://www.datadoghq.com/).
+* Copyright 2019-Present Datadog, Inc.
 */
 
 import Foundation
@@ -51,7 +51,7 @@ internal class OTelSpan: OpenTelemetryApi.Span {
     let context: OpenTelemetryApi.SpanContext
     @ReadWriteLock
     var kind: OpenTelemetryApi.SpanKind
-    let ddSpan: DDSpan
+    let ooSpan: DDSpan
     let tracer: OpenObserveTracer
     let spanLinks: [OTelSpanLink]
 
@@ -94,7 +94,7 @@ internal class OTelSpan: OpenTelemetryApi.Span {
                     return
                 }
                 $0 = newValue
-                ddSpan.setOperationName($0)
+                ooSpan.setOperationName($0)
             }
         }
     }
@@ -121,7 +121,7 @@ internal class OTelSpan: OpenTelemetryApi.Span {
         self.tracer = tracer
         self.spanLinks = spanLinks
         let sampler = tracer.samplerProvider.sampler
-        self.ddSpan = .init(
+        self.ooSpan = .init(
             tracer: tracer,
             context: .init(
                 traceID: context.traceId.toOpenObserve(),
@@ -188,13 +188,13 @@ internal class OTelSpan: OpenTelemetryApi.Span {
 
         // set global tags
         for (key, value) in tracer.tags {
-            ddSpan.setTag(key: key, value: value)
+            ooSpan.setTag(key: key, value: value)
         }
 
         // set local tags
         // local takes precedence over global
         for (key, value) in tags {
-            ddSpan.setTag(key: key, value: value)
+            ooSpan.setTag(key: key, value: value)
         }
 
         switch status {
@@ -206,20 +206,20 @@ internal class OTelSpan: OpenTelemetryApi.Span {
 
             // send error log to OpenObserve
             // Empty kind or description is equivalent to not present
-            ddSpan.setError(kind: "", message: description)
+            ooSpan.setError(kind: "", message: description)
         @unknown default:
             break
         }
 
         // SpanKind maps to the `span.kind` tag in OpenObserve
-        ddSpan.setTag(key: OpenObserveTagKeys.spanKind.rawValue, value: kind.rawValue)
+        ooSpan.setTag(key: OpenObserveTagKeys.spanKind.rawValue, value: kind.rawValue)
 
         // OpenObserve uses `_oo.span_links` tag to send span links
         if !spanLinks.isEmpty {
-            ddSpan.setTag(key: OpenObserveTagKeys.spanLinks.rawValue, value: spanLinks)
+            ooSpan.setTag(key: OpenObserveTagKeys.spanLinks.rawValue, value: spanLinks)
         }
 
-        ddSpan.finish(at: time)
+        ooSpan.finish(at: time)
         OpenTelemetry.instance.contextProvider.removeContextForSpan(self)
     }
 

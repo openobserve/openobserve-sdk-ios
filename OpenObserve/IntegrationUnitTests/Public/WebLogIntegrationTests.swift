@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -75,7 +75,7 @@ class WebLogIntegrationTests: XCTestCase {
             jsonString: """
         {
             "date": \(1_635_932_927_012 + 123.dd.toInt64Milliseconds),
-            "ddtags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
+            "ootags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
             "message": "message",
             "session_id": "0110cab4-7471-480e-aa4e-7ce039ced355",
             "status": "debug",
@@ -130,7 +130,7 @@ class WebLogIntegrationTests: XCTestCase {
             jsonString: """
         {
             "date": \(1_635_932_927_012 + 123.dd.toInt64Milliseconds),
-            "ddtags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
+            "ootags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
             "message": "message",
             "application_id": "\(randomApplicationID)",
             "session_id": "\(expectedUUID)",

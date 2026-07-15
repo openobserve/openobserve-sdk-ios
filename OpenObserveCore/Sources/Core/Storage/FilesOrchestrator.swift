@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -348,7 +348,7 @@ internal class FilesOrchestrator: FilesOrchestratorType {
 /// This function converts file creation date into file name.
 internal func fileNameFrom(fileCreationDate: Date) -> String {
     let milliseconds = fileCreationDate.timeIntervalSinceReferenceDate / FilesOrchestrator.Constants.fileNamePrecision
-    let converted = (try? UInt64.ddWithReportingOverflow(milliseconds)) ?? 0
+    let converted = (try? UInt64.ooWithReportingOverflow(milliseconds)) ?? 0
     return String(converted)
 }
 

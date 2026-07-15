@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -17,7 +17,7 @@ public struct ImmutableRequest {
     /// The HTTP method of the request.
     public let httpMethod: String?
     /// The value of `x-datadog-origin` header (if any).
-    public let ddOriginHeaderValue: String?
+    public let ooOriginHeaderValue: String?
     /// A reference to the original `URLRequest` object provided during initialization. Direct use is discouraged
     /// due to thread safety concerns. Instead, necessary attributes should be accessed through `ImmutableRequest` fields.
     public let unsafeOriginal: URLRequest
@@ -28,7 +28,7 @@ public struct ImmutableRequest {
         // RUM-3183: As observed in https://github.com/openobserve/openobserve-sdk-ios/issues/1638, accessing `request.allHTTPHeaderFields` is not
         // safe and can lead to crashes with undefined root cause. To avoid issues we should prefer `request.value(forHTTPHeaderField:)`
         // when interacting with `URLRequest`.
-        self.ddOriginHeaderValue = request.value(forHTTPHeaderField: TracingHTTPHeaders.originField)
+        self.ooOriginHeaderValue = request.value(forHTTPHeaderField: TracingHTTPHeaders.originField)
         self.unsafeOriginal = request
     }
 }

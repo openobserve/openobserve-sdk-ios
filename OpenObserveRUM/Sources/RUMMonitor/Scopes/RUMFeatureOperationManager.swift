@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import OpenObserveInternal
@@ -102,7 +102,7 @@ internal class RUMFeatureOperationManager {
             container: nil,
             context: .init(contextInfo: mergedAttributes),
             date: command.time.addingTimeInterval(context.serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ddtags: context.ddTags,
+            ootags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             os: context.os,

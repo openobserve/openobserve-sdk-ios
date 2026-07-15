@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -48,8 +48,8 @@ internal final class ConsoleLogger: LoggerProtocol {
     func log(level: LogLevel, message: String, error: Error?, attributes: [String: Encodable]?) {
         var errorString: String? = nil
         if let error = error {
-            let ddError = DDError(error: error)
-            errorString = buildErrorString(error: ddError)
+            let ooError = DDError(error: error)
+            errorString = buildErrorString(error: ooError)
         }
 
         internalLog(level: level, message: message, errorString: errorString)
@@ -101,8 +101,8 @@ extension ConsoleLogger: InternalLoggerProtocol {
         if errorKind != nil || errorMessage != nil || stackTrace != nil {
             // Cross platform frameworks don't necessarily send all values for errors. Send empty strings
             // for any values that are empty.
-            let ddError = DDError(type: errorKind ?? "", message: errorMessage ?? "", stack: stackTrace ?? "")
-            errorString = buildErrorString(error: ddError)
+            let ooError = DDError(type: errorKind ?? "", message: errorMessage ?? "", stack: stackTrace ?? "")
+            errorString = buildErrorString(error: ooError)
         }
 
         internalLog(level: level, message: message, errorString: errorString)

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #import <XCTest/XCTest.h>
@@ -55,16 +55,16 @@
     UIView *view = [[UIView alloc] init];
 
     // When
-    view.ddSessionReplayPrivacyOverrides.textAndInputPrivacy = DDTextAndInputPrivacyLevelOverrideMaskAll;
-    view.ddSessionReplayPrivacyOverrides.imagePrivacy = DDImagePrivacyLevelOverrideMaskAll;
-    view.ddSessionReplayPrivacyOverrides.touchPrivacy = DDTouchPrivacyLevelOverrideHide;
-    view.ddSessionReplayPrivacyOverrides.hide = @YES;
+    view.ooSessionReplayPrivacyOverrides.textAndInputPrivacy = DDTextAndInputPrivacyLevelOverrideMaskAll;
+    view.ooSessionReplayPrivacyOverrides.imagePrivacy = DDImagePrivacyLevelOverrideMaskAll;
+    view.ooSessionReplayPrivacyOverrides.touchPrivacy = DDTouchPrivacyLevelOverrideHide;
+    view.ooSessionReplayPrivacyOverrides.hide = @YES;
 
     // Then
-    XCTAssertEqual(view.ddSessionReplayPrivacyOverrides.textAndInputPrivacy, DDTextAndInputPrivacyLevelOverrideMaskAll);
-    XCTAssertEqual(view.ddSessionReplayPrivacyOverrides.imagePrivacy, DDImagePrivacyLevelOverrideMaskAll);
-    XCTAssertEqual(view.ddSessionReplayPrivacyOverrides.touchPrivacy, DDTouchPrivacyLevelOverrideHide);
-    XCTAssertTrue(view.ddSessionReplayPrivacyOverrides.hide.boolValue);
+    XCTAssertEqual(view.ooSessionReplayPrivacyOverrides.textAndInputPrivacy, DDTextAndInputPrivacyLevelOverrideMaskAll);
+    XCTAssertEqual(view.ooSessionReplayPrivacyOverrides.imagePrivacy, DDImagePrivacyLevelOverrideMaskAll);
+    XCTAssertEqual(view.ooSessionReplayPrivacyOverrides.touchPrivacy, DDTouchPrivacyLevelOverrideHide);
+    XCTAssertTrue(view.ooSessionReplayPrivacyOverrides.hide.boolValue);
 }
 
 - (void)testClearingOverride {
@@ -72,22 +72,22 @@
     UIView *view = [[UIView alloc] init];
 
     // Set initial values
-    view.ddSessionReplayPrivacyOverrides.textAndInputPrivacy = DDTextAndInputPrivacyLevelOverrideMaskAll;
-    view.ddSessionReplayPrivacyOverrides.imagePrivacy = DDImagePrivacyLevelOverrideMaskAll;
-    view.ddSessionReplayPrivacyOverrides.touchPrivacy = DDTouchPrivacyLevelOverrideHide;
-    view.ddSessionReplayPrivacyOverrides.hide = @YES;
+    view.ooSessionReplayPrivacyOverrides.textAndInputPrivacy = DDTextAndInputPrivacyLevelOverrideMaskAll;
+    view.ooSessionReplayPrivacyOverrides.imagePrivacy = DDImagePrivacyLevelOverrideMaskAll;
+    view.ooSessionReplayPrivacyOverrides.touchPrivacy = DDTouchPrivacyLevelOverrideHide;
+    view.ooSessionReplayPrivacyOverrides.hide = @YES;
 
     // When
-    view.ddSessionReplayPrivacyOverrides.textAndInputPrivacy = DDTextAndInputPrivacyLevelOverrideNone;
-    view.ddSessionReplayPrivacyOverrides.imagePrivacy = DDImagePrivacyLevelOverrideNone;
-    view.ddSessionReplayPrivacyOverrides.touchPrivacy = DDTouchPrivacyLevelOverrideNone;
-    view.ddSessionReplayPrivacyOverrides.hide = nil;
+    view.ooSessionReplayPrivacyOverrides.textAndInputPrivacy = DDTextAndInputPrivacyLevelOverrideNone;
+    view.ooSessionReplayPrivacyOverrides.imagePrivacy = DDImagePrivacyLevelOverrideNone;
+    view.ooSessionReplayPrivacyOverrides.touchPrivacy = DDTouchPrivacyLevelOverrideNone;
+    view.ooSessionReplayPrivacyOverrides.hide = nil;
 
     // Then
-    XCTAssertEqual(view.ddSessionReplayPrivacyOverrides.textAndInputPrivacy, DDTextAndInputPrivacyLevelOverrideNone);
-    XCTAssertEqual(view.ddSessionReplayPrivacyOverrides.imagePrivacy, DDImagePrivacyLevelOverrideNone);
-    XCTAssertEqual(view.ddSessionReplayPrivacyOverrides.touchPrivacy, DDTouchPrivacyLevelOverrideNone);
-    XCTAssertNil(view.ddSessionReplayPrivacyOverrides.hide);
+    XCTAssertEqual(view.ooSessionReplayPrivacyOverrides.textAndInputPrivacy, DDTextAndInputPrivacyLevelOverrideNone);
+    XCTAssertEqual(view.ooSessionReplayPrivacyOverrides.imagePrivacy, DDImagePrivacyLevelOverrideNone);
+    XCTAssertEqual(view.ooSessionReplayPrivacyOverrides.touchPrivacy, DDTouchPrivacyLevelOverrideNone);
+    XCTAssertNil(view.ooSessionReplayPrivacyOverrides.hide);
 }
 @end
 

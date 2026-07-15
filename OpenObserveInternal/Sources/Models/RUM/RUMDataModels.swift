@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 // This file was generated from JSON Schema. Do not modify it directly.
@@ -272,7 +272,7 @@ public struct RUMActionEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -325,7 +325,7 @@ public struct RUMActionEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -355,7 +355,7 @@ public struct RUMActionEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -380,7 +380,7 @@ public struct RUMActionEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -405,7 +405,7 @@ public struct RUMActionEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.os = os
@@ -1347,7 +1347,7 @@ public struct RUMErrorEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -1409,7 +1409,7 @@ public struct RUMErrorEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case error = "error"
@@ -1442,7 +1442,7 @@ public struct RUMErrorEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - error: Error properties
@@ -1470,7 +1470,7 @@ public struct RUMErrorEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         error: Error,
@@ -1498,7 +1498,7 @@ public struct RUMErrorEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.error = error
@@ -2871,7 +2871,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -2927,7 +2927,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case longTask = "long_task"
@@ -2958,7 +2958,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - longTask: Long Task properties
@@ -2984,7 +2984,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         longTask: LongTask,
@@ -3010,7 +3010,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.longTask = longTask
@@ -3764,7 +3764,7 @@ public struct RUMResourceEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -3820,7 +3820,7 @@ public struct RUMResourceEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -3851,7 +3851,7 @@ public struct RUMResourceEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -3877,7 +3877,7 @@ public struct RUMResourceEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -3903,7 +3903,7 @@ public struct RUMResourceEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.os = os
@@ -5227,7 +5227,7 @@ public struct RUMViewEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -5285,7 +5285,7 @@ public struct RUMViewEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case featureFlags = "feature_flags"
@@ -5316,7 +5316,7 @@ public struct RUMViewEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - featureFlags: Feature flags properties
@@ -5342,7 +5342,7 @@ public struct RUMViewEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         featureFlags: FeatureFlags? = nil,
@@ -5368,7 +5368,7 @@ public struct RUMViewEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.featureFlags = featureFlags
@@ -7469,7 +7469,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -7527,7 +7527,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case featureFlags = "feature_flags"
@@ -7558,7 +7558,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - featureFlags: Feature flags properties
@@ -7584,7 +7584,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         featureFlags: FeatureFlags? = nil,
@@ -7610,7 +7610,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.featureFlags = featureFlags
@@ -9504,7 +9504,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -9559,7 +9559,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -9589,7 +9589,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -9614,7 +9614,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -9639,7 +9639,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.os = os
@@ -10248,7 +10248,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -10303,7 +10303,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -10333,7 +10333,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -10358,7 +10358,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -10383,7 +10383,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.os = os
@@ -10952,7 +10952,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ddtags: String?
+    public let ootags: String?
 
     /// Device properties
     public let device: Device?
@@ -11007,7 +11007,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ddtags = "ddtags"
+        case ootags = "ootags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -11037,7 +11037,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ddtags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -11062,7 +11062,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ddtags: String? = nil,
+        ootags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -11087,7 +11087,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ddtags = ddtags
+        self.ootags = ootags
         self.device = device
         self.display = display
         self.os = os

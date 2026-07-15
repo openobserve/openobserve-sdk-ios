@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-2020 OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-2020 Datadog, Inc.
  */
 
 import Foundation
@@ -111,8 +111,8 @@ public protocol SpanIDGenerator {
 public struct DefaultSpanIDGenerator: SpanIDGenerator {
     /// Describes the lower and upper boundary of tracing ID generation.
     ///
-    /// * Lower: starts with `1` as `0` is reserved for historical reason: 0 == "unset", ref: dd-trace-java:DDId.java.
-    /// * Upper: equals to `2 ^ 63 - 1` as some tracers can't handle the `2 ^ 64 -1` range, ref: dd-trace-java:DDId.java.
+    /// * Lower: starts with `1` as `0` is reserved for historical reason: 0 == "unset", ref: oo-trace-java:DDId.java.
+    /// * Upper: equals to `2 ^ 63 - 1` as some tracers can't handle the `2 ^ 64 -1` range, ref: oo-trace-java:DDId.java.
     public static let defaultGenerationRange = (1...UInt64.max >> 1)
 
     /// The generator's range.

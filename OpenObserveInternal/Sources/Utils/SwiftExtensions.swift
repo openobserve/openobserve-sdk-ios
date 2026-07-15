@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -46,37 +46,37 @@ extension OpenObserveExtension where ExtendedType == Double {
     /// `TimeInterval` represented in milliseconds (capped to `.min` or `.max` respectively to its sign).
     public var toMilliseconds: UInt64 {
         let milliseconds = type * 1_000
-        return UInt64.ddWithNoOverflow(milliseconds)
+        return UInt64.ooWithNoOverflow(milliseconds)
     }
 
     /// `TimeInterval` represented in milliseconds (capped to `.min` or `.max` respectively to its sign).
     public var toInt64Milliseconds: Int64 {
         let milliseconds = type * 1_000
-        return Int64.ddWithNoOverflow(milliseconds)
+        return Int64.ooWithNoOverflow(milliseconds)
     }
 
     /// `TimeInterval` represented in nanoseconds (capped to `.min` or `.max` respectively to its sign).
     /// Note: as `TimeInterval` yields sub-millisecond precision the nanoseconds precision will be lost.
     public var toNanoseconds: UInt64 {
         let nanoseconds = type * 1_000_000_000
-        return UInt64.ddWithNoOverflow(nanoseconds)
+        return UInt64.ooWithNoOverflow(nanoseconds)
     }
 
     /// `TimeInterval` represented in nanoseconds (capped to `.min` or `.max` respectively to its sign).
     /// Note: as `TimeInterval` yields sub-millisecond precision the nanoseconds precision will be lost.
     public var toInt64Nanoseconds: Int64 {
         let nanoseconds = type * 1_000_000_000
-        return Int64.ddWithNoOverflow(nanoseconds)
+        return Int64.ooWithNoOverflow(nanoseconds)
     }
 }
 
 // TimeInterval factory methods
 extension TimeInterval {
-    public static func ddFromMilliseconds(_ milliseconds: Int64) -> TimeInterval {
+    public static func ooFromMilliseconds(_ milliseconds: Int64) -> TimeInterval {
         return Double(milliseconds) / 1_000
     }
 
-    public static func ddFromNanoseconds(_ nanoseconds: Int64) -> TimeInterval {
+    public static func ooFromNanoseconds(_ nanoseconds: Int64) -> TimeInterval {
         return Double(nanoseconds) / 1_000_000_000
     }
 }
@@ -105,7 +105,7 @@ extension FixedWidthInteger {
 
      IMPORTANT: If you pass floatingPoint to Self(exactly:) without rounded(), it may return nil
      */
-    public static func ddWithReportingOverflow<T: BinaryFloatingPoint>(_ floatingPoint: T) throws -> Self {
+    public static func ooWithReportingOverflow<T: BinaryFloatingPoint>(_ floatingPoint: T) throws -> Self {
         guard let converted = Self(exactly: floatingPoint.rounded()) else {
             throw FixedWidthIntegerError<T>.overflow(overflowingValue: floatingPoint)
         }
@@ -115,7 +115,7 @@ extension FixedWidthInteger {
     /// Converts floating point value to fixed width integer with preventing overflow (and crash).
     /// In case of overflow, the value is converted to `.min` or `.max` respectively to its sign.
     /// - Parameter floatingPoint: the value to convert
-    public static func ddWithNoOverflow<T: BinaryFloatingPoint>(_ floatingPoint: T) -> Self {
+    public static func ooWithNoOverflow<T: BinaryFloatingPoint>(_ floatingPoint: T) -> Self {
         if let converted = Self(exactly: floatingPoint.rounded()) {
             return converted
         } else { // overflow occurred

@@ -29,7 +29,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ecs-Xp-TM2" firstAttribute="centerX" secondItem="NrI-Vk-ZoQ" secondAttribute="centerX" id="SWO-zZ-aoq"/>
-                            <constraint firstItem="ecs-Xp-TM2" firstAttribute="centerY" secondItem="NrI-Vk-ZoQ" secondAttribute="centerY" id="dG3-dd-OmP"/>
+                            <constraint firstItem="ecs-Xp-TM2" firstAttribute="centerY" secondItem="NrI-Vk-ZoQ" secondAttribute="centerY" id="dG3-oo-OmP"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="36v-HB-HqG"/>

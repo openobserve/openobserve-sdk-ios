@@ -7412,7 +7412,7 @@
 			);
 			mainGroup = 61133B78242393DE00786299;
 			packageReferences = (
-				3CDA3F6C2BCD8429005D2C13 /* XCRemoteSwiftPackageReference "dd-sdk-swift-testing" */,
+				3CDA3F6C2BCD8429005D2C13 /* XCRemoteSwiftPackageReference "oo-sdk-swift-testing" */,
 				D22689B72EB12C3100875E44 /* XCRemoteSwiftPackageReference "KSCrash" */,
 			);
 			productRefGroup = 61133B83242393DE00786299 /* Products */;
@@ -11724,9 +11724,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3CDA3F6C2BCD8429005D2C13 /* XCRemoteSwiftPackageReference "dd-sdk-swift-testing" */ = {
+		3CDA3F6C2BCD8429005D2C13 /* XCRemoteSwiftPackageReference "oo-sdk-swift-testing" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/DataDog/dd-sdk-swift-testing.git";
+			repositoryURL = "https://github.com/DataDog/oo-sdk-swift-testing.git";
 			requirement = {
 				kind = upToNextMinorVersion;
 				minimumVersion = 2.7.0;
@@ -11745,7 +11745,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		118246C52D906FFB00E3D16F /* OpenObserveSDKTesting */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3CDA3F6C2BCD8429005D2C13 /* XCRemoteSwiftPackageReference "dd-sdk-swift-testing" */;
+			package = 3CDA3F6C2BCD8429005D2C13 /* XCRemoteSwiftPackageReference "oo-sdk-swift-testing" */;
 			productName = OpenObserveSDKTesting;
 		};
 		D22689B82EB12C3100875E44 /* Filters */ = {

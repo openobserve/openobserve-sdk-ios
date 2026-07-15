@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -21,14 +21,14 @@ public struct Request {
 }
 
 extension Array where Element == URLQueryItem {
-    /// Returns the `ddtags` query item as a dictionary.
-    /// The `ddtags` query item is expected to be in the format `key:value,key:value`.
-    /// - Returns: The `ddtags` query item as a dictionary.
-    public func ddtags() -> [String: String]? {
-        guard let ddtags = first(where: { $0.name == "ddtags" })?.value else {
+    /// Returns the `ootags` query item as a dictionary.
+    /// The `ootags` query item is expected to be in the format `key:value,key:value`.
+    /// - Returns: The `ootags` query item as a dictionary.
+    public func ootags() -> [String: String]? {
+        guard let ootags = first(where: { $0.name == "ootags" })?.value else {
             return nil
         }
-        return ddtags.split(separator: ",", keyValueSeparator: ":")
+        return ootags.split(separator: ",", keyValueSeparator: ":")
     }
 
     /// Returns the value of the first query item with the given name.

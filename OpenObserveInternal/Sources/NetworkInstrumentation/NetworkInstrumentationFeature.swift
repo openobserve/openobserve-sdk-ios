@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-2020 OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-2020 Datadog, Inc.
  */
 
 import Foundation
@@ -360,11 +360,11 @@ extension NetworkInstrumentationFeature {
     /// - Parameter request: The URLRequest to check.
     /// - Returns: `true` if the request is an SDK internal request, `false` otherwise.
     private func isOpenObserveIntakeRequest(_ request: URLRequest?) -> Bool {
-        // Every OpenObserve intake request authenticates with `DD-API-KEY`. This catches both this SDK's
+        // Every OpenObserve intake request authenticates with `OO-API-KEY`. This catches both this SDK's
         // own uploads (preventing recursion) and other OpenObserve tooling that may run in the same
         // process (e.g. `OpenObserveSDKTesting`'s CI Visibility uploader, which would otherwise pollute
         // interception expectations via the global `__NSCFLocalSessionTask.resume` swizzle in tests).
-        return request?.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ddAPIKeyHeaderField) != nil
+        return request?.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooAPIKeyHeaderField) != nil
     }
 
     /// Helper structure that optionally contains a trace context and captured state, used to pass this
@@ -465,7 +465,7 @@ extension NetworkInstrumentationFeature {
                 interception.register(trace: traceContext)
             }
 
-            if let origin = request.ddOriginHeaderValue {
+            if let origin = request.ooOriginHeaderValue {
                 interception.register(origin: origin)
             }
 

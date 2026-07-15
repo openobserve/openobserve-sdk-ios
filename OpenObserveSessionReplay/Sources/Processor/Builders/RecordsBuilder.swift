@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS)
@@ -26,9 +26,9 @@ internal class RecordsBuilder {
     func createMetaRecord(from snapshot: ViewTreeSnapshot) -> SRRecord {
         let record = SRMetaRecord(
             data: .init(
-                height: Int64.ddWithNoOverflow(snapshot.viewportSize.height),
+                height: Int64.ooWithNoOverflow(snapshot.viewportSize.height),
                 href: nil,
-                width: Int64.ddWithNoOverflow(snapshot.viewportSize.width)
+                width: Int64.ooWithNoOverflow(snapshot.viewportSize.width)
             ),
             slotId: nil,
             timestamp: snapshot.date.timeIntervalSince1970.dd.toInt64Milliseconds
@@ -133,8 +133,8 @@ internal class RecordsBuilder {
             value: SRIncrementalSnapshotRecord(
                 data: .viewportResizeData(
                     value: .init(
-                        height: Int64.ddWithNoOverflow(snapshot.viewportSize.height),
-                        width: Int64.ddWithNoOverflow(snapshot.viewportSize.width)
+                        height: Int64.ooWithNoOverflow(snapshot.viewportSize.height),
+                        width: Int64.ooWithNoOverflow(snapshot.viewportSize.width)
                     )
                 ),
                 timestamp: snapshot.date.timeIntervalSince1970.dd.toInt64Milliseconds

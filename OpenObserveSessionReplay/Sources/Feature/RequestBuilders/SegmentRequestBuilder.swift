@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS)
@@ -65,10 +65,10 @@ internal struct SegmentRequestBuilder: FeatureRequestBuilder {
                     device: context.device,
                     os: context.os
                 ),
-                .ddAPIKeyHeader(clientToken: context.clientToken),
-                .ddEVPOriginHeader(source: context.source),
-                .ddEVPOriginVersionHeader(sdkVersion: context.sdkVersion),
-                .ddRequestIDHeader(),
+                .ooAPIKeyHeader(clientToken: context.clientToken),
+                .ooEVPOriginHeader(source: context.source),
+                .ooEVPOriginVersionHeader(sdkVersion: context.sdkVersion),
+                .ooRequestIDHeader(),
             ],
             telemetry: telemetry
         )

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -95,7 +95,7 @@ class LoggerTests: XCTestCase {
           "date" : "2019-12-15T10:00:00.000Z",
           "version": "1.0.0",
           "build_version": "1",
-          "ddtags": "sdk_version:1.2.3,service:default-service-name,version:1.0.0,env:tests",
+          "ootags": "sdk_version:1.2.3,service:default-service-name,version:1.0.0,env:tests",
           "os": {
             "build": "FFFFFF",
             "name": "testOS",
@@ -104,11 +104,11 @@ class LoggerTests: XCTestCase {
           }
         }
         """, usingCustomKeyComparators: [
-            "ddtags": { lhs, rhs, file, line in
+            "ootags": { lhs, rhs, file, line in
                 guard let lhs = lhs as? String,
                       let rhs = rhs as? String
                 else {
-                    XCTFail("ddTags values are not strings.", file: file, line: line)
+                    XCTFail("ooTags values are not strings.", file: file, line: line)
                     return
                 }
 

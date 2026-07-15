@@ -179,8 +179,8 @@ The SDK must **never throw exceptions** to customer code:
 
 ## HTTP Upload Details
 
-- **Auth**: Client token passed as `DD-API-KEY` header
-- **Custom headers**: `DD-EVP-ORIGIN`, `DD-EVP-ORIGIN-VERSION`, `DD-REQUEST-ID`
+- **Auth**: Client token passed as `OO-API-KEY` header
+- **Custom headers**: `OO-EVP-ORIGIN`, `OO-EVP-ORIGIN-VERSION`, `OO-REQUEST-ID`
 - **Formats**: JSON, NDJSON (batches), multipart/form-data (Session Replay, crashes)
 - **Compression**: Gzip (`Content-Encoding: gzip`)
 - **Endpoints by site**: `.us1` → `browser-intake-openobserve.ai`, `.eu1` → `browser-intake-openobserve.eu`, etc.

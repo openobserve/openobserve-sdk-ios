@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -52,8 +52,8 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertEqual(url(for: .eu1), "https://browser-intake-openobserve.eu/api/v2/rum")
         XCTAssertEqual(url(for: .ap1), "https://browser-intake-ap1-openobserve.ai/api/v2/rum")
         XCTAssertEqual(url(for: .ap2), "https://browser-intake-ap2-openobserve.ai/api/v2/rum")
-        XCTAssertEqual(url(for: .us1_fed), "https://browser-intake-ddog-gov.com/api/v2/rum")
-        XCTAssertEqual(url(for: .us2_fed), "https://browser-intake-us2-ddog-gov.com/api/v2/rum")
+        XCTAssertEqual(url(for: .us1_fed), "https://browser-intake-openobserve-gov.com/api/v2/rum")
+        XCTAssertEqual(url(for: .us2_fed), "https://browser-intake-us2-openobserve-gov.com/api/v2/rum")
     }
 
     func testItSetsCustomIntakeURL() throws {
@@ -111,7 +111,7 @@ class RequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: execution)
 
         // Then
-        let expextedQuery = "ddsource=\(randomSource)&ddtags=retry_count:\(randomAttempt),retry_after:\(randomStatus)"
+        let expextedQuery = "oosource=\(randomSource)&ootags=retry_count:\(randomAttempt),retry_after:\(randomStatus)"
         XCTAssertEqual(request.url?.query, expextedQuery)
     }
 
@@ -162,10 +162,10 @@ class RequestBuilderTests: XCTestCase {
         )
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Type"], "text/plain;charset=UTF-8")
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Encoding"], "deflate")
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN"], randomOrigin)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN-VERSION"], randomSDKVersion)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomOrigin)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     func testItSetsHTTPBodyInExpectedFormat() throws {
@@ -201,7 +201,7 @@ class RequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: execution)
 
         // Then
-        XCTAssertEqual(request.url?.query, "ddsource=\(randomSource)") // no ddtags on first request
+        XCTAssertEqual(request.url?.query, "oosource=\(randomSource)") // no ootags on first request
     }
 
     func testItSetsRetryQueryParametersOnNetworkErrorRetry() throws {
@@ -215,6 +215,6 @@ class RequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: execution)
 
         // Then
-        XCTAssertEqual(request.url?.query, "ddsource=\(randomSource)&ddtags=retry_count:1") // no retry_after without response code
+        XCTAssertEqual(request.url?.query, "oosource=\(randomSource)&ootags=retry_count:1") // no retry_after without response code
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS) || os(visionOS)
@@ -79,13 +79,13 @@ class UIScrollViewSwizzlerTests: XCTestCase {
         // alongside a third-party delegate proxy (e.g. RxSwift's DelegateProxy).
         //
         // Without the getter swizzle, a third-party proxy reading `scrollView.delegate` would get
-        // `ddProxy` back and store it as its forward target, creating a circular chain:
-        //   ddProxy.originalDelegate = thirdPartyProxy, thirdPartyProxy.forwardToDelegate = ddProxy
-        // Any call to `responds(to:)` on `ddProxy` would then infinitely recurse → stack overflow.
+        // `ooProxy` back and store it as its forward target, creating a circular chain:
+        //   ooProxy.originalDelegate = thirdPartyProxy, thirdPartyProxy.forwardToDelegate = ooProxy
+        // Any call to `responds(to:)` on `ooProxy` would then infinitely recurse → stack overflow.
         //
-        // With the getter swizzle, the getter transparently returns the app's delegate (not `ddProxy`),
+        // With the getter swizzle, the getter transparently returns the app's delegate (not `ooProxy`),
         // so the third-party proxy stores the real delegate and the chain stays linear:
-        //   ddProxy → thirdPartyProxy → originalDelegate (no cycle)
+        //   ooProxy → thirdPartyProxy → originalDelegate (no cycle)
 
         // Given
         guard let handler else {
@@ -98,15 +98,15 @@ class UIScrollViewSwizzlerTests: XCTestCase {
         let scrollView = UIScrollView()
         let originalDelegate = MockScrollViewDelegate()
 
-        // App sets delegate — swizzler wraps it in ddProxy; getter transparently returns the app's delegate
+        // App sets delegate — swizzler wraps it in ooProxy; getter transparently returns the app's delegate
         scrollView.delegate = originalDelegate
         XCTAssertTrue(scrollView.delegate === originalDelegate)
 
-        // Third-party proxy reads the delegate (gets app's delegate, not ddProxy) and sets itself
+        // Third-party proxy reads the delegate (gets app's delegate, not ooProxy) and sets itself
         // as the new delegate — this is how RxSwift sets up rx.contentOffset
         let thirdPartyProxy = ThirdPartyDelegateProxy()
         thirdPartyProxy.forwardToDelegate = scrollView.delegate as? (NSObject & UIScrollViewDelegate)
-        scrollView.delegate = thirdPartyProxy  // triggers swizzler → ddProxy.originalDelegate = thirdPartyProxy
+        scrollView.delegate = thirdPartyProxy  // triggers swizzler → ooProxy.originalDelegate = thirdPartyProxy
 
         // When / Then — must not stack-overflow
         let selector = #selector(UIScrollViewDelegate.scrollViewDidScroll(_:))

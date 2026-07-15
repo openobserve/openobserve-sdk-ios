@@ -365,7 +365,7 @@ public class objc_RUMActionEvent: NSObject
     public var container: objc_RUMActionEventContainer?
     public var context: objc_RUMActionEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMActionEventDevice?
     public var display: objc_RUMActionEventDisplay?
     public var os: objc_RUMActionEventOperatingSystem?
@@ -611,7 +611,7 @@ public class objc_RUMErrorEvent: NSObject
     public var container: objc_RUMErrorEventContainer?
     public var context: objc_RUMErrorEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMErrorEventDevice?
     public var display: objc_RUMErrorEventDisplay?
     public var error: objc_RUMErrorEventError
@@ -986,7 +986,7 @@ public class objc_RUMLongTaskEvent: NSObject
     public var container: objc_RUMLongTaskEventContainer?
     public var context: objc_RUMLongTaskEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMLongTaskEventDevice?
     public var display: objc_RUMLongTaskEventDisplay?
     public var longTask: objc_RUMLongTaskEventLongTask
@@ -1231,7 +1231,7 @@ public class objc_RUMResourceEvent: NSObject
     public var container: objc_RUMResourceEventContainer?
     public var context: objc_RUMResourceEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMResourceEventDevice?
     public var display: objc_RUMResourceEventDisplay?
     public var os: objc_RUMResourceEventOperatingSystem?
@@ -1559,7 +1559,7 @@ public class objc_RUMViewEvent: NSObject
     public var container: objc_RUMViewEventContainer?
     public var context: objc_RUMViewEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMViewEventDevice?
     public var display: objc_RUMViewEventDisplay?
     public var featureFlags: objc_RUMViewEventFeatureFlags?
@@ -1975,7 +1975,7 @@ public class objc_RUMViewUpdateEvent: NSObject
     public var container: objc_RUMViewUpdateEventContainer?
     public var context: objc_RUMViewUpdateEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMViewUpdateEventDevice?
     public var display: objc_RUMViewUpdateEventDisplay?
     public var featureFlags: objc_RUMViewUpdateEventFeatureFlags?
@@ -2356,7 +2356,7 @@ public class objc_RUMVitalAppLaunchEvent: NSObject
     public var container: objc_RUMVitalAppLaunchEventContainer?
     public var context: objc_RUMVitalAppLaunchEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMVitalAppLaunchEventDevice?
     public var display: objc_RUMVitalAppLaunchEventDisplay?
     public var os: objc_RUMVitalAppLaunchEventOperatingSystem?
@@ -2576,7 +2576,7 @@ public class objc_RUMVitalDurationEvent: NSObject
     public var container: objc_RUMVitalDurationEventContainer?
     public var context: objc_RUMVitalDurationEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMVitalDurationEventDevice?
     public var display: objc_RUMVitalDurationEventDisplay?
     public var os: objc_RUMVitalDurationEventOperatingSystem?
@@ -2785,7 +2785,7 @@ public class objc_RUMVitalOperationStepEvent: NSObject
     public var container: objc_RUMVitalOperationStepEventContainer?
     public var context: objc_RUMVitalOperationStepEventRUMEventAttributes?
     public var date: NSNumber
-    public var ddtags: String?
+    public var ootags: String?
     public var device: objc_RUMVitalOperationStepEventDevice?
     public var display: objc_RUMVitalOperationStepEventDisplay?
     public var os: objc_RUMVitalOperationStepEventOperatingSystem?
@@ -3543,7 +3543,7 @@ public enum objc_TouchPrivacyLevelOverride: Int
     case show
     case hide
 public extension UIView
-    @objc var ddSessionReplayPrivacyOverrides: objc_SessionReplayPrivacyOverrides
+    @objc var ooSessionReplayPrivacyOverrides: objc_SessionReplayPrivacyOverrides
 public final class objc_SessionReplayPrivacyOverrides: NSObject
     public init(view: UIView)
     @objc public var textAndInputPrivacy: objc_TextAndInputPrivacyLevelOverride

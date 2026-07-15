@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -79,13 +79,13 @@ internal struct DataUploadStatus {
 extension DataUploadStatus {
     // MARK: - Initialization
 
-    init(httpResponse: HTTPURLResponse, ddRequestID: String?, attempt: UInt) {
+    init(httpResponse: HTTPURLResponse, ooRequestID: String?, attempt: UInt) {
         let statusCode = HTTPResponseStatusCode(rawValue: httpResponse.statusCode) ?? .unexpected
 
         self.init(
             needsRetry: statusCode.needsRetry,
             responseCode: httpResponse.statusCode,
-            userDebugDescription: "[response code: \(httpResponse.statusCode) (\(statusCode)), request ID: \(ddRequestID ?? "(???)")",
+            userDebugDescription: "[response code: \(httpResponse.statusCode) (\(statusCode)), request ID: \(ooRequestID ?? "(???)")",
             error: DataUploadError(status: httpResponse.statusCode),
             attempt: attempt
         )

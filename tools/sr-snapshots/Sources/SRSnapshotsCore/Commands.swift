@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Git
@@ -10,9 +10,9 @@ import Foundation
 import ArgumentParser
 
 /// Git clone ssh for snapshots repo.
-private let ssh = "git@github.com:DataDog/dd-mobile-session-replay-snapshots.git"
+private let ssh = "git@github.com:DataDog/oo-mobile-session-replay-snapshots.git"
 /// GitHub owner/repo identifier (used with token authentication on CI via gh CLI over HTTPS).
-private let repo = "DataDog/dd-mobile-session-replay-snapshots"
+private let repo = "DataDog/oo-mobile-session-replay-snapshots"
 /// Default branch in snapshots repo.
 private let defaultBranch = "main"
 

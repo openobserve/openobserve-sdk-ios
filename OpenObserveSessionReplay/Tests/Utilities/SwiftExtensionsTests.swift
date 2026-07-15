@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -14,7 +14,7 @@ class FixedWidthIntegerTests: XCTestCase {
         let floatingValue = CGFloat(Int.mockRandom(min: .min, max: .max))
 
         // When
-        let convertedValue = Int.ddWithNoOverflow(floatingValue)
+        let convertedValue = Int.ooWithNoOverflow(floatingValue)
 
         // Then
         let recoveredFloatingValue = CGFloat(convertedValue)
@@ -26,7 +26,7 @@ class FixedWidthIntegerTests: XCTestCase {
         let floatingValue: CGFloat = .greatestFiniteMagnitude
 
         // When
-        let convertedValue = Int.ddWithNoOverflow(floatingValue)
+        let convertedValue = Int.ooWithNoOverflow(floatingValue)
 
         // Then
         let expectedConvertedValue = Int.max
@@ -38,7 +38,7 @@ class FixedWidthIntegerTests: XCTestCase {
         let floatingValue: CGFloat = -.greatestFiniteMagnitude
 
         // When
-        let convertedValue = Int.ddWithNoOverflow(floatingValue)
+        let convertedValue = Int.ooWithNoOverflow(floatingValue)
 
         // Then
         let expectedConvertedValue = Int.min

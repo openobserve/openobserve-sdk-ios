@@ -1,13 +1,13 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
 @testable import OpenObserveInternal
 
-/// Cross-SDK test vectors for `DeterministicSampler` — derived from dd-trace-go via browser SDK sampler.spec.ts.
+/// Cross-SDK test vectors for `DeterministicSampler` — derived from oo-trace-go via browser SDK sampler.spec.ts.
 final class DeterministicSamplerTests: XCTestCase {
     /// Vectors that must produce `true` (sampled).
     func testCrossSDKVectors_itReturnsSampledTrue() {

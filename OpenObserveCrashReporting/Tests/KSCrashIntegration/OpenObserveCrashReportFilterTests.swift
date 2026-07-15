@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -101,29 +101,29 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
 
         // Then
         XCTAssertEqual(capturedReports?.count, 1)
-        let ddReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
+        let ooReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
 
         // Verify error type and message
-        XCTAssertEqual(ddReport.type, "SIGSEGV (SEGV_MAPERR)", "Should format type as 'signal (code)'")
-        XCTAssertEqual(ddReport.message, "Application crash: SIGSEGV (Segmentation fault)", "Should include signal description")
+        XCTAssertEqual(ooReport.type, "SIGSEGV (SEGV_MAPERR)", "Should format type as 'signal (code)'")
+        XCTAssertEqual(ooReport.message, "Application crash: SIGSEGV (Segmentation fault)", "Should include signal description")
 
         // Verify metadata
-        XCTAssertEqual(ddReport.meta.incidentIdentifier, "incident-123", "Should extract incident identifier")
-        XCTAssertEqual(ddReport.meta.process, "MyApp [12345]", "Should format process as 'name [pid]'")
-        XCTAssertEqual(ddReport.meta.parentProcess, "launchd [1]", "Should format parent process as 'name [pid]'")
-        XCTAssertEqual(ddReport.meta.path, "/var/containers/Bundle/Application/MyApp", "Should extract executable path")
-        XCTAssertEqual(ddReport.meta.codeType, "arm64", "Should extract architecture")
-        XCTAssertEqual(ddReport.meta.exceptionType, "SIGSEGV", "Should extract exception type")
-        XCTAssertEqual(ddReport.meta.exceptionCodes, "SEGV_MAPERR", "Should extract exception codes")
+        XCTAssertEqual(ooReport.meta.incidentIdentifier, "incident-123", "Should extract incident identifier")
+        XCTAssertEqual(ooReport.meta.process, "MyApp [12345]", "Should format process as 'name [pid]'")
+        XCTAssertEqual(ooReport.meta.parentProcess, "launchd [1]", "Should format parent process as 'name [pid]'")
+        XCTAssertEqual(ooReport.meta.path, "/var/containers/Bundle/Application/MyApp", "Should extract executable path")
+        XCTAssertEqual(ooReport.meta.codeType, "arm64", "Should extract architecture")
+        XCTAssertEqual(ooReport.meta.exceptionType, "SIGSEGV", "Should extract exception type")
+        XCTAssertEqual(ooReport.meta.exceptionCodes, "SEGV_MAPERR", "Should extract exception codes")
 
         // Verify threads
-        XCTAssertEqual(ddReport.threads.count, 1, "Should have 1 thread")
-        XCTAssertTrue(ddReport.threads[0].crashed, "Thread should be marked as crashed")
-        XCTAssertEqual(ddReport.threads[0].name, "Thread 0", "Should default thread name")
-        XCTAssertFalse(ddReport.threads[0].stack.isEmpty, "Thread should have stack")
+        XCTAssertEqual(ooReport.threads.count, 1, "Should have 1 thread")
+        XCTAssertTrue(ooReport.threads[0].crashed, "Thread should be marked as crashed")
+        XCTAssertEqual(ooReport.threads[0].name, "Thread 0", "Should default thread name")
+        XCTAssertFalse(ooReport.threads[0].stack.isEmpty, "Thread should have stack")
 
         // Verify stack format using regex parser
-        let stackLines = ddReport.stack.split(separator: "\n")
+        let stackLines = ooReport.stack.split(separator: "\n")
         XCTAssertEqual(stackLines.count, 1, "Should have 1 stack frame")
 
         let parsed = try parseStackFrame(String(stackLines[0]))
@@ -134,8 +134,8 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         XCTAssertEqual(parsed.offset, 96, "Offset should be 96 (4096 - 4000)")
 
         // Verify binary images
-        XCTAssertEqual(ddReport.binaryImages.count, 1, "Should have 1 binary image")
-        let binaryImage = ddReport.binaryImages[0]
+        XCTAssertEqual(ooReport.binaryImages.count, 1, "Should have 1 binary image")
+        let binaryImage = ooReport.binaryImages[0]
         XCTAssertEqual(binaryImage.libraryName, "MyApp", "Should extract library name from path")
         XCTAssertEqual(binaryImage.uuid, "12345678-1234-1234-1234-123456789012", "Should preserve UUID")
         XCTAssertEqual(binaryImage.architecture, "arm64", "Should extract architecture")
@@ -144,8 +144,8 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         XCTAssertFalse(binaryImage.isSystemLibrary, "MyApp should not be a system library")
 
         // Verify context
-        XCTAssertEqual(ddReport.context, Data(#"{"dd":"🐶"}"#.utf8), "Should decode context data")
-        XCTAssertFalse(ddReport.wasTruncated, "Should not be truncated by default")
+        XCTAssertEqual(ooReport.context, Data(#"{"dd":"🐶"}"#.utf8), "Should decode context data")
+        XCTAssertFalse(ooReport.wasTruncated, "Should not be truncated by default")
     }
 
     func testFilterReports_HandlesMinimalCrashReport() throws {
@@ -181,10 +181,10 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         }
 
         // Then
-        let ddReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
-        XCTAssertEqual(ddReport.type, "<unknown> (#0)")
-        XCTAssertEqual(ddReport.message, "No crash reason provided")
-        XCTAssertEqual(ddReport.stack, "???")
+        let ooReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
+        XCTAssertEqual(ooReport.type, "<unknown> (#0)")
+        XCTAssertEqual(ooReport.message, "No crash reason provided")
+        XCTAssertEqual(ooReport.stack, "???")
     }
 
     func testFilterReports_ExtractsCrashedThreadStack() throws {
@@ -257,14 +257,14 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         }
 
         // Then
-        let ddReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
+        let ooReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
 
         // Verify stack contains only crashed thread
-        XCTAssertTrue(ddReport.stack.contains("MyFramework"), "Stack should contain crashed thread frames")
-        XCTAssertFalse(ddReport.stack.contains("libsystem"), "Stack should not contain non-crashed thread frames")
+        XCTAssertTrue(ooReport.stack.contains("MyFramework"), "Stack should contain crashed thread frames")
+        XCTAssertFalse(ooReport.stack.contains("libsystem"), "Stack should not contain non-crashed thread frames")
 
         // Verify stack format using regex parser
-        let stackLines = ddReport.stack.split(separator: "\n")
+        let stackLines = ooReport.stack.split(separator: "\n")
         XCTAssertEqual(stackLines.count, 2, "Should have 2 stack frames")
 
         // First frame: 0   MyFramework   0x0000000000001388 0x1324 + 100
@@ -284,10 +284,10 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         XCTAssertEqual(secondFrame.offset, 220, "Second frame offset should be 220 (5120 - 4900)")
 
         // Verify threads
-        XCTAssertEqual(ddReport.threads.count, 2, "Should have 2 threads")
-        XCTAssertFalse(ddReport.threads[0].crashed, "First thread should not be crashed")
-        XCTAssertTrue(ddReport.threads[1].crashed, "Second thread should be crashed")
-        XCTAssertEqual(ddReport.threads[1].stack, ddReport.stack, "Crashed thread stack should match main stack")
+        XCTAssertEqual(ooReport.threads.count, 2, "Should have 2 threads")
+        XCTAssertFalse(ooReport.threads[0].crashed, "First thread should not be crashed")
+        XCTAssertTrue(ooReport.threads[1].crashed, "Second thread should be crashed")
+        XCTAssertEqual(ooReport.threads[1].stack, ooReport.stack, "Crashed thread stack should match main stack")
     }
 
     func testFilterReports_DetectsSystemVsUserBinaryImages() throws {
@@ -343,11 +343,11 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         }
 
         // Then
-        let ddReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
-        XCTAssertEqual(ddReport.binaryImages.count, 2, "Should have 2 binary images")
+        let ooReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
+        XCTAssertEqual(ooReport.binaryImages.count, 2, "Should have 2 binary images")
 
         // Verify system image details
-        let systemImage = try XCTUnwrap(ddReport.binaryImages.first { $0.libraryName == "Foundation" })
+        let systemImage = try XCTUnwrap(ooReport.binaryImages.first { $0.libraryName == "Foundation" })
         XCTAssertEqual(systemImage.isSystemLibrary, true, "Foundation should be a system library")
         XCTAssertEqual(systemImage.uuid, "12345678-1234-1234-1234-123456789ABC", "Should preserve UUID")
         XCTAssertEqual(systemImage.architecture, "arm64", "Should extract architecture from system info")
@@ -355,7 +355,7 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         XCTAssertEqual(systemImage.maxAddress, "0x0000000000003000", "Should calculate max address (load + size)")
 
         // Verify user image details
-        let userImage = try XCTUnwrap(ddReport.binaryImages.first { $0.libraryName == "MyApp" })
+        let userImage = try XCTUnwrap(ooReport.binaryImages.first { $0.libraryName == "MyApp" })
         XCTAssertEqual(userImage.isSystemLibrary, false, "MyApp should be a user library")
         XCTAssertEqual(userImage.uuid, "ABCDEF01-2345-6789-ABCD-EF0123456789", "Should preserve UUID")
         XCTAssertEqual(userImage.architecture, "arm64", "Should extract architecture from system info")
@@ -414,8 +414,8 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         }
 
         // Then
-        let ddReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
-        XCTAssertTrue(ddReport.wasTruncated)
+        let ooReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
+        XCTAssertTrue(ooReport.wasTruncated)
     }
 
     func testFilterReports_ReturnsErrorForInvalidReportType() {
@@ -471,10 +471,10 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
 
         // Then
         XCTAssertEqual(capturedReports?.count, 2)
-        let ddReport1 = try XCTUnwrap(capturedReports?[0].untypedValue as? DDCrashReport)
-        let ddReport2 = try XCTUnwrap(capturedReports?[1].untypedValue as? DDCrashReport)
-        XCTAssertEqual(ddReport1.meta.incidentIdentifier, "1")
-        XCTAssertEqual(ddReport2.meta.incidentIdentifier, "2")
+        let ooReport1 = try XCTUnwrap(capturedReports?[0].untypedValue as? DDCrashReport)
+        let ooReport2 = try XCTUnwrap(capturedReports?[1].untypedValue as? DDCrashReport)
+        XCTAssertEqual(ooReport1.meta.incidentIdentifier, "1")
+        XCTAssertEqual(ooReport2.meta.incidentIdentifier, "2")
     }
 
     func testFilterReports_HandlesInvalidOffsetCalculation() throws {
@@ -526,10 +526,10 @@ class OpenObserveCrashReportFilterTests: XCTestCase {
         }
 
         // Then
-        let ddReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
+        let ooReport = try XCTUnwrap(capturedReports?.first?.untypedValue as? DDCrashReport)
 
         // Verify stack format using regex parser
-        let stackLines = ddReport.stack.split(separator: "\n")
+        let stackLines = ooReport.stack.split(separator: "\n")
         XCTAssertEqual(stackLines.count, 1, "Should have 1 stack frame")
 
         let parsed = try parseStackFrame(String(stackLines[0]))

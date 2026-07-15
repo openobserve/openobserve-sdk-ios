@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS)
@@ -33,10 +33,10 @@ extension OpenObserveExtension where ExtendedType: UIColor {
 
         type.getRed(&r, green: &g, blue: &b, alpha: &a)
 
-        let ri = Int16.ddWithNoOverflow(round(r * 255))
-        let gi = Int16.ddWithNoOverflow(round(g * 255))
-        let bi = Int16.ddWithNoOverflow(round(b * 255))
-        let ai = Int16.ddWithNoOverflow(round(a * 255))
+        let ri = Int16.ooWithNoOverflow(round(r * 255))
+        let gi = Int16.ooWithNoOverflow(round(g * 255))
+        let bi = Int16.ooWithNoOverflow(round(b * 255))
+        let ai = Int16.ooWithNoOverflow(round(a * 255))
 
         var rstr = String(ri, radix: 16, uppercase: true)
         var gstr = String(gi, radix: 16, uppercase: true)

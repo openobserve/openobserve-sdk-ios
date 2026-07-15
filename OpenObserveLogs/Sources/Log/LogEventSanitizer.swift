@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -13,7 +13,7 @@ internal struct LogEventSanitizer {
         /// Attribute names reserved for OpenObserve.
         /// If any of those is used by the user, the attribute will be ignored.
         static let reservedAttributeNames: Set<String> = [
-            "host", "message", "status", "service", "source", "ddtags",
+            "host", "message", "status", "service", "source", "ootags",
             "dd.trace_id", "dd.span_id",
             "application_id", "session_id", "view.id", "user_action.id",
             "build_id",

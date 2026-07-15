@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -14,8 +14,8 @@ import OpenTelemetryApi
 class OTelTraceIdOpenObserveTests: XCTestCase {
     func testToOpenObserve_onlyHigherOrderBitsAreConsidered() {
         let otelId = TraceId.random()
-        let ddId = otelId.toOpenObserve()
-        XCTAssertEqual(otelId.idLo, ddId.idLo)
-        XCTAssertEqual(otelId.idHi, ddId.idHi)
+        let ooId = otelId.toOpenObserve()
+        XCTAssertEqual(otelId.idLo, ooId.idLo)
+        XCTAssertEqual(otelId.idHi, ooId.idHi)
     }
 }

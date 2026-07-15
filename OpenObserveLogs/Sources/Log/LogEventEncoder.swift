@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -159,7 +159,7 @@ public struct LogEvent: Encodable {
     /// The attributes associated with this log.
     public var attributes: LogEvent.Attributes
     /// OpenObserve tags to send with logs, in addition to ``tags``.
-    public let ddTags: String
+    public let ooTags: String
     /// Tags associated with this log.
     public var tags: [String]?
 
@@ -178,7 +178,7 @@ internal struct LogEventEncoder {
         case message
         case serviceName = "service"
         case environment = "env"
-        case tags = "ddtags"
+        case tags = "ootags"
 
         // MARK: - Error
 
@@ -375,10 +375,10 @@ internal struct LogEventEncoder {
         // Encode tags
         var tags = log.tags ?? []
         // Include dd tags
-        // log.ddTags is already a string with multiple tags
+        // log.ooTags is already a string with multiple tags
         // joined by ",". That is OK, as it gets joined with
         // the specific ones for this log.
-        tags.append(log.ddTags)
+        tags.append(log.ooTags)
         let tagsString = tags.joined(separator: ",")
         try container.encode(tagsString, forKey: .tags)
     }

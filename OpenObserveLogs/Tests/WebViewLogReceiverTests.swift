@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -76,7 +76,7 @@ class WebViewLogReceiverTests: XCTestCase {
         waitForExpectations(timeout: 0.5, handler: nil)
         let received: AnyEncodable = try XCTUnwrap(core.events().last, "It should send event")
         let expected: [String: Any] = [
-            "ddtags": "service:abc,version:abc,sdk_version:abc,env:abc",
+            "ootags": "service:abc,version:abc,sdk_version:abc,env:abc",
             "test": value
         ]
 
@@ -132,7 +132,7 @@ class WebViewLogReceiverTests: XCTestCase {
             "application_id": "123456",
             "session_id": mockSessionID.uuidString.lowercased(),
             "status": "error",
-            "ddtags": "service:abc,version:\(applicationVersion),sdk_version:abc,env:\(environment)",
+            "ootags": "service:abc,version:\(applicationVersion),sdk_version:abc,env:\(environment)",
             "view": ["referrer": "", "url": "https://openobserve.dev/browser-sdk-test-playground"]
         ]
 

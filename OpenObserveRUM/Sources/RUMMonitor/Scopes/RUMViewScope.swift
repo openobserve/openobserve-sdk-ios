@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import OpenObserveInternal
@@ -529,7 +529,7 @@ extension RUMViewScope {
         if interactionToNextViewTime == .failure(.disabled),
            let customInvValue = internalAttributes[CrossPlatformAttributes.customINVValue] as? (any BinaryInteger),
            let customInvValue = Int64(exactly: customInvValue) {
-            interactionToNextViewTime = .success(TimeInterval.ddFromNanoseconds( customInvValue))
+            interactionToNextViewTime = .success(TimeInterval.ooFromNanoseconds( customInvValue))
         }
 
         // Only add the performance member if we have a value for it
@@ -597,7 +597,7 @@ extension RUMViewScope {
             container: nil,
             context: .init(contextInfo: attributes),
             date: viewStartTime.addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ddtags: context.ddTags,
+            ootags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             featureFlags: .init(featureFlagsInfo: featureFlags),
@@ -750,7 +750,7 @@ extension RUMViewScope {
             container: nil,
             context: .init(contextInfo: commandAttributes),
             date: command.time.addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ddtags: context.ddTags,
+            ootags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             error: .init(
@@ -842,7 +842,7 @@ extension RUMViewScope {
             container: nil,
             context: .init(contextInfo: commandAttributes),
             date: (command.time - command.duration).addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ddtags: context.ddTags,
+            ootags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             longTask: .init(

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -66,8 +66,8 @@ public class objc_RUMActionEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMActionEventDevice? {
@@ -1326,8 +1326,8 @@ public class objc_RUMErrorEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMErrorEventDevice? {
@@ -3204,8 +3204,8 @@ public class objc_RUMLongTaskEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMLongTaskEventDevice? {
@@ -4440,8 +4440,8 @@ public class objc_RUMResourceEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMResourceEventDevice? {
@@ -6114,8 +6114,8 @@ public class objc_RUMViewEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMViewEventDevice? {
@@ -8224,8 +8224,8 @@ public class objc_RUMViewUpdateEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMViewUpdateEventDevice? {
@@ -10147,8 +10147,8 @@ public class objc_RUMVitalAppLaunchEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMVitalAppLaunchEventDevice? {
@@ -11260,8 +11260,8 @@ public class objc_RUMVitalDurationEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMVitalDurationEventDevice? {
@@ -12312,8 +12312,8 @@ public class objc_RUMVitalOperationStepEvent: NSObject {
         root.swiftModel.date as NSNumber
     }
 
-    public var ddtags: String? {
-        root.swiftModel.ddtags
+    public var ootags: String? {
+        root.swiftModel.ootags
     }
 
     public var device: objc_RUMVitalOperationStepEventDevice? {

@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -84,7 +84,7 @@ class OpenObserveLogsFeatureTests: XCTestCase {
         let requestURL = try XCTUnwrap(request.url)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertTrue(requestURL.absoluteString.starts(with: randomUploadURL.absoluteString + "?"))
-        XCTAssertEqual(requestURL.query, "ddsource=\(randomSource)")
+        XCTAssertEqual(requestURL.query, "oosource=\(randomSource)")
         XCTAssertEqual(
             request.allHTTPHeaderFields?["User-Agent"],
             """
@@ -93,10 +93,10 @@ class OpenObserveLogsFeatureTests: XCTestCase {
         )
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Type"], "application/json")
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Encoding"], "deflate")
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN"], randomOrigin)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-EVP-ORIGIN-VERSION"], randomSDKVersion)
-        XCTAssertEqual(request.allHTTPHeaderFields?["DD-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomOrigin)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     // MARK: - HTTP Payload

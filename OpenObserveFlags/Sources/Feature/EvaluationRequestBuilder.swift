@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -32,7 +32,7 @@ internal struct EvaluationRequestBuilder: FeatureRequestBuilder {
         let builder = URLRequestBuilder(
             url: url(with: context),
             queryItems: [
-                .ddsource(source: context.source)
+                .oosource(source: context.source)
             ],
             headers: [
                 .contentTypeHeader(contentType: .applicationJSON),
@@ -42,10 +42,10 @@ internal struct EvaluationRequestBuilder: FeatureRequestBuilder {
                     device: context.device,
                     os: context.os
                 ),
-                .ddAPIKeyHeader(clientToken: context.clientToken),
-                .ddEVPOriginHeader(source: context.ciAppOrigin ?? context.source),
-                .ddEVPOriginVersionHeader(sdkVersion: context.sdkVersion),
-                .ddRequestIDHeader()
+                .ooAPIKeyHeader(clientToken: context.clientToken),
+                .ooEVPOriginHeader(source: context.ciAppOrigin ?? context.source),
+                .ooEVPOriginVersionHeader(sdkVersion: context.sdkVersion),
+                .ooRequestIDHeader()
             ],
             telemetry: telemetry
         )

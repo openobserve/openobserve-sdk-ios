@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -66,7 +66,7 @@ internal final class AppLaunchMetric {
         guard vitalEvent.vital.appLaunchMetric == .ttid else {
             return nil
         }
-        self.init(context: context, duration: Int64.ddWithNoOverflow(vitalEvent.vital.duration))
+        self.init(context: context, duration: Int64.ooWithNoOverflow(vitalEvent.vital.duration))
         self.coldStartRule = coldStartRule?.rawValue
         startupType = vitalEvent.vital.startupType?.rawValue
 

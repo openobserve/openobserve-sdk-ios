@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import Foundation
@@ -9,21 +9,21 @@ import Foundation
 /// Builds `URLRequest` for sending data to OpenObserve.
 public struct URLRequestBuilder {
     public enum QueryItem {
-        /// `ddsource={source}` query item
-        case ddsource(source: String)
-        /// `ddtags={tag1},{tag2},...` query item
-        case ddtags(tags: [String])
+        /// `oosource={source}` query item
+        case oosource(source: String)
+        /// `ootags={tag1},{tag2},...` query item
+        case ootags(tags: [String])
     }
 
     public struct HTTPHeader {
         public static let contentTypeHeaderField = "Content-Type"
         public static let contentEncodingHeaderField = "Content-Encoding"
         public static let userAgentHeaderField = "User-Agent"
-        public static let ddAPIKeyHeaderField = "DD-API-KEY"
-        public static let ddEVPOriginHeaderField = "DD-EVP-ORIGIN"
-        public static let ddEVPOriginVersionHeaderField = "DD-EVP-ORIGIN-VERSION"
-        public static let ddRequestIDHeaderField = "DD-REQUEST-ID"
-        public static let ddIdempotencyKeyHeaderField = "DD-IDEMPOTENCY-KEY"
+        public static let ooAPIKeyHeaderField = "OO-API-KEY"
+        public static let ooEVPOriginHeaderField = "OO-EVP-ORIGIN"
+        public static let ooEVPOriginVersionHeaderField = "OO-EVP-ORIGIN-VERSION"
+        public static let ooRequestIDHeaderField = "OO-REQUEST-ID"
+        public static let ooIdempotencyKeyHeaderField = "OO-IDEMPOTENCY-KEY"
 
         public enum ContentType {
             case applicationJSON
@@ -79,30 +79,30 @@ public struct URLRequestBuilder {
         // MARK: - OpenObserve Headers
 
         /// OpenObserve request authentication header.
-        public static func ddAPIKeyHeader(clientToken: String) -> HTTPHeader {
-            return HTTPHeader(field: ddAPIKeyHeaderField, value: { clientToken })
+        public static func ooAPIKeyHeader(clientToken: String) -> HTTPHeader {
+            return HTTPHeader(field: ooAPIKeyHeaderField, value: { clientToken })
         }
 
         /// An observability and troubleshooting OpenObserve header for tracking the origin which is sending the request.
-        public static func ddEVPOriginHeader(source: String) -> HTTPHeader {
-            return HTTPHeader(field: ddEVPOriginHeaderField, value: { source })
+        public static func ooEVPOriginHeader(source: String) -> HTTPHeader {
+            return HTTPHeader(field: ooEVPOriginHeaderField, value: { source })
         }
 
         /// An observability and troubleshooting OpenObserve header for tracking the origin which is sending the request.
-        public static func ddEVPOriginVersionHeader(sdkVersion: String) -> HTTPHeader {
-            return HTTPHeader(field: ddEVPOriginVersionHeaderField, value: { sdkVersion })
+        public static func ooEVPOriginVersionHeader(sdkVersion: String) -> HTTPHeader {
+            return HTTPHeader(field: ooEVPOriginVersionHeaderField, value: { sdkVersion })
         }
 
         /// An optional OpenObserve header for debugging Intake requests by their ID.
-        public static func ddRequestIDHeader() -> HTTPHeader {
-            return HTTPHeader(field: ddRequestIDHeaderField, value: { UUID().uuidString })
+        public static func ooRequestIDHeader() -> HTTPHeader {
+            return HTTPHeader(field: ooRequestIDHeaderField, value: { UUID().uuidString })
         }
 
         /// An optional OpenObserve header for ensuring idempotent requests.
         /// - Parameter key: The idempotency key.
         /// - Returns: Header with the idempotency key.
-        public static func ddIdempotencyKeyHeader(key: String) -> HTTPHeader {
-            return HTTPHeader(field: ddIdempotencyKeyHeaderField, value: { key })
+        public static func ooIdempotencyKeyHeader(key: String) -> HTTPHeader {
+            return HTTPHeader(field: ooIdempotencyKeyHeaderField, value: { key })
         }
     }
     /// Upload `URL`.
@@ -168,10 +168,10 @@ public struct URLRequestBuilder {
 extension URLQueryItem {
     init(_ query: URLRequestBuilder.QueryItem) {
         switch query {
-        case .ddsource(let source):
-            self = URLQueryItem(name: "ddsource", value: source)
-        case .ddtags(let tags):
-            self = URLQueryItem(name: "ddtags", value: tags.joined(separator: ","))
+        case .oosource(let source):
+            self = URLQueryItem(name: "oosource", value: source)
+        case .ootags(let tags):
+            self = URLQueryItem(name: "ootags", value: tags.joined(separator: ","))
         }
     }
 }

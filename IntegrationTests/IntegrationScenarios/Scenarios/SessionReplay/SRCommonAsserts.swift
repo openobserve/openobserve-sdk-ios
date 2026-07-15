@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import HTTPServerMock
@@ -28,10 +28,10 @@ extension SRCommonAsserts {
             let contentTypeRegex = #"^multipart/form-data; boundary=.*$"#
             XCTAssertEqual(request.httpHeaders["Content-Type"]?.matches(regex: contentTypeRegex), true, file: file, line: line)
             XCTAssertEqual(request.httpHeaders["User-Agent"]?.matches(regex: userAgentRegex), true, file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["DD-API-KEY"], "ui-tests-client-token", file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["DD-EVP-ORIGIN"], "ios", file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["DD-EVP-ORIGIN-VERSION"]?.matches(regex: semverRegex), true, file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["DD-REQUEST-ID"]?.matches(regex: ddRequestIDRegex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["OO-API-KEY"], "ui-tests-client-token", file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["OO-EVP-ORIGIN"], "ios", file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["OO-EVP-ORIGIN-VERSION"]?.matches(regex: semverRegex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["OO-REQUEST-ID"]?.matches(regex: ooRequestIDRegex), true, file: file, line: line)
         }
     }
 }

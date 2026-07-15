@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -13,7 +13,7 @@ import OpenObserveInternal
 /// installed in `ServerMockProtocol`, to ensure that the request completion is delivered to the right instance of `ServerMock`.
 ///
 /// Added in RUMM-1381 to fix a range of flakiness caused by leaking asynchronous upload tasks.
-private let ddURLSessionUUIDHeaderField = "dd-urlsession-uuid"
+private let ooURLSessionUUIDHeaderField = "oo-urlsession-uuid"
 
 #if os(watchOS)
 /// On watchOS, `URLProtocol` subclasses (https://developer.apple.com/documentation/foundation/urlprotocol)
@@ -123,10 +123,10 @@ public class ServerMockProtocol: URLProtocol {
         server = ServerMock.activeInstance
 
         // Get utility header value to match it with an active instance of `ServerMock`
-        let urlSessionUUID = UUID(uuidString: request.allHTTPHeaderFields![ddURLSessionUUIDHeaderField]!)!
+        let urlSessionUUID = UUID(uuidString: request.allHTTPHeaderFields![ooURLSessionUUIDHeaderField]!)!
 
         super.init(
-            request: request.removing(httpHeaderField: ddURLSessionUUIDHeaderField), // remove utility header
+            request: request.removing(httpHeaderField: ooURLSessionUUIDHeaderField), // remove utility header
             cachedResponse: cachedResponse,
             client: client
         )
@@ -251,7 +251,7 @@ public class ServerMock {
         let configuration: URLSessionConfiguration = .ephemeral
         // Tag every request emitted by this session with our UUID. `ServerMockProtocol` uses it
         // for delivery routing; `isMyRequest(_:)` uses it to scope test handlers to this session.
-        configuration.httpAdditionalHeaders = [ddURLSessionUUIDHeaderField: urlSessionUUID.uuidString]
+        configuration.httpAdditionalHeaders = [ooURLSessionUUIDHeaderField: urlSessionUUID.uuidString]
 
         #if os(watchOS)
         // On watchOS, `URLProtocol` is non-functional. We swizzle `__NSCFLocalSessionTask._onqueue_resume`
@@ -270,7 +270,7 @@ public class ServerMock {
     /// Test handlers can use this to ignore traffic from foreign URLSessions sharing the
     /// process-global `__NSCFLocalSessionTask.resume` swizzle.
     public func isMyRequest(_ request: URLRequest) -> Bool {
-        return request.value(forHTTPHeaderField: ddURLSessionUUIDHeaderField) == urlSessionUUID.uuidString
+        return request.value(forHTTPHeaderField: ooURLSessionUUIDHeaderField) == urlSessionUUID.uuidString
     }
 
     // MARK: - Waiting for total number of requests

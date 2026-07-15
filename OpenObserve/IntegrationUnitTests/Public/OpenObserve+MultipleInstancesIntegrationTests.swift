@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -68,14 +68,14 @@ class OpenObserve_MultipleInstancesIntegrationTests: XCTestCase {
 
         defaultInstanceRequests.forEach { request in
             XCTAssertEqual(
-                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ddAPIKeyHeaderField),
+                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooAPIKeyHeaderField),
                 defaultInstanceConfig.clientToken,
                 "Default instance should authenticate data using '\(defaultInstanceConfig.clientToken)' client token"
             )
         }
         customInstanceRequests.forEach { request in
             XCTAssertEqual(
-                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ddAPIKeyHeaderField),
+                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooAPIKeyHeaderField),
                 customInstanceConfig.clientToken,
                 "Custom instance should authenticate data using '\(customInstanceConfig.clientToken)' client token"
             )

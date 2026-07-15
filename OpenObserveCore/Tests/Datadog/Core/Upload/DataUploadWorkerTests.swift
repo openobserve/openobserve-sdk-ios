@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 import XCTest
@@ -10,7 +10,7 @@ import OpenObserveInternal
 @testable import OpenObserveCore
 
 class DataUploadWorkerTests: XCTestCase {
-    private let uploaderQueue = DispatchQueue(label: "dd-tests-uploader", target: .global(qos: .utility))
+    private let uploaderQueue = DispatchQueue(label: "oo-tests-uploader", target: .global(qos: .utility))
 
     lazy var dateProvider = RelativeDateProvider(advancingBySeconds: 1)
     lazy var orchestrator = FilesOrchestrator(
@@ -51,7 +51,7 @@ class DataUploadWorkerTests: XCTestCase {
         let dataUploader = DataUploaderMock(
             uploadStatus: DataUploadStatus(
                 httpResponse: .mockResponseWith(statusCode: 200),
-                ddRequestID: nil,
+                ooRequestID: nil,
                 attempt: 0
             ),
             onUpload: { previousUploadStatus in
@@ -104,7 +104,7 @@ class DataUploadWorkerTests: XCTestCase {
         let dataUploader = DataUploaderMock(
             uploadStatus: DataUploadStatus(
                 httpResponse: .mockResponseWith(statusCode: 200),
-                ddRequestID: nil,
+                ooRequestID: nil,
                 attempt: 0
             ),
             onUpload: { previousUploadStatus in

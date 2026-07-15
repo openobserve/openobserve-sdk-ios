@@ -1,7 +1,7 @@
 /*
  * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
- * This product includes software developed at OpenObserve (https://www.openobserve.ai/).
- * Copyright 2019-Present OpenObserve, Inc.
+ * This product includes software developed at Datadog (https://www.datadoghq.com/).
+ * Copyright 2019-Present Datadog, Inc.
  */
 
 #if os(iOS)
@@ -101,7 +101,7 @@ public enum SessionReplay {
             textAndInputPrivacyLevel: configuration.textAndInputPrivacyLevel.rawValue,
             imagePrivacyLevel: configuration.imagePrivacyLevel.rawValue,
             touchPrivacyLevel: configuration.touchPrivacyLevel.rawValue,
-            sessionReplaySampleRate: Int64.ddWithNoOverflow(configuration.replaySampleRate),
+            sessionReplaySampleRate: Int64.ooWithNoOverflow(configuration.replaySampleRate),
             startRecordingImmediately: configuration.startRecordingImmediately
         )
     }
