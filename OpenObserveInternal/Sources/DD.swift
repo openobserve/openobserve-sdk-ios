@@ -38,10 +38,10 @@ public var consolePrint: @Sendable (String, CoreLoggerLevel) -> Void = { message
     #if canImport(OSLog)
     if #available(iOS 14.0, tvOS 14.0, *) {
         switch level {
-        case .debug: Logger.datadog.debug("\(message, privacy: .private)")
-        case .warn: Logger.datadog.warning("\(message, privacy: .private)")
-        case .error: Logger.datadog.critical("\(message, privacy: .private)")
-        case .critical: Logger.datadog.fault("\(message, privacy: .private)")
+        case .debug: Logger.openobserve.debug("\(message, privacy: .private)")
+        case .warn: Logger.openobserve.warning("\(message, privacy: .private)")
+        case .error: Logger.openobserve.critical("\(message, privacy: .private)")
+        case .critical: Logger.openobserve.fault("\(message, privacy: .private)")
         }
     } else {
         print(message)
@@ -54,6 +54,6 @@ public var consolePrint: @Sendable (String, CoreLoggerLevel) -> Void = { message
 #if canImport(OSLog)
 @available(iOS 14.0, tvOS 14.0, *)
 extension Logger {
-    static let datadog = Logger(subsystem: "openobserve-sdk-ios", category: "OpenObserveInternal")
+    static let openobserve = Logger(subsystem: "openobserve-sdk-ios", category: "OpenObserveInternal")
 }
 #endif

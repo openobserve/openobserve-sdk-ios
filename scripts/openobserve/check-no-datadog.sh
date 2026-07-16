@@ -30,8 +30,12 @@ if [ -n "$PATH_HITS" ]; then
 fi
 
 # --- 2. CONTENT ---------------------------------------------------------------
+# NOTE: `datadog\.` (bare lowercase + dot) catches HOSTNAMES like the upstream NTP vendor zone
+# `[0-3].datadog.pool.ntp.org`, which every other pattern here misses — they all require an
+# uppercase letter or the `hq` suffix. That gap shipped a default-on DNS lookup naming the
+# upstream vendor in the published Android alpha1. Do not remove it.
 HITS=$(echo "$PATHS" | xargs grep -nE \
-  '\bDatadog[A-Za-z]|\bDATADOG|datad0g|ddog-gov|\bddtags\b|\bddsource\b|DD-API-KEY|com\.datadoghq' \
+  '\bDatadog[A-Za-z]|\bDATADOG|datad0g|ddog-gov|\bddtags\b|\bddsource\b|DD-API-KEY|com\.datadoghq|datadog\.pool|datadog\.[a-z]+\.(org|com|net)' \
   2>/dev/null | grep -viE 'developed at Datadog|Copyright .*Datadog|licensed under' || true)
 if [ -n "$HITS" ]; then
   echo "ZERO-DATADOG GATE FAILED — Datadog token in shipped source CONTENT:"

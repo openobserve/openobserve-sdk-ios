@@ -16,10 +16,9 @@
       "token": "Datadog",
       "to": "OpenObserve",
       "skip": [
-        ".xcodeproj",
         ".xcworkspace"
       ],
-      "why": "Datadog-named directories NESTED at any depth \u2014 pathRenames.topLevelPrefix only inspects the first path segment (f.split('/')[0]) and cannot reach them. The SHIPPED violation was OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files): OpenObserveInternal is a PUBLISHED pod \u2014 the first one we push \u2014 and CocoaPods globs source_files as '**/*.swift', so the directory name lands inside the artifact even though every file's CONTENT was clean, which is why a content-only check-no-datadog.sh reported PASS. TestUtilities/Sources/Mocks/Datadog* (58 files) is also renamed, but for repo hygiene only: TestUtilities is NOT published (trunk 404; upstream does not publish it either, and it is absent from publish.sh PODS). SKIPS .xcodeproj/.xcworkspace: dev-only bundles that ship in no pod, and renaming them repoints `xcodebuild -scheme` from the verified Package.swift path to the Xcode project path \u2014 a build-system change that must not ride along with a rebrand. Tracked as Option B in patches/README; Datadog.xcworkspace is deleted by patches/0001."
+      "why": "Datadog-named directories NESTED at any depth \u2014 pathRenames.topLevelPrefix only inspects the first path segment (f.split('/')[0]) and cannot reach them. The SHIPPED violation was OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files): OpenObserveInternal is a PUBLISHED pod \u2014 the first one we push \u2014 and CocoaPods globs source_files as '**/*.swift', so the directory name lands inside the artifact even though every file's CONTENT was clean, which is why a content-only check-no-datadog.sh reported PASS. TestUtilities/Sources/Mocks/Datadog* (58 files) is also renamed, but for repo hygiene only: TestUtilities is NOT published (trunk 404; upstream does not publish it either, and it is absent from publish.sh PODS). ALSO renames OpenObserve/Datadog.xcodeproj -> OpenObserve/OpenObserve.xcodeproj: it ships in no pod, but it is the last upstream-named path visible to anyone browsing this public repo. Safe because it lives in a SUBDIRECTORY \u2014 `xcodebuild -scheme` at the repo root only inspects the root, finds no project/workspace there, and resolves via Package.swift; nothing references the project by name. SKIPS .xcworkspace on purpose: patches/0001 DELETES the root Datadog.xcworkspace, and a rename here would make that patch fail to apply. Deleting it is also what keeps `xcodebuild -scheme` on the verified Package.swift path rather than the Xcode project path."
     }
   ],
   "fileRenames": [
@@ -126,7 +125,8 @@
     "items": [
       "ddtags / ddsource query params + DD-API-KEY intake header: wire-protocol bytes; renaming to oo* needs backend + browser-sdk agreement (wire-token task, doc 08 \u00a73.2).",
       "lowercase x-datadog-* distributed-trace propagation headers: distributed trace excluded from v1 (Q4).",
-      "keep-ours identity files (README, LICENSE/NOTICE, .github) + .xcodeproj/.xcworkspace (dev-only, regenerated)."
+      "keep-ours identity files (README, LICENSE/NOTICE, .github) + .xcodeproj/.xcworkspace (dev-only, regenerated).",
+      "NTP host list (ServerOffsetPublisher.OpenObserveNTPServers): NOT a codemod rule. Upstream ships 4 hosts of the form '<N>.<vendor>.pool.ntp.org'; the fork replaces the whole ARRAY with 2 neutral anycast providers. Any literal rule leaves the '<N>.' prefix behind and yields bogus hosts like '0.time.cloudflare.com', silently breaking clock sync. This is a behavioural change to a hand-maintained list, so it lives in patches/0002 and is enforced by check-no-datadog.sh, which fails on any upstream-named network host."
     ]
   },
   "openQuestions": {

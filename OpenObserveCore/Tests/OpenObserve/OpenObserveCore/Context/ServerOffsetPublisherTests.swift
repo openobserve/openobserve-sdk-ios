@@ -20,7 +20,13 @@ class ServerOffsetPublisherTests: XCTestCase {
         try (0..<100).forEach { _ in
             publisher.publish { _ in }
             let pool = try XCTUnwrap(kronos.currentPool)
-            XCTAssertTrue(pool.hasSuffix(".datadog.pool.ntp.org"))
+            // openobserve: upstream asserted `.datadog.pool.ntp.org` here, which pinned the
+            // upstream vendor's NTP zone into the test suite — so the suite would have gone
+            // RED on the rebrand rather than catching it. Assert the inverse: whatever the
+            // list holds, the SDK must only contact hosts we ship, and never one naming the
+            // upstream vendor. See ServerOffsetPublisher.OpenObserveNTPServers.
+            XCTAssertTrue(OpenObserveNTPServers.contains(pool), "Contacted an NTP host not in the shipped list: \(pool)")
+            XCTAssertFalse(pool.lowercased().contains("datadog"), "SDK must never contact an upstream-named NTP host: \(pool)")
             pools.insert(pool)
         }
 

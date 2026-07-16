@@ -2,6 +2,17 @@
 # API surface for OpenObserveCore:
 # ----------------------------------
 
+public final class objc_URLSessionInstrumentationConfiguration: NSObject
+    public init(delegateClass: URLSessionDataDelegate.Type)
+    public func setFirstPartyHostsTracing(_ firstPartyHostsTracing: objc_URLSessionInstrumentationFirstPartyHostsTracing)
+    public var delegateClass: URLSessionDataDelegate.Type
+public final class objc_URLSessionInstrumentationFirstPartyHostsTracing: NSObject
+    public init(hostsWithHeaderTypes: [String: Set<objc_TracingHeaderType>])
+    public init(hosts: Set<String>)
+public final class objc_URLSessionInstrumentation: NSObject
+    public static func enableDurationBreakdown(with configuration: objc_URLSessionInstrumentationConfiguration)
+    public static func enable(configuration: objc_URLSessionInstrumentationConfiguration)
+    public static func disable(delegateClass: URLSessionDataDelegate.Type)
 public final class objc_TrackingConsent: NSObject
     public static func granted() -> objc_TrackingConsent
     public static func notGranted() -> objc_TrackingConsent
@@ -62,17 +73,6 @@ public final class objc_Configuration: NSObject
     public var additionalConfiguration: [String: Any]
     public var backgroundTasksEnabled: Bool
     public init(clientToken: String, env: String)
-public final class objc_URLSessionInstrumentationConfiguration: NSObject
-    public init(delegateClass: URLSessionDataDelegate.Type)
-    public func setFirstPartyHostsTracing(_ firstPartyHostsTracing: objc_URLSessionInstrumentationFirstPartyHostsTracing)
-    public var delegateClass: URLSessionDataDelegate.Type
-public final class objc_URLSessionInstrumentationFirstPartyHostsTracing: NSObject
-    public init(hostsWithHeaderTypes: [String: Set<objc_TracingHeaderType>])
-    public init(hosts: Set<String>)
-public final class objc_URLSessionInstrumentation: NSObject
-    public static func enableDurationBreakdown(with configuration: objc_URLSessionInstrumentationConfiguration)
-    public static func enable(configuration: objc_URLSessionInstrumentationConfiguration)
-    public static func disable(delegateClass: URLSessionDataDelegate.Type)
 
 # ----------------------------------
 # API surface for OpenObserveLogs:

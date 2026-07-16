@@ -13,7 +13,7 @@ final class KSCrashPluginTests: XCTestCase {
 
     func testConfiguration() throws {
         // When
-        let config: KSCrashConfiguration = try .datadog()
+        let config: KSCrashConfiguration = try .openobserve()
 
         // Then
         XCTAssertTrue(config.installPath?.contains("/Library/Caches/ai.openobserve.crash-reporting/v2") ?? false)

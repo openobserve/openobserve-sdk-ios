@@ -28,7 +28,7 @@ internal class KSCrashPlugin: NSObject, CrashReportingPlugin {
 
     init(_ kscrash: KSCrash = .shared, telemetry: Telemetry = NOPTelemetry()) throws {
         do {
-            try kscrash.install(with: .datadog())
+            try kscrash.install(with: .openobserve())
             kscrash.reportStore?.sink = CrashReportFilterPipeline(
                 filters: [
                     OpenObserveTypeSafeFilter(),
@@ -95,7 +95,7 @@ internal class KSCrashPlugin: NSObject, CrashReportingPlugin {
 }
 
 extension KSCrashConfiguration {
-    static func datadog() throws -> KSCrashConfiguration {
+    static func openobserve() throws -> KSCrashConfiguration {
         let version = "v2"
 
         guard let cache = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {

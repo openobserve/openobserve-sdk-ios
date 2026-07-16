@@ -2,12 +2,18 @@
 # API surface for OpenObserveCore:
 # ----------------------------------
 
-public let OpenObserveNTPServers = ["0.datadog.pool.ntp.org","1.datadog.pool.ntp.org","2.datadog.pool.ntp.org","3.datadog.pool.ntp.org"]
+public let OpenObserveNTPServers = ["time.cloudflare.com","time.google.com"]
 public protocol ServerDateProvider
     func synchronize(update: @escaping (TimeInterval) -> Void)
 public protocol DataEncryption
     func encrypt(data: Data) throws -> Data
     func decrypt(data: Data) throws -> Data
+public class SharedContext: NSObject
+    public let userId: String?
+    public let accountId: String?
+public final class CrossPlatformExtension: NSObject
+    public static func subscribe(toSharedContext: @escaping (SharedContext?) -> Void)
+    public static func unsubscribeFromSharedContext()
 [?] extension InternalExtension where ExtendedType == OpenObserve
     public static var telemetry: _TelemetryProxy
     public static func set(customVersion: String)
@@ -60,12 +66,6 @@ public extension OpenObserve
         public var batchProcessingLevel: BatchProcessingLevel
         public var backgroundTasksEnabled: Bool
         public init(clientToken: String,env: String,site: OpenObserveSite = .us1,service: String? = nil,version: String? = nil,bundle: Bundle = .main,batchSize: BatchSize = .medium,uploadFrequency: UploadFrequency = .average,proxyConfiguration: [AnyHashable: Any]? = nil,encryption: DataEncryption? = nil,serverDateProvider: ServerDateProvider? = nil,batchProcessingLevel: BatchProcessingLevel = .medium,backgroundTasksEnabled: Bool = false)
-public class SharedContext: NSObject
-    public let userId: String?
-    public let accountId: String?
-public final class CrossPlatformExtension: NSObject
-    public static func subscribe(toSharedContext: @escaping (SharedContext?) -> Void)
-    public static func unsubscribeFromSharedContext()
 
 # ----------------------------------
 # API surface for OpenObserveLogs:
