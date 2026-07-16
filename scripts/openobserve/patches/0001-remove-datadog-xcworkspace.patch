@@ -1,0 +1,41 @@
+commit 3532d05ebbc4d915a368fb9af74502bb4992d11b
+Author: Bhargav <BJP232004@GMAIL.COM>
+Date:   Wed Jul 15 16:58:56 2026 +0530
+
+    build: remove empty Datadog.xcworkspace (SPM scheme resolution + zero-Datadog)
+    
+    The stale Datadog.xcworkspace (dev-only, .xcworkspace is SKIPped by the rebrand)
+    had no schemes and hijacked `xcodebuild -scheme OpenObserveRUM`, hiding the SPM
+    package's auto-generated schemes. Removed so xcodebuild resolves Package.swift
+    directly (OpenObserveRUM/Core/... schemes) — and it drops a Datadog-named file.
+    Regenerate an OpenObserve.xcworkspace locally if you want one for the IDE.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+diff --git a/Datadog.xcworkspace/contents.xcworkspacedata b/Datadog.xcworkspace/contents.xcworkspacedata
+deleted file mode 100644
+index 5c0bd8f85..000000000
+--- a/Datadog.xcworkspace/contents.xcworkspacedata
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<Workspace
+-   version = "1.0">
+-   <FileRef
+-      location = "group:OpenObserve/OpenObserve.xcodeproj">
+-   </FileRef>
+-</Workspace>
+diff --git a/Datadog.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist b/Datadog.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+deleted file mode 100644
+index 18d981003..000000000
+--- a/Datadog.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
++++ /dev/null
+@@ -1,8 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+-<plist version="1.0">
+-<dict>
+-	<key>IDEDidComputeMac32BitWarning</key>
+-	<true/>
+-</dict>
+-</plist>

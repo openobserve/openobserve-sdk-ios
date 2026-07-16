@@ -26,7 +26,9 @@ const CHECK = process.argv.includes('--check')
 const CONTENT_ONLY = process.argv.includes('--content-only')
 const LIST = process.argv.includes('--list')
 
-const { rules, pathRenames, fileRenames = [] } = JSON.parse(fs.readFileSync(path.join(HERE, 'rename-map.json'), 'utf8'))
+const { rules, pathRenames, dirRenames = [], fileRenames = [] } = JSON.parse(
+  fs.readFileSync(path.join(HERE, 'rename-map.json'), 'utf8')
+)
 const keepOursPaths = fs
   .readFileSync(path.join(HERE, 'keep-ours.txt'), 'utf8')
   .split('\n')
@@ -87,6 +89,51 @@ for (const rule of pathRenames) {
   }
 }
 
+// ---- Phase 1.2: nested directory renames (any depth) ------------------------
+// topLevelMoves only inspects the FIRST path segment, so a Datadog-named directory
+// nested at any depth was structurally unreachable — e.g.
+//   OpenObserveInternal/Sources/NetworkInstrumentation/Datadog/   (SHIPPED in the pod)
+//   TestUtilities/Sources/Mocks/DatadogCore/                      (SHIPPED in the pod)
+// CocoaPods globs source_files as "**/*.swift", so those directory names ship inside
+// the published artifact and break the zero-Datadog invariant even though every file's
+// CONTENT is clean. Renames the basename of any tracked directory starting with the
+// token, deepest paths handled by iterating to a fixpoint (a rename can expose a
+// parent/child that still matches). Nested moves under an already-moved dir are
+// dropped — git mv carries their content.
+let dirMoves = 0
+for (const rule of dirRenames) {
+  const skips = rule.skip || []
+  for (let pass = 0; pass < 10; pass++) {
+    const dirs = new Set()
+    for (const f of tracked().filter((x) => !SKIP.some((re) => re.test(x)))) {
+      const parts = f.split('/')
+      for (let i = 1; i < parts.length; i++) dirs.add(parts.slice(0, i).join('/'))
+    }
+    const moves = []
+    for (const d of dirs) {
+      const base = path.basename(d)
+      if (!base.startsWith(rule.token)) continue
+      if (skips.some((s) => d.includes(s))) continue
+      if (keepOursPaths.some((p) => d === p || d.startsWith(`${p}/`))) continue
+      moves.push([d, path.join(path.dirname(d), rule.to + base.slice(rule.token.length))])
+    }
+    // shallowest first, then drop any move nested under another move in this pass
+    moves.sort((a, b) => a[0].split('/').length - b[0].split('/').length)
+    const done = []
+    const batch = moves.filter(([from]) => {
+      if (done.some((p) => from === p || from.startsWith(`${p}/`))) return false
+      done.push(from)
+      return true
+    })
+    if (!batch.length) break
+    dirMoves += batch.length
+    if (LIST) batch.forEach(([a, b]) => console.log(`  ${a} -> ${b}`))
+    if (CHECK || CONTENT_ONLY) break // no mutation: a second pass would report the same moves
+    for (const [from, to] of batch) git(['mv', from, to])
+  }
+}
+if (dirRenames.length) console.log(`dirRenames: ${dirMoves} directories ${CHECK ? 'would be' : ''} moved`)
+
 // ---- Phase 1.5: file renames (basename token) -------------------------------
 // Rename nested class-name FILES whose basename still carries a Datadog token
 // (topLevelPrefix only moves top-level product dirs/podspecs). Literal token
@@ -128,4 +175,4 @@ for (const file of tracked().filter(
   }
 }
 console.log(`content: ${changed} files ${CHECK ? 'would be' : ''} rebranded`)
-if (CHECK && (changed > 0 || totalMoves > 0 || fileMoves > 0)) process.exit(1)
+if (CHECK && (changed > 0 || totalMoves > 0 || dirMoves > 0 || fileMoves > 0)) process.exit(1)

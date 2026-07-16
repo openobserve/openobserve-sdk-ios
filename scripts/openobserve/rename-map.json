@@ -8,6 +8,14 @@
       "why": "top-level product dirs (DatadogCore, DatadogRUM, DatadogLogs, DatadogTrace, DatadogInternal, DatadogCrashReporting, DatadogSessionReplay, DatadogWebViewTracking, DatadogFlags, DatadogProfiling, umbrella Datadog) AND the matching *.podspec files. git mv each top-level entry; nested content follows."
     }
   ],
+  "dirRenames": [
+    {
+      "token": "Datadog",
+      "to": "OpenObserve",
+      "skip": [".xcodeproj", ".xcworkspace"],
+      "why": "Datadog-named directories NESTED at any depth — pathRenames.topLevelPrefix only inspects the first path segment and cannot reach them. Two of these ship inside published pods, because CocoaPods globs source_files as '**/*.swift': OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files) and TestUtilities/Sources/Mocks/Datadog* (58 files). File CONTENT was already clean, so check-no-datadog.sh (a content grep) passed while the artifact still carried a 'Datadog' path — see check-no-datadog.sh, which now gates on paths too. SKIPS .xcodeproj/.xcworkspace: those are dev-only IDE bundles that ship in no pod, and renaming them would repoint `xcodebuild -scheme` from the verified Package.swift path to the Xcode project path — a build-system change that must not ride along with a rebrand. Tracked separately; Datadog.xcworkspace is deleted by patches/0001."
+    }
+  ],
   "fileRenames": [
     {
       "token": "Datadog",
