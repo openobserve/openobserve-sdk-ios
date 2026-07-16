@@ -1,0 +1,126 @@
+diff --git b/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift a/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift
+index 624ebea59..c469045bb 100644
+--- b/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift
++++ a/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift
+@@ -7,12 +7,35 @@
+ import Foundation
+ import OpenObserveInternal
+ 
+-/// List of OpenObserve NTP pools.
++/// List of NTP servers used to synchronize the SDK clock.
++///
++/// openobserve: upstream pointed these at the vendor's own registered *vendor zone* in the NTP
++/// Pool Project (`[0-3].<upstream-vendor>.pool.ntp.org`). No SDK data travels over NTP (UDP/123
++/// carries timestamps only) and that zone resolves to community pool servers, not to upstream
++/// infrastructure — but every host running this SDK would still emit DNS lookups naming the
++/// upstream vendor. Those are visible to enterprise DNS logging, proxies and packet capture, and
++/// are enough for SDK-fingerprinting tools to report an OpenObserve app as embedding a
++/// competitor's SDK. It also made our clock sync depend on a DNS zone a competitor controls.
++///
++/// The rebrand codemod could not reach these string literals: every upstream-identity rule
++/// requires an uppercase letter or a suffix, and a bare lowercase hostname label matches none of
++/// them. See scripts/openobserve/rename-map.json (now carries an explicit rule for this) and
++/// check-no-datadog.sh (now fails on any upstream-named network host, not just file content).
++///
++/// INTERIM: neutral public anycast NTP — no registration, globally distributed. Note the NTP
++/// Pool Project explicitly asks vendors NOT to hardcode the generic `pool.ntp.org` in
++/// distributed software (that is precisely why upstream registered a vendor zone), so the
++/// generic pool is not a correct destination for us either.
++/// TODO(openobserve): register our own `openobserve.pool.ntp.org` vendor zone at
++/// https://www.ntppool.org/vendors.html and point these there — the proper long-term fix.
++///
++/// Two independent providers, not one: a caller picks at random (`randomElement()`), and
++/// upstream relied on 4 pool hosts for redundancy. Both are neutral public anycast services
++/// and resolve identically on Android, so the two SDKs stay in sync. On failure the offset
++/// falls back to `.zero` (device clock) — degraded ordering, never a crash.
+ public let OpenObserveNTPServers = [
+-    "0.datadog.pool.ntp.org",
+-    "1.datadog.pool.ntp.org",
+-    "2.datadog.pool.ntp.org",
+-    "3.datadog.pool.ntp.org"
++    "time.cloudflare.com",
++    "time.google.com"
+ ]
+ 
+ /// Abstract the monotonic clock synchronized with the server using NTP.
+diff --git b/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift a/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift
+index 1dc6f4c35..95a09fe00 100644
+--- b/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift
++++ a/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift
+@@ -20,7 +20,13 @@ class ServerOffsetPublisherTests: XCTestCase {
+         try (0..<100).forEach { _ in
+             publisher.publish { _ in }
+             let pool = try XCTUnwrap(kronos.currentPool)
+-            XCTAssertTrue(pool.hasSuffix(".datadog.pool.ntp.org"))
++            // openobserve: upstream asserted `.datadog.pool.ntp.org` here, which pinned the
++            // upstream vendor's NTP zone into the test suite — so the suite would have gone
++            // RED on the rebrand rather than catching it. Assert the inverse: whatever the
++            // list holds, the SDK must only contact hosts we ship, and never one naming the
++            // upstream vendor. See ServerOffsetPublisher.OpenObserveNTPServers.
++            XCTAssertTrue(OpenObserveNTPServers.contains(pool), "Contacted an NTP host not in the shipped list: \(pool)")
++            XCTAssertFalse(pool.lowercased().contains("datadog"), "SDK must never contact an upstream-named NTP host: \(pool)")
+             pools.insert(pool)
+         }
+ 
+diff --git b/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift a/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift
+index ddb9b5251..e17aa5a24 100644
+--- b/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift
++++ a/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift
+@@ -28,7 +28,7 @@ internal class KSCrashPlugin: NSObject, CrashReportingPlugin {
+ 
+     init(_ kscrash: KSCrash = .shared, telemetry: Telemetry = NOPTelemetry()) throws {
+         do {
+-            try kscrash.install(with: .datadog())
++            try kscrash.install(with: .openobserve())
+             kscrash.reportStore?.sink = CrashReportFilterPipeline(
+                 filters: [
+                     OpenObserveTypeSafeFilter(),
+@@ -95,7 +95,7 @@ internal class KSCrashPlugin: NSObject, CrashReportingPlugin {
+ }
+ 
+ extension KSCrashConfiguration {
+-    static func datadog() throws -> KSCrashConfiguration {
++    static func openobserve() throws -> KSCrashConfiguration {
+         let version = "v2"
+ 
+         guard let cache = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+diff --git b/OpenObserveCrashReporting/Tests/KSCrashIntegration/KSCrashPluginTests.swift a/OpenObserveCrashReporting/Tests/KSCrashIntegration/KSCrashPluginTests.swift
+index c96f22467..e3bef2138 100644
+--- b/OpenObserveCrashReporting/Tests/KSCrashIntegration/KSCrashPluginTests.swift
++++ a/OpenObserveCrashReporting/Tests/KSCrashIntegration/KSCrashPluginTests.swift
+@@ -13,7 +13,7 @@ final class KSCrashPluginTests: XCTestCase {
+ 
+     func testConfiguration() throws {
+         // When
+-        let config: KSCrashConfiguration = try .datadog()
++        let config: KSCrashConfiguration = try .openobserve()
+ 
+         // Then
+         XCTAssertTrue(config.installPath?.contains("/Library/Caches/ai.openobserve.crash-reporting/v2") ?? false)
+diff --git b/OpenObserveInternal/Sources/DD.swift a/OpenObserveInternal/Sources/DD.swift
+index a8d48d04a..7b33572b8 100644
+--- b/OpenObserveInternal/Sources/DD.swift
++++ a/OpenObserveInternal/Sources/DD.swift
+@@ -38,10 +38,10 @@ public var consolePrint: @Sendable (String, CoreLoggerLevel) -> Void = { message
+     #if canImport(OSLog)
+     if #available(iOS 14.0, tvOS 14.0, *) {
+         switch level {
+-        case .debug: Logger.datadog.debug("\(message, privacy: .private)")
+-        case .warn: Logger.datadog.warning("\(message, privacy: .private)")
+-        case .error: Logger.datadog.critical("\(message, privacy: .private)")
+-        case .critical: Logger.datadog.fault("\(message, privacy: .private)")
++        case .debug: Logger.openobserve.debug("\(message, privacy: .private)")
++        case .warn: Logger.openobserve.warning("\(message, privacy: .private)")
++        case .error: Logger.openobserve.critical("\(message, privacy: .private)")
++        case .critical: Logger.openobserve.fault("\(message, privacy: .private)")
+         }
+     } else {
+         print(message)
+@@ -54,6 +54,6 @@ public var consolePrint: @Sendable (String, CoreLoggerLevel) -> Void = { message
+ #if canImport(OSLog)
+ @available(iOS 14.0, tvOS 14.0, *)
+ extension Logger {
+-    static let datadog = Logger(subsystem: "openobserve-sdk-ios", category: "OpenObserveInternal")
++    static let openobserve = Logger(subsystem: "openobserve-sdk-ios", category: "OpenObserveInternal")
+ }
+ #endif
