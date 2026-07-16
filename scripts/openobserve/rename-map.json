@@ -4,7 +4,10 @@
     {
       "topLevelPrefix": "Datadog",
       "to": "OpenObserve",
-      "skip": [".xcworkspace", ".xcodeproj"],
+      "skip": [
+        ".xcworkspace",
+        ".xcodeproj"
+      ],
       "why": "top-level product dirs (DatadogCore, DatadogRUM, DatadogLogs, DatadogTrace, DatadogInternal, DatadogCrashReporting, DatadogSessionReplay, DatadogWebViewTracking, DatadogFlags, DatadogProfiling, umbrella Datadog) AND the matching *.podspec files. git mv each top-level entry; nested content follows."
     }
   ],
@@ -12,8 +15,11 @@
     {
       "token": "Datadog",
       "to": "OpenObserve",
-      "skip": [".xcodeproj", ".xcworkspace"],
-      "why": "Datadog-named directories NESTED at any depth — pathRenames.topLevelPrefix only inspects the first path segment and cannot reach them. Two of these ship inside published pods, because CocoaPods globs source_files as '**/*.swift': OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files) and TestUtilities/Sources/Mocks/Datadog* (58 files). File CONTENT was already clean, so check-no-datadog.sh (a content grep) passed while the artifact still carried a 'Datadog' path — see check-no-datadog.sh, which now gates on paths too. SKIPS .xcodeproj/.xcworkspace: those are dev-only IDE bundles that ship in no pod, and renaming them would repoint `xcodebuild -scheme` from the verified Package.swift path to the Xcode project path — a build-system change that must not ride along with a rebrand. Tracked separately; Datadog.xcworkspace is deleted by patches/0001."
+      "skip": [
+        ".xcodeproj",
+        ".xcworkspace"
+      ],
+      "why": "Datadog-named directories NESTED at any depth \u2014 pathRenames.topLevelPrefix only inspects the first path segment (f.split('/')[0]) and cannot reach them. The SHIPPED violation was OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files): OpenObserveInternal is a PUBLISHED pod \u2014 the first one we push \u2014 and CocoaPods globs source_files as '**/*.swift', so the directory name lands inside the artifact even though every file's CONTENT was clean, which is why a content-only check-no-datadog.sh reported PASS. TestUtilities/Sources/Mocks/Datadog* (58 files) is also renamed, but for repo hygiene only: TestUtilities is NOT published (trunk 404; upstream does not publish it either, and it is absent from publish.sh PODS). SKIPS .xcodeproj/.xcworkspace: dev-only bundles that ship in no pod, and renaming them repoints `xcodebuild -scheme` from the verified Package.swift path to the Xcode project path \u2014 a build-system change that must not ride along with a rebrand. Tracked as Option B in patches/README; Datadog.xcworkspace is deleted by patches/0001."
     }
   ],
   "fileRenames": [
@@ -118,13 +124,13 @@
   "intentionallyNotRebranded": {
     "comment": "Deferred, mirroring the Android fork.",
     "items": [
-      "ddtags / ddsource query params + DD-API-KEY intake header: wire-protocol bytes; renaming to oo* needs backend + browser-sdk agreement (wire-token task, doc 08 §3.2).",
+      "ddtags / ddsource query params + DD-API-KEY intake header: wire-protocol bytes; renaming to oo* needs backend + browser-sdk agreement (wire-token task, doc 08 \u00a73.2).",
       "lowercase x-datadog-* distributed-trace propagation headers: distributed trace excluded from v1 (Q4).",
       "keep-ours identity files (README, LICENSE/NOTICE, .github) + .xcodeproj/.xcworkspace (dev-only, regenerated)."
     ]
   },
   "openQuestions": {
-    "Q1_casing": "OpenObserveRUM (long form) chosen — must match the RN codemod's deferredRules and the Podfile the RN fork will reference.",
-    "Q4_module_scope": "The RN bridge (3.5.3) DatadogSDKReactNative.podspec pins DatadogCore/Logs/Trace/RUM/CrashReporting/Flags + DatadogWebViewTracking at 3.11.0 — includes Trace/Flags/WebViewTracking which doc 03 wanted to exclude. Same call as Android Q4: fork what the bridge needs; disable the features at the JS layer, don't remove native products."
+    "Q1_casing": "OpenObserveRUM (long form) chosen \u2014 must match the RN codemod's deferredRules and the Podfile the RN fork will reference.",
+    "Q4_module_scope": "The RN bridge (3.5.3) DatadogSDKReactNative.podspec pins DatadogCore/Logs/Trace/RUM/CrashReporting/Flags + DatadogWebViewTracking at 3.11.0 \u2014 includes Trace/Flags/WebViewTracking which doc 03 wanted to exclude. Same call as Android Q4: fork what the bridge needs; disable the features at the JS layer, don't remove native products."
   }
 }

@@ -27,13 +27,38 @@ while [ $# -gt 0 ]; do case "$1" in
 esac; done
 [ -n "$VERSION" ] || { echo "ERROR: --version X.Y.Z[-alpha.N] required" >&2; exit 2; }
 
-# Publish order: base first, then Core, then the features that depend on Core.
+# Publish order: base first, then Core, then the features. Every other pod declares
+# exactly one local dependency — OpenObserveInternal — so this order is sufficient:
+# once Internal is on trunk, each later pod resolves it from there.
+# OpenObserveProfiling is included because upstream publishes DatadogProfiling; omitting
+# it would ship 9 pods where upstream ships 10.
 PODS=(
   OpenObserveInternal
   OpenObserveCore
   OpenObserveLogs OpenObserveTrace OpenObserveRUM OpenObserveCrashReporting
   OpenObserveSessionReplay OpenObserveWebViewTracking OpenObserveFlags
+  OpenObserveProfiling
 )
+
+# Platforms to validate. The podspecs advertise ios + tvos + watchos, so all three are
+# linted — publishing a platform we never built is an unvalidated claim to consumers.
+# Requires the simulator runtimes: xcodebuild -downloadPlatform tvOS (and watchOS).
+LINT_PLATFORMS=${LINT_PLATFORMS:-ios,tvos,watchos}
+
+# Local podspecs a pod needs at lint time, BEFORE anything is on trunk.
+# Deliberately minimal — do NOT use --include-podspecs='*.podspec'. CocoaPods cannot
+# resolve the EXTERNAL transitive deps of *included* podspecs, so the glob pulled
+# TestUtilities -> OpenObserveTrace -> OpenTelemetry-Swift-Api into every lint graph and
+# failed with "Unable to find a specification for OpenTelemetry-Swift-Api (~> 2.3.0)" —
+# even while that pod resolves fine on its own, and even when linting dependency-free
+# OpenObserveInternal. Passing --sources does not help. Including only the real local
+# dep keeps external deps owned by the pod UNDER TEST, where they resolve normally.
+lint_includes() {
+  case "$1" in
+    OpenObserveInternal) echo "" ;;                                  # no dependencies
+    *)                   echo "--include-podspecs=OpenObserveInternal.podspec" ;;
+  esac
+}
 
 echo "==> OpenObserve iOS publish: $VERSION (publish=$PUBLISH, spm-only=$SPM_ONLY)"
 
@@ -54,10 +79,12 @@ xcodebuild -scheme OpenObserveRUM -destination 'generic/platform=iOS' build \
   | { xcpretty 2>/dev/null || cat; }
 
 if [ "$SPM_ONLY" = "0" ]; then
-  echo "==> pod lib lint (each pod, dependency order)"
+  echo "==> pod lib lint (each pod, dependency order, platforms=$LINT_PLATFORMS)"
   for pod in "${PODS[@]}"; do
     echo "    lint $pod"
-    pod lib lint "$pod.podspec" --allow-warnings --include-podspecs='*.podspec'
+    # shellcheck disable=SC2046  # word-splitting of lint_includes is intentional
+    pod lib lint "$pod.podspec" --allow-warnings --platforms="$LINT_PLATFORMS" $(lint_includes "$pod") \
+      || { echo "FAILED: $pod did not pass lint" >&2; exit 1; }
   done
 fi
 
