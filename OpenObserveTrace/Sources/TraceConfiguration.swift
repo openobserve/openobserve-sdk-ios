@@ -11,7 +11,6 @@ import OpenObserveInternal
 // swiftlint:disable duplicate_imports
 @_exported import enum OpenObserveInternal.URLSessionInstrumentation
 
-@_exported import class OpenObserveInternal.HTTPHeadersWriter
 @_exported import class OpenObserveInternal.B3HTTPHeadersWriter
 @_exported import class OpenObserveInternal.W3CHTTPHeadersWriter
 @_exported import enum OpenObserveInternal.TraceContextInjection

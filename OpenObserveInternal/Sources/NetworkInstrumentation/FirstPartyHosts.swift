@@ -21,13 +21,19 @@ public struct FirstPartyHosts: Equatable {
         self.init(hostsWithTracingHeaderTypes: hostsWithTracingHeaderTypes)
     }
 
-    /// Creates a `FirstPartyHosts` instance with the given set of host names by assigning `.datadog` and `.tracecontext` header types to each.
+    /// Creates a `FirstPartyHosts` instance with the given set of host names by assigning the
+    /// `.tracecontext` header type to each.
+    ///
+    /// openobserve: upstream defaulted to `[.datadog, .tracecontext]`, which silently injected
+    /// the upstream vendor's proprietary `x-<vendor>-*` headers into every first-party request —
+    /// no opt-in required. That propagator has been removed (see `TracingHeaderType`), leaving
+    /// W3C Trace Context, which is what OpenObserve actually reads.
     ///
     /// - Parameter hosts: The set of host names.
     public init(_ hosts: Set<String>) {
         self.init(
             hostsWithTracingHeaderTypes: hosts.reduce(into: [:], { partialResult, host in
-                partialResult[host] = [.datadog, .tracecontext]
+                partialResult[host] = [.tracecontext]
             })
         )
     }

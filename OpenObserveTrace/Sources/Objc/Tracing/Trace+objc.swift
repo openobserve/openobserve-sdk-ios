@@ -206,15 +206,9 @@ public final class objc_Tracer: NSObject, objc_OTTracer {
     }
 
     public func inject(_ spanContext: objc_OTSpanContext, format: String, carrier: Any) throws {
-        if let objcWriter = carrier as? objc_HTTPHeadersWriter, format == OT.formatTextMap {
-            guard let ddspanContext = spanContext.dd else {
-                return
-            }
-            swiftTracer.inject(
-                spanContext: ddspanContext.swiftSpanContext,
-                writer: objcWriter.swiftHTTPHeadersWriter
-            )
-        } else if let objcWriter = carrier as? objc_B3HTTPHeadersWriter, format == OT.formatTextMap {
+        // openobserve: the branch for the vendor-proprietary writer was removed along with the
+        // propagator itself (see `TracingHeaderType`). B3 and W3C remain.
+        if let objcWriter = carrier as? objc_B3HTTPHeadersWriter, format == OT.formatTextMap {
             guard let ddspanContext = spanContext.dd else {
                 return
             }

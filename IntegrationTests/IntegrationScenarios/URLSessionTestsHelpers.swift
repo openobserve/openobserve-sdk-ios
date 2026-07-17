@@ -18,37 +18,47 @@ protocol URLSessionTestsHelpers {
 }
 
 extension URLSessionTestsHelpers {
+    /// Reads `traceparent`, formatted as `<version>-<trace-id>-<parent-id>-<trace-flags>`.
+    private func getTraceparentComponents(from request: Request) -> [String]? {
+        request.httpHeaders[W3CHTTPHeaders.traceparent]?
+            .components(separatedBy: W3CHTTPHeaders.Constants.separator)
+    }
+
     func getTraceID(from request: Request) -> TraceID? {
-        guard let traceIDLoValue = request.httpHeaders["x-datadog-trace-id"] else {
+        guard let components = getTraceparentComponents(from: request), components.count > 1 else {
             return nil
         }
-
-        let tags = getRequestTags(request)
-        let traceIDHiValue = tags[TracingHTTPHeaders.TagKeys.traceIDHi] ?? "0"
-
-        return .init(
-            idHi: UInt64(traceIDHiValue, radix: 16) ?? 0,
-            idLo: UInt64(traceIDLoValue, radix: 10) ?? 0
-        )
+        return .init(components[1], representation: .hexadecimal)
     }
 
     func getSpanID(from request: Request) -> SpanID? {
-        guard let spanId = request.httpHeaders["x-datadog-parent-id"] else {
+        guard let components = getTraceparentComponents(from: request), components.count > 2 else {
             return nil
         }
-        return .init(spanId, representation: .decimal)
+        return .init(components[2], representation: .hexadecimal)
     }
 
     func isValid(sampleRate: Double) -> Bool { sampleRate >= 0 && sampleRate <= 1 }
 
     func getRequestTags(_ request: Request) -> [String : String] {
-        // tags are comma separated key=value pairs
-        return request.httpHeaders[TracingHTTPHeaders.tagsField]?.split(separator: ",")
-            .map { $0.split(separator: "=") }
+        // tags live in the `dd` list-member of `tracestate`, formatted as `dd=key1:value1;key2:value2`
+        guard let tracestate = request.httpHeaders[W3CHTTPHeaders.tracestate] else {
+            return [:]
+        }
+
+        let prefix = W3CHTTPHeaders.Constants.dd + "="
+        guard tracestate.hasPrefix(prefix) else {
+            return [:]
+        }
+
+        return tracestate
+            .dropFirst(prefix.count)
+            .components(separatedBy: W3CHTTPHeaders.Constants.tracestatePairSeparator)
             .reduce(into: [String: String]()) { result, pair in
-                if pair.count == 2 {
-                    result[String(pair[0])] = String(pair[1])
+                let elements = pair.components(separatedBy: W3CHTTPHeaders.Constants.tracestateKeyValueSeparator)
+                if elements.count == 2 {
+                    result[elements[0]] = elements[1]
                 }
-            } ?? [:]
+            }
     }
 }

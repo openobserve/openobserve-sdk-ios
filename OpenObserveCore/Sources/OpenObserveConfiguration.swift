@@ -8,7 +8,6 @@ import Foundation
 import OpenObserveInternal
 
 @_exported import class OpenObserveInternal.CoreRegistry
-@_exported import class OpenObserveInternal.HTTPHeadersWriter
 @_exported import class OpenObserveInternal.B3HTTPHeadersWriter
 @_exported import class OpenObserveInternal.W3CHTTPHeadersWriter
 

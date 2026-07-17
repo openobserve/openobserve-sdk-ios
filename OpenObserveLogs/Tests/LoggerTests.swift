@@ -15,7 +15,7 @@ class LoggerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        core = SingleFeatureCoreMock(context: .mockWith(applicationBundleIdentifier: "com.datadog.unit-tests"))
+        core = SingleFeatureCoreMock(context: .mockWith(applicationBundleIdentifier: "com.openobserve.unit-tests"))
         Logs.enable(in: core)
     }
 

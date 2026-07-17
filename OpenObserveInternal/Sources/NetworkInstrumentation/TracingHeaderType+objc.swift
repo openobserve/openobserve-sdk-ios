@@ -17,8 +17,9 @@ public final class objc_TracingHeaderType: NSObject {
         self.swiftType = swiftType
     }
 
-    /// [OpenObserve's `x-datadog-*` header](https://openobserve.ai/docs/real_user_monitoring/connect_rum_and_traces/?tab=browserrum#how-are-rum-resources-linked-to-traces).
-    public static let datadog = objc_TracingHeaderType(.datadog)
+    // openobserve: the upstream-proprietary propagator was removed, not renamed — see
+    // TracingHeaderType. Its headers only ever interoperated with an upstream-instrumented
+    // backend; OpenObserve reads W3C `traceparent`. Use `tracecontext` or `b3`.
     /// Open Telemetry B3 [Multiple headers](https://github.com/openzipkin/b3-propagation#multiple-headers).
     public static let b3multi = objc_TracingHeaderType(.b3multi)
     /// Open Telemetry B3 [Single header](https://github.com/openzipkin/b3-propagation#single-headers).

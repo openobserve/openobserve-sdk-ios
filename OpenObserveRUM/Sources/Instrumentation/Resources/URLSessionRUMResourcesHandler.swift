@@ -302,10 +302,6 @@ extension DistributedTracing {
         headerTypes.forEach {
             let writer: TracePropagationHeadersWriter
             switch $0 {
-            case .datadog:
-                writer = HTTPHeadersWriter(traceContextInjection: traceContextInjection)
-                // To make sure the generated traces from RUM don’t affect APM Index Spans counts.
-                request.setValue("rum", forHTTPHeaderField: TracingHTTPHeaders.originField)
             case .b3:
                 writer = B3HTTPHeadersWriter(
                     injectEncoding: .single,

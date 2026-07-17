@@ -243,13 +243,10 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertTrue(span.samplingPriority.isKept, "Span must be sampled")
 
         // Then
-        let expectedTraceIDField = String(span.traceID.idLo)
-        let expectedSpanIDField = String(span.spanID, representation: .decimal)
-        let expectedTagsField = "_oo.p.tid=\(span.traceID.idHiHex),_oo.p.dm=-1"
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+        let expectedTraceparent = "00-\(String(span.traceID, representation: .hexadecimal32Chars))-\(String(span.spanID, representation: .hexadecimal16Chars))-01"
+        let expectedTracestate = "dd=p:\(String(span.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
 
     func testSendingDroppedDistributedTraceWithNoParent_throughURLSessionInstrumentationAPI() throws {
@@ -277,10 +274,10 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // Then
         XCTAssertNil(core.waitAndReturnSpanEvents().first, "It should not send span event")
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
+        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
+        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
+        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
+        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
     }
 
     func testSendingSampledDistributedTraceWithParent_throughURLSessionInstrumentationAPI() throws {
@@ -323,13 +320,10 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertEqual(urlsessionSpan.parentID, activeSpan.spanID)
 
         // Then
-        let expectedTraceIDField = String(activeSpan.traceID.idLo)
-        let expectedSpanIDField = String(urlsessionSpan.spanID, representation: .decimal)
-        let expectedTagsField = "_oo.p.tid=\(activeSpan.traceID.idHiHex),_oo.p.dm=-1"
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+        let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars))-01"
+        let expectedTracestate = "dd=p:\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
 
     func testSendingDroppedDistributedTraceWithParent_throughURLSessionInstrumentationAPI() throws {
@@ -365,10 +359,10 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertNil(spanEvents.first(where: { $0.operationName == "urlsession.request" }))
 
         // Then
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
+        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
+        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
+        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
+        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
     }
 
     func testSendingDroppedDistributedTraceWithParent_throughURLSessionInstrumentationAPI_noInjection() throws {
@@ -404,10 +398,8 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertEqual(spanEvents.count, 0)
 
         // Then
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
+        XCTAssertNil(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
+        XCTAssertNil(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
     }
 
     // MARK: - Distributed Tracing (through Tracer API)
@@ -428,7 +420,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // When
         var request: URLRequest = .mockAny()
-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
         writer.traceHeaderFields.forEach { field, value in request.setValue(value, forHTTPHeaderField: field) }
@@ -441,13 +433,10 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertTrue(networkSpan.samplingPriority.isKept, "Span must be sampled")
 
         // Then
-        let expectedTraceIDField = String(networkSpan.traceID.idLo)
-        let expectedSpanIDField = String(networkSpan.spanID, representation: .decimal)
-        let expectedTagsField = "_oo.p.tid=\(networkSpan.traceID.idHiHex),_oo.p.dm=-1"
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+        let expectedTraceparent = "00-\(String(networkSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
+        let expectedTracestate = "dd=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
 
     func testSendingDroppedDistributedTraceWithNoParent_throughTracerAPI() throws {
@@ -466,7 +455,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // When
         var request: URLRequest = .mockAny()
-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
         writer.traceHeaderFields.forEach { field, value in request.setValue(value, forHTTPHeaderField: field) }
@@ -476,10 +465,10 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertNil(core.waitAndReturnSpanEvents().first, "It should not send span event")
 
         // Then
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
+        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
+        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
+        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
+        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
     }
 
     func testSendingSampledDistributedTraceWithParent_throughTracerAPI() throws {
@@ -500,7 +489,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // When
         var request: URLRequest = .mockAny()
-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
         let parentSpan = Tracer.shared(in: core).startSpan(operationName: "active.span").setActive()
         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
@@ -521,13 +510,10 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertEqual(networkSpan.parentID, activeSpan.spanID)
 
         // Then
-        let expectedTraceIDField = String(activeSpan.traceID.idLo)
-        let expectedSpanIDField = String(networkSpan.spanID, representation: .decimal)
-        let expectedTagsField = "_oo.p.tid=\(activeSpan.traceID.idHiHex),_oo.p.dm=-1"
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+        let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
+        let expectedTracestate = "dd=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
+        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
 
     func testSendingDroppedDistributedTraceWithParent_throughTracerAPI() throws {
@@ -548,7 +534,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // When
         var request: URLRequest = .mockAny()
-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
         let parentSpan = Tracer.shared(in: core).startSpan(operationName: "active.span").setActive()
         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
@@ -562,9 +548,9 @@ class HeadBasedSamplingTests: XCTestCase {
         XCTAssertNil(spanEvents.first(where: { $0.operationName == "network.span" }))
 
         // Then
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
+        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
+        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
+        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
+        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
     }
 }

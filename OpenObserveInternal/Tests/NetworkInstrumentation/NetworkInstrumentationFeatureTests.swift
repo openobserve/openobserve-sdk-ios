@@ -120,7 +120,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         // Given
         let url: URL = .mockAny()
         handler.firstPartyHosts = .init(
-            hostsWithTracingHeaderTypes: [url.host!: [.datadog]]
+            hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]]
         )
         try URLSessionInstrumentation.enableOrThrow(with: nil, in: core)
         // Registered delegate mode
@@ -431,7 +431,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
 
         let url: URL = .mockAny()
         handler.firstPartyHosts = .init(
-            hostsWithTracingHeaderTypes: [url.host!: [.datadog]]
+            hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]]
         )
 
         // Registered delegate mode
@@ -1999,7 +1999,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         // Given - Configure first-party hosts
         let url = URL(string: "https://api.example.com")!
         handler.firstPartyHosts = .init(
-            hostsWithTracingHeaderTypes: [url.host!: [.datadog]]
+            hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]]
         )
 
         handler.onInterceptionDidStart = { interception in
@@ -2030,7 +2030,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         // Given - Configure first-party hosts
         let url = URL(string: "https://api.example.com")!
         handler.firstPartyHosts = .init(
-            hostsWithTracingHeaderTypes: [url.host!: [.datadog, .tracecontext]]
+            hostsWithTracingHeaderTypes: [url.host!: [.b3, .tracecontext]]
         )
 
         var capturedHeaderTypes: Set<TracingHeaderType>?
@@ -2053,7 +2053,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
 
         // Then - Verify request mutation (header injection) was called with correct header types
         waitForExpectations(timeout: 5, handler: nil)
-        XCTAssertEqual(capturedHeaderTypes, [.datadog, .tracecontext], "Should pass configured header types for injection")
+        XCTAssertEqual(capturedHeaderTypes, [.b3, .tracecontext], "Should pass configured header types for injection")
         _ = server.waitAndReturnRequests(count: 1)
     }
 
@@ -2064,7 +2064,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
 
         // Given - Configure first-party hosts that don't match the request URL
         handler.firstPartyHosts = .init(
-            hostsWithTracingHeaderTypes: ["api.first-party.com": [.datadog]]
+            hostsWithTracingHeaderTypes: ["api.first-party.com": [.tracecontext]]
         )
 
         var requestMutationCalled = false
@@ -2098,7 +2098,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         // Given
         try URLSessionInstrumentation.enableOrThrow(with: nil, in: core)
         let delegate = SessionDataDelegateMock()
-        let firstPartyHosts: URLSessionInstrumentation.FirstPartyHostsTracing = .traceWithHeaders(hostsWithHeaders: ["test.com": [.datadog]])
+        let firstPartyHosts: URLSessionInstrumentation.FirstPartyHostsTracing = .traceWithHeaders(hostsWithHeaders: ["test.com": [.tracecontext]])
         try URLSessionInstrumentation.enableOrThrow(with: .init(delegateClass: SessionDataDelegateMock.self, firstPartyHostsTracing: firstPartyHosts), in: core)
 
         let session = server.getInterceptedURLSession(delegate: delegate)
@@ -2127,7 +2127,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         let feature = try XCTUnwrap(core.get(feature: NetworkInstrumentationFeature.self))
 
         let url = URL(string: "https://api.example.com/graphql")!
-        handler.firstPartyHosts = .init(hostsWithTracingHeaderTypes: [url.host!: [.datadog]])
+        handler.firstPartyHosts = .init(hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]])
 
         var request = URLRequest(url: url)
         request.setValue("GetUser", forHTTPHeaderField: GraphQLHeaders.operationName)

@@ -16,19 +16,19 @@ public struct ImmutableRequest {
     public let url: URL?
     /// The HTTP method of the request.
     public let httpMethod: String?
-    /// The value of `x-datadog-origin` header (if any).
-    public let ooOriginHeaderValue: String?
     /// A reference to the original `URLRequest` object provided during initialization. Direct use is discouraged
     /// due to thread safety concerns. Instead, necessary attributes should be accessed through `ImmutableRequest` fields.
     public let unsafeOriginal: URLRequest
 
+    // openobserve: upstream also captured `ooOriginHeaderValue`, read from the vendor's
+    // proprietary `x-<vendor>-origin` request header, and registered it on the interception so
+    // its APM would not double-count RUM-originated spans. The only writer of that header was
+    // the vendor-proprietary propagator, which has been removed (see `TracingHeaderType`), so
+    // nothing sets it and the value was always nil. Dropped rather than left as dead public API.
+
     public init(request: URLRequest) {
         self.url = request.url
         self.httpMethod = request.httpMethod
-        // RUM-3183: As observed in https://github.com/openobserve/openobserve-sdk-ios/issues/1638, accessing `request.allHTTPHeaderFields` is not
-        // safe and can lead to crashes with undefined root cause. To avoid issues we should prefer `request.value(forHTTPHeaderField:)`
-        // when interacting with `URLRequest`.
-        self.ooOriginHeaderValue = request.value(forHTTPHeaderField: TracingHTTPHeaders.originField)
         self.unsafeOriginal = request
     }
 }

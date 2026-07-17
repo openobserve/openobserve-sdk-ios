@@ -465,9 +465,10 @@ extension NetworkInstrumentationFeature {
                 interception.register(trace: traceContext)
             }
 
-            if let origin = request.ooOriginHeaderValue {
-                interception.register(origin: origin)
-            }
+            // openobserve: upstream registered an origin here from the vendor-proprietary
+            // `x-<vendor>-origin` request header. That header's only writer was the
+            // vendor-proprietary propagator, now removed (see `TracingHeaderType`), so the value
+            // was always nil and the branch dead.
 
             self.interceptions[task] = interception
 

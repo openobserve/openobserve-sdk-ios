@@ -55,13 +55,13 @@ class FirstPartyHostsTests: XCTestCase {
     func testGivenValidDictionary_itReturnsTracingHeaderTypes_forSubdomainURL() {
         let firstPartyHosts = FirstPartyHosts([
             "first-party.com": .init([.b3multi]),
-            "example.com": [.datadog, .b3multi],
+            "example.com": [.b3multi],
             "subdomain.example.com": [.tracecontext],
             "otherdomain.com": [.b3]
         ])
 
-        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://example.com/path1")), [.datadog, .b3multi])
-        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "https://subdomain.example.com/path2")), [.tracecontext, .datadog, .b3multi])
+        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://example.com/path1")), [.b3multi])
+        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "https://subdomain.example.com/path2")), [.tracecontext, .b3multi])
         XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://otherdomain.com/path3")), [.b3])
         XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "https://somedomain.com/path4")), [])
         XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://api.first-party.com")), [.b3multi])
@@ -81,17 +81,17 @@ class FirstPartyHostsTests: XCTestCase {
         }
     }
 
-    func testGivenValidSet_itAssignsOpenObserveAndTracecontextHeaderType() {
+    func testGivenValidSet_itAssignsTracecontextHeaderType() {
         let hosts = FirstPartyHosts(Set(otherHosts))
         otherHosts.forEach {
             let url = URL(string: $0)
-            XCTAssertEqual(hosts.tracingHeaderTypes(for: url), [.datadog, .tracecontext])
+            XCTAssertEqual(hosts.tracingHeaderTypes(for: url), [.tracecontext])
         }
     }
 
     func testFalsePositiveURL_itReturnsEmptyTracingHeaderTypes() {
         let filter = FirstPartyHosts(
-            hostsWithTracingHeaderTypes: ["example.com": [.datadog, .b3multi]]
+            hostsWithTracingHeaderTypes: ["example.com": [.b3multi]]
         )
         let url = URL(string: "http://foo.com/something.example.com")
 
@@ -111,7 +111,7 @@ class FirstPartyHostsTests: XCTestCase {
 
     func testGivenURLHostIsSubdomain_itIsConsideredFirstParty() {
         let filter = FirstPartyHosts([
-            "first-party.com": .init([.datadog])
+            "first-party.com": .init([.tracecontext])
         ])
         let url = URL(string: "https://api.first-party.com")!
         XCTAssertTrue(
@@ -122,7 +122,7 @@ class FirstPartyHostsTests: XCTestCase {
 
     func testGivenURLHostIsNotSubdomain_itIsNotConsideredFirstParty() {
         let filter = FirstPartyHosts([
-            "first-party.com": .init([.datadog])
+            "first-party.com": .init([.tracecontext])
         ])
         let urlString = "https://apifirst-party.com"
         let url = URL(string: urlString)!
@@ -138,7 +138,7 @@ class FirstPartyHostsTests: XCTestCase {
 
     func testGivenWRongURL_itIsNotConsideredFirstParty() {
         let filter = FirstPartyHosts([
-            "first-party.com": .init([.datadog])
+            "first-party.com": .init([.tracecontext])
         ])
         let badUrlString = ""
         let badUrl = URL(string: badUrlString)

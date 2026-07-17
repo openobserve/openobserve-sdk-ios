@@ -38,7 +38,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
             contextReceiver: receiver,
             samplingRate: .maxSampleRate,
             firstPartyHosts: .init([
-                "www.example.com": [.datadog]
+                "www.example.com": [.tracecontext]
             ]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
@@ -229,7 +229,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
         _ = handler.contextReceiver.receive(message: message, from: core)
         let (modifiedRequest, _, _) = handler.modify(
             request: request,
-            headerTypes: [.datadog, .tracecontext, .b3, .b3multi],
+            headerTypes: [.tracecontext, .b3, .b3multi],
             networkContext: NetworkContext(
                 rumContext: .mockWith(
                     applicationID: .mockRandom(),
@@ -246,12 +246,8 @@ class TracingURLSessionHandlerTests: XCTestCase {
                 "X-B3-Sampled": "1",
                 "X-B3-TraceId": "000000000000000a0000000000000064",
                 "b3": "000000000000000a0000000000000064-0000000000000064-1",
-                "x-datadog-trace-id": "100",
-                "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1",
                 "baggage": "session.id=\(fakeSessionId.uuidString.lowercased())",
-                "tracestate": "dd=p:0000000000000064;s:1;t.dm:-1",
-                "x-datadog-parent-id": "100",
-                "x-datadog-sampling-priority": "1"
+                "tracestate": "dd=p:0000000000000064;s:1;t.dm:-1"
             ]
         )
     }

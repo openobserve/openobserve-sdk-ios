@@ -32,46 +32,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
 
     private lazy var handler = createHandler(rumAttributesProvider: nil)
 
-    func testGivenFirstPartyInterception_withSampledTrace_itInjectDDTraceHeaders() throws {
-        // Given
-        let handler = createHandler(
-            distributedTracing: .init(
-                samplingRate: .maxSampleRate,
-                firstPartyHosts: .init(),
-                traceIDGenerator: RelativeTracingUUIDGenerator(startingFrom: .init(idHi: 10, idLo: 100)),
-                spanIDGenerator: RelativeSpanIDGenerator(startingFrom: 100, advancingByCount: 0),
-                traceContextInjection: .all
-            )
-        )
-
-        // When
-        let (request, traceContext, _) = handler.modify(
-            request: .mockWith(url: "https://www.example.com"),
-            headerTypes: [.datadog],
-            networkContext: NetworkContext(
-                rumContext: .mockWith(
-                    applicationID: .mockRandom(),
-                    sessionID: .mockWith("abcdef01-2345-6789-abcd-ef0123456789")
-                )
-            )
-        )
-
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField), "rum")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
-        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.baggage), "session.id=abcdef01-2345-6789-abcd-ef0123456789")
-
-        let injectedTraceContext = try XCTUnwrap(traceContext, "It must return injected trace context")
-        XCTAssertEqual(injectedTraceContext.traceID, .init(idHi: 10, idLo: 100))
-        XCTAssertEqual(injectedTraceContext.spanID, 100)
-        XCTAssertNil(injectedTraceContext.parentSpanID)
-        XCTAssertEqual(injectedTraceContext.sampleRate, 100)
-        XCTAssertEqual(injectedTraceContext.samplingPriority, SamplingPriority.autoKeep)
-        XCTAssertEqual(injectedTraceContext.samplingDecisionMaker, SamplingMechanismType.agentRate)
-        XCTAssertEqual(injectedTraceContext.rumSessionId, "abcdef01-2345-6789-abcd-ef0123456789")
-    }
 
     func testGivenFirstPartyInterception_withSampledTrace_itInjectB3TraceHeaders() throws {
         // Given
@@ -97,7 +57,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Single.b3Field), "000000000000000a0000000000000064-0000000000000064-1")
 
         let injectedTraceContext = try XCTUnwrap(traceContext, "It must return injected trace context")
@@ -134,7 +93,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000064")
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
@@ -174,7 +132,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), "00-000000000000000a0000000000000064-0000000000000064-01")
 
         let injectedTraceContext = try XCTUnwrap(traceContext, "It must return injected trace context")
@@ -187,37 +144,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         XCTAssertEqual(injectedTraceContext.rumSessionId, "abcdef01-2345-6789-abcd-ef0123456789")
     }
 
-    func testGivenFirstPartyInterception_withRejectedTrace_itDoesNotInjectDDTraceHeaders() throws {
-        /// Given
-        let handler = createHandler(
-            distributedTracing: .init(
-                samplingRate: 0,
-                firstPartyHosts: .init(),
-                traceIDGenerator: RelativeTracingUUIDGenerator(startingFrom: .init(idHi: 10, idLo: 100)),
-                spanIDGenerator: RelativeSpanIDGenerator(startingFrom: 100, advancingByCount: 0),
-                traceContextInjection: .sampled
-            )
-        )
-
-        // When
-        let (request, traceContext, _) = handler.modify(
-            request: .mockWith(url: "https://www.example.com"),
-            headerTypes: [.datadog],
-            networkContext: NetworkContext(
-                rumContext: .mockWith(
-                    applicationID: .mockRandom(),
-                    sessionID: .mockWith("abcdef01-2345-6789-abcd-ef0123456789")
-                )
-            )
-        )
-
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField), "rum")
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
-
-        XCTAssertNil(traceContext, "It must return no trace context")
-    }
 
     func testGivenFirstPartyInterception_withRejectedTrace_itDoesNotInjectB3TraceHeaders() throws {
         /// Given
@@ -243,7 +169,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Single.b3Field), "000000000000000a0000000000000064-0000000000000064-0")
 
         XCTAssertNil(traceContext, "It must return no trace context")
@@ -273,7 +198,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000064")
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
@@ -306,7 +230,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), "00-000000000000000a0000000000000064-0000000000000064-00")
 
         XCTAssertNil(traceContext, "It must return no trace context")
@@ -326,10 +249,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
 
         // When
         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
@@ -343,7 +262,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         let (request, _, _) = handler.modify(
             request: orgRequest,
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -358,10 +276,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
@@ -386,10 +300,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
 
         // When
         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
@@ -415,10 +325,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
@@ -445,10 +351,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
 
         // When
         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
@@ -471,10 +373,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
@@ -761,7 +659,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         let request: URLRequest = .mockWith(httpMethod: "GET")
         let (modifiedRequest, _, _) = handler.modify(
             request: request,
-            headerTypes: [.datadog, .tracecontext, .b3, .b3multi],
+            headerTypes: [.tracecontext, .b3, .b3multi],
             networkContext: NetworkContext(
                 rumContext: .mockWith(
                     applicationID: .mockRandom(),
@@ -779,11 +677,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
                 "X-B3-Sampled": "1",
                 "X-B3-TraceId": "000000000000000a0000000000000064",
                 "b3": "000000000000000a0000000000000064-0000000000000064-1",
-                "x-datadog-trace-id": "100",
-                "x-datadog-parent-id": "100",
-                "x-datadog-sampling-priority": "1",
-                "x-datadog-origin": "rum",
-                "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1",
                 "baggage": "session.id=abcdef01-2345-6789-abcd-ef0123456789",
             ]
         )
@@ -809,7 +702,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         // When
         let (modifiedRequest, _, _) = handler.modify(
             request: request,
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: NetworkContext(
                 rumContext: .mockWith(
                     applicationID: .mockRandom(),
@@ -969,7 +862,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         // When
         let (modifiedRequest, _, _) = handler.modify(
             request: request,
-            headerTypes: [.datadog, .tracecontext], // Both inject baggage headers
+            headerTypes: [.b3, .tracecontext],
             networkContext: NetworkContext(
                 rumContext: .mockWith(
                     applicationID: .mockRandom(),
@@ -1014,7 +907,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         // When
         let (_, traceContext, _) = handler.modify(
             request: mockRequest,
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: NetworkContext(
                 rumContext: .mockWith(
                     applicationID: .mockRandom(),
@@ -1145,7 +1038,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
         for _ in 1...10 {
             let (_, traceContext, _) = handler.modify(
                 request: .mockWith(url: "https://www.example.com"),
-                headerTypes: [.datadog],
+                headerTypes: [.tracecontext],
                 networkContext: NetworkContext(
                     rumContext: .mockWith(
                         applicationID: .mockRandom(),

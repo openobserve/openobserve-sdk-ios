@@ -21,17 +21,6 @@ class ImmutableRequestTests: XCTestCase {
         XCTAssertEqual(immutable.httpMethod, original.httpMethod)
     }
 
-    func testReadingOpenObserveOriginHeader() {
-        let expectedValue: String = .mockRandom(length: 128)
-        let original: URLRequest = .mockWith(
-            headers: [
-                TracingHTTPHeaders.originField: expectedValue
-            ]
-        )
-        let immutable = ImmutableRequest(request: original)
-        XCTAssertEqual(immutable.ooOriginHeaderValue, expectedValue)
-    }
-
     func testPreservingUnsafeOriginal() {
         let original: URLRequest = .mockAny()
         let immutable = ImmutableRequest(request: original)

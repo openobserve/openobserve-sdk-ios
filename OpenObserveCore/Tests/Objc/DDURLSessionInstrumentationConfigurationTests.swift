@@ -22,7 +22,7 @@ final class DDURLSessionInstrumentationConfigurationTests: XCTestCase {
         objc.setFirstPartyHostsTracing(.init(hosts: ["example.com", "example.org"]))
         DDAssertReflectionEqual(swift.firstPartyHostsTracing, .trace(hosts: ["example.com", "example.org"]))
 
-        objc.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["example.com": [.b3, .datadog]]))
-        DDAssertReflectionEqual(swift.firstPartyHostsTracing, .traceWithHeaders(hostsWithHeaders: ["example.com": [.b3, .datadog]]))
+        objc.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["example.com": [.b3, .tracecontext]]))
+        DDAssertReflectionEqual(swift.firstPartyHostsTracing, .traceWithHeaders(hostsWithHeaders: ["example.com": [.b3, .tracecontext]]))
     }
 }

@@ -94,8 +94,6 @@ internal struct TracingURLSessionHandler: OpenObserveURLSessionHandler {
         headerTypes.forEach {
             let writer: TracePropagationHeadersWriter
             switch $0 {
-            case .datadog:
-                writer = HTTPHeadersWriter(traceContextInjection: traceContextInjection)
             case .b3:
                 writer = B3HTTPHeadersWriter(
                     injectEncoding: .single,

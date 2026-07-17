@@ -111,7 +111,7 @@ internal final class OpenObserveTracer: OTTracer, OpenTelemetryApi.Tracer {
     }
 
     func extract(reader: OTFormatReader) -> OTSpanContext? {
-        // TODO: RUMM-385 - make `HTTPHeadersReader` available in public API
+        // openobserve: upstream TODO RUMM-385 dropped — the vendor-proprietary header reader was removed (see TracingHeaderType).
         guard let context = reader.extract() as? DDSpanContext else {
             return nil
         }

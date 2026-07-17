@@ -822,28 +822,6 @@ class TracerTests: XCTestCase {
 
     // MARK: - Injecting span context into carrier
 
-    func testInjectingAndExtractingSpanContextUsingOpenObserveCarrier() {
-        // Given
-        Trace.enable(with: config, in: core)
-        let tracer = Tracer.shared(in: core)
-        let injectedContext = tracer.startSpan(operationName: .mockAny()).context
-
-        // When
-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
-        tracer.inject(spanContext: injectedContext, writer: writer)
-
-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
-        let extractedContext = tracer.extract(reader: reader)!
-
-        // Then
-        XCTAssertEqual(injectedContext.dd.traceID, extractedContext.dd.traceID)
-        XCTAssertEqual(injectedContext.dd.spanID, extractedContext.dd.spanID)
-        XCTAssertEqual(injectedContext.dd.parentSpanID, extractedContext.dd.parentSpanID)
-        XCTAssertEqual(injectedContext.dd.sampleRate, extractedContext.dd.sampleRate)
-        XCTAssertEqual(injectedContext.dd.samplingDecision.samplingPriority, extractedContext.dd.samplingDecision.samplingPriority)
-        XCTAssertEqual(injectedContext.dd.samplingDecision.decisionMaker, extractedContext.dd.samplingDecision.decisionMaker)
-    }
-
     func testInjectingAndExtractingSpanContextUsingB3SingleCarrier() {
         // Given
         Trace.enable(with: config, in: core)

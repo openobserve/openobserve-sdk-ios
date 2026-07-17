@@ -7,11 +7,9 @@
 import Foundation
 import OpenObserveInternal
 
-extension HTTPHeadersReader: OTFormatReader {}
 extension W3CHTTPHeadersReader: OTFormatReader {}
 extension B3HTTPHeadersReader: OTFormatReader {}
 
-extension HTTPHeadersWriter: OTFormatWriter {}
 extension W3CHTTPHeadersWriter: OTFormatWriter {}
 extension B3HTTPHeadersWriter: OTFormatWriter {}
 

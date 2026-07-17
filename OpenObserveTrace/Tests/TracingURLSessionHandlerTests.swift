@@ -33,7 +33,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
             contextReceiver: receiver,
             samplingRate: .maxSampleRate,
             firstPartyHosts: .init([
-                "www.example.com": [.datadog]
+                "www.example.com": [.tracecontext]
             ]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
@@ -60,7 +60,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: .mockWith(url: "https://www.example.com"),
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -74,10 +73,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000064")
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
@@ -108,10 +103,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
 
         // When
         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
@@ -123,7 +114,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: orgRequest,
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -137,10 +127,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
@@ -168,7 +154,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: .mockWith(url: "https://www.example.com"),
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -182,9 +167,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField))
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField))
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
@@ -214,7 +196,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: .mockWith(url: "https://www.example.com"),
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -230,10 +211,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
 
         span.finish()
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000065")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "0000000000000064")
@@ -269,7 +246,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: .mockWith(url: "https://www.example.com"),
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -285,10 +261,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
 
         span.finish()
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-4")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "2")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000065")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "0000000000000064")
@@ -324,7 +296,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: .mockWith(url: "https://www.example.com"),
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -340,10 +311,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
 
         span.finish()
 
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "-1")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000065")
         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "0000000000000064")
@@ -379,7 +346,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
         let (request, traceContext, capturedState) = handler.modify(
             request: .mockWith(url: "https://www.example.com"),
             headerTypes: [
-                .datadog,
                 .b3,
                 .b3multi,
                 .tracecontext
@@ -393,9 +359,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField))
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField))
         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
@@ -560,10 +523,8 @@ class TracingURLSessionHandlerTests: XCTestCase {
         core.onEventWriteContext = { _ in expectation.fulfill() }
 
         // Given - with duration breakdown
-        let request: ImmutableRequest = .mockWith(
-            allHTTPHeaderFields: [TracingHTTPHeaders.originField: "rum"]
-        )
-        let interception = URLSessionTaskInterception(request: request, isFirstParty: false, trackingMode: .registeredDelegate)
+        let interception = URLSessionTaskInterception(request: .mockAny(), isFirstParty: false, trackingMode: .registeredDelegate)
+        interception.register(origin: "rum")
         interception.register(response: .mockAny(), error: nil)
         interception.register(
             metrics: .mockWith(
@@ -588,10 +549,8 @@ class TracingURLSessionHandlerTests: XCTestCase {
         core.onEventWriteContext = { _ in expectation.fulfill() }
 
         // Given - automatic mode
-        let request: ImmutableRequest = .mockWith(
-            allHTTPHeaderFields: [TracingHTTPHeaders.originField: "rum"]
-        )
-        let interception = URLSessionTaskInterception(request: request, isFirstParty: false, trackingMode: .automatic)
+        let interception = URLSessionTaskInterception(request: .mockAny(), isFirstParty: false, trackingMode: .automatic)
+        interception.register(origin: "rum")
         interception.register(response: .mockAny(), error: nil)
         interception.register(startDate: .mockDecember15th2019At10AMUTC())
         interception.register(endDate: .mockDecember15th2019At10AMUTC(addingTimeInterval: 1))
@@ -862,7 +821,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: ContextMessageReceiver(samplerProvider: SamplerProvider(sampleRate: .maxSampleRate)),
             samplingRate: .maxSampleRate,
-            firstPartyHosts: .init(["www.example.com": [.datadog]]),
+            firstPartyHosts: .init(["www.example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
         )
@@ -894,7 +853,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: ContextMessageReceiver(samplerProvider: SamplerProvider(sampleRate: .maxSampleRate)),
             samplingRate: .maxSampleRate,
-            firstPartyHosts: .init(["www.example.com": [.datadog]]),
+            firstPartyHosts: .init(["www.example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry(),
             redactedStatusCodes: []
@@ -927,7 +886,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: ContextMessageReceiver(samplerProvider: SamplerProvider(sampleRate: .maxSampleRate)),
             samplingRate: .maxSampleRate,
-            firstPartyHosts: .init(["www.example.com": [.datadog]]),
+            firstPartyHosts: .init(["www.example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry(),
             redactedStatusCodes: [404, 500]
@@ -984,7 +943,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: receiver,
             samplingRate: 80.0,
-            firstPartyHosts: .init(["example.com": [.datadog]]),
+            firstPartyHosts: .init(["example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
         )
@@ -992,12 +951,12 @@ class TracingURLSessionHandlerTests: XCTestCase {
         // When — modify is called twice with the same networkContext
         let (_, ctx1, _) = handler.modify(
             request: .mockWith(url: "https://example.com/path"),
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: networkContext
         )
         let (_, ctx2, _) = handler.modify(
             request: .mockWith(url: "https://example.com/path"),
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: networkContext
         )
 
@@ -1026,14 +985,14 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: receiver,
             samplingRate: traceRate,
-            firstPartyHosts: .init(["example.com": [.datadog]]),
+            firstPartyHosts: .init(["example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
         )
 
         let (_, traceContext, _) = handler.modify(
             request: .mockWith(url: "https://example.com/resource"),
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: NetworkContext(rumContext: RUMCoreContext(applicationID: "app-id", sessionID: sessionUUID, sessionSampler: sessionSampler))
         )
 
@@ -1050,14 +1009,14 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: receiver,
             samplingRate: 80.0,
-            firstPartyHosts: .init(["example.com": [.datadog]]),
+            firstPartyHosts: .init(["example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
         )
 
         let (_, traceContext, _) = handler.modify(
             request: .mockWith(url: "https://example.com/path"),
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: NetworkContext(rumContext: nil)
         )
 
@@ -1085,14 +1044,14 @@ class TracingURLSessionHandlerTests: XCTestCase {
             tracer: tracer,
             contextReceiver: receiver,
             samplingRate: traceRate,
-            firstPartyHosts: .init(["example.com": [.datadog]]),
+            firstPartyHosts: .init(["example.com": [.tracecontext]]),
             traceContextInjection: .all,
             telemetry: NOPTelemetry()
         )
 
         let (_, traceContext, _) = handler.modify(
             request: .mockWith(url: "https://example.com/resource"),
-            headerTypes: [.datadog],
+            headerTypes: [.tracecontext],
             networkContext: NetworkContext(rumContext: RUMCoreContext(applicationID: "app-id", sessionID: sessionUUID, sessionSampler: sessionSampler))
         )
 

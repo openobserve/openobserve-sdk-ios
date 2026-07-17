@@ -135,7 +135,7 @@ class TraceTests: XCTestCase {
             )
             },
             { self.config.urlSessionTracking = .init(
-                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.datadog, .b3]])
+                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.tracecontext, .b3]])
             )
             },
         ])
@@ -186,7 +186,7 @@ class TraceTests: XCTestCase {
             )
             },
             { self.config.urlSessionTracking = .init(
-                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.datadog, .b3]], sampleRate: random)
+                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.tracecontext, .b3]], sampleRate: random)
             )
             },
         ])

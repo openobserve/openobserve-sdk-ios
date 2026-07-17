@@ -31,7 +31,6 @@ extension TraceContextInjection {
 @available(iOS 13, tvOS 13, *)
 internal struct DebugManualTraceInjectionView: View {
     enum TraceHeaderType: String, CaseIterable, Identifiable {
-        case datadog = "OpenObserve"
         case w3c = "W3C"
         case b3Single = "B3-Single"
         case b3Multiple = "B3-Multiple"
@@ -41,7 +40,7 @@ internal struct DebugManualTraceInjectionView: View {
 
     @State private var spanName = "network request"
     @State private var requestURL = "https://httpbin.org/get"
-    @State private var selectedTraceHeaderTypes: Set<TraceHeaderType> = [.datadog, .w3c]
+    @State private var selectedTraceHeaderTypes: Set<TraceHeaderType> = [.w3c]
     @State private var selectedTraceContextInjection: TraceContextInjection = .sampled
     @State private var isRequestPending = false
 
@@ -116,12 +115,6 @@ internal struct DebugManualTraceInjectionView: View {
 
         for selectedTraceHeaderType in selectedTraceHeaderTypes {
             switch selectedTraceHeaderType {
-            case .datadog:
-                let writer = HTTPHeadersWriter(
-                    traceContextInjection: selectedTraceContextInjection
-                )
-                Tracer.shared().inject(spanContext: span.context, writer: writer)
-                writer.traceHeaderFields.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
             case .w3c:
                 let writer = W3CHTTPHeadersWriter(
                     tracestate: [:],

@@ -107,13 +107,13 @@ class DDRUMConfigurationTests: XCTestCase {
         objc.setURLSessionTracking(tracking)
         DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .trace(hosts: ["foo.com"], sampleRate: 99)))
 
-        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .datadog]]))
+        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .tracecontext]]))
         objc.setURLSessionTracking(tracking)
-        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .datadog]])))
+        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .tracecontext]])))
 
-        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .datadog]], sampleRate: 99))
+        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .tracecontext]], sampleRate: 99))
         objc.setURLSessionTracking(tracking)
-        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .datadog]], sampleRate: 99)))
+        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .tracecontext]], sampleRate: 99)))
     }
 
     func testSetDDRUMURLSessionTrackingWithTrackResourceHeaders() {

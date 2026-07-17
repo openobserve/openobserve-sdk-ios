@@ -30,7 +30,7 @@ class NetworkInstrumentationIntegrationTests: XCTestCase {
         var config = Trace.Configuration(
             urlSessionTracking: Trace.Configuration.URLSessionTracking(
                 firstPartyHostsTracing: .traceWithHeaders(
-                    hostsWithHeaders: ["www.example.com": [.datadog]],
+                    hostsWithHeaders: ["www.example.com": [.tracecontext]],
                     sampleRate: 100
                 )
             )
