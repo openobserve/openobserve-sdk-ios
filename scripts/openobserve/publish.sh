@@ -71,10 +71,17 @@ PODS=(
   OpenObserveProfiling
 )
 
-# Platforms to validate. The podspecs advertise ios + tvos + watchos, so all three are
-# linted — publishing a platform we never built is an unvalidated claim to consumers.
-# Requires the simulator runtimes: xcodebuild -downloadPlatform tvOS (and watchOS).
-LINT_PLATFORMS=${LINT_PLATFORMS:-ios,tvos,watchos}
+# Platforms to validate. Left EMPTY on purpose: `pod lib lint` already defaults to linting
+# every platform a podspec declares, which is exactly the bar we want — validate everything
+# we advertise, and nothing we don't. Do NOT hardcode a list here: the pods differ
+# (SessionReplay and Profiling are ios+tvos; WebViewTracking is ios-only; the rest add
+# watchos), so forcing ios,tvos,watchos on all of them fails with
+# "Platform `watchOS` is not supported by specification `OpenObserveSessionReplay`".
+# Requires the simulator runtimes to be installed for every declared platform
+# (xcodebuild -downloadPlatform tvOS / watchOS) — a missing runtime, not a missing flag,
+# is what makes a platform fail to lint.
+# Override only to narrow scope during local iteration, e.g. LINT_PLATFORMS=ios.
+LINT_PLATFORMS=${LINT_PLATFORMS:-}
 
 # Local podspecs a pod needs at lint time, BEFORE anything is on trunk.
 # Deliberately minimal — do NOT use --include-podspecs='*.podspec'. CocoaPods cannot
@@ -110,11 +117,13 @@ xcodebuild -scheme OpenObserveRUM -destination 'generic/platform=iOS' build \
   | { xcpretty 2>/dev/null || cat; }
 
 if [ "$SPM_ONLY" = "0" ]; then
-  echo "==> pod lib lint (each pod, dependency order, platforms=$LINT_PLATFORMS)"
+  echo "==> pod lib lint (each pod, dependency order, platforms=${LINT_PLATFORMS:-<as declared by each podspec>})"
+  PLATFORM_ARG=""
+  [ -n "$LINT_PLATFORMS" ] && PLATFORM_ARG="--platforms=$LINT_PLATFORMS"
   for pod in "${PODS[@]}"; do
     echo "    lint $pod"
-    # shellcheck disable=SC2046  # word-splitting of lint_includes is intentional
-    pod lib lint "$pod.podspec" --allow-warnings --platforms="$LINT_PLATFORMS" $(lint_includes "$pod") \
+    # shellcheck disable=SC2046,SC2086  # word-splitting of the optional flags is intentional
+    pod lib lint "$pod.podspec" --allow-warnings $PLATFORM_ARG $(lint_includes "$pod") \
       || { echo "FAILED: $pod did not pass lint" >&2; exit 1; }
   done
 fi
