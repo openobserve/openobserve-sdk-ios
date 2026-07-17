@@ -307,9 +307,6 @@ public enum objc_InjectEncoding: Int
 public final class objc_B3HTTPHeadersWriter: NSObject
     public var traceHeaderFields: [String: String]
     public init(injectEncoding: objc_InjectEncoding = .single,traceContextInjection: objc_TraceContextInjection = .sampled)
-public final class objc_HTTPHeadersWriter: NSObject
-    public var traceHeaderFields: [String: String]
-    public init(traceContextInjection: objc_TraceContextInjection)
 public enum objc_TraceContextInjection: Int
     case all
     case sampled
