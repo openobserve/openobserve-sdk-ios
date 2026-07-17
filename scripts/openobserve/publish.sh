@@ -139,7 +139,16 @@ git tag -f "$VERSION"
 git push -f origin "$VERSION"
 
 if [ "$SPM_ONLY" = "0" ]; then
-  : "${COCOAPODS_TRUNK_TOKEN:?set your CocoaPods trunk token}"
+  # Trunk auth comes from EITHER an explicit token (CI) or the ~/.netrc session written by
+  # `pod trunk register` (local). Requiring the env var unconditionally would abort a local
+  # publish that is in fact fully authenticated.
+  if [ -z "${COCOAPODS_TRUNK_TOKEN:-}" ] && ! grep -q 'trunk.cocoapods.org' "${HOME}/.netrc" 2>/dev/null; then
+    echo "ERROR: no CocoaPods trunk credentials." >&2
+    echo "       Local:  pod trunk register you@openobserve.ai 'OpenObserve'  (then click the email link)" >&2
+    echo "       CI:     export COCOAPODS_TRUNK_TOKEN=..." >&2
+    exit 2
+  fi
+  echo "    trunk auth: ${COCOAPODS_TRUNK_TOKEN:+env token}${COCOAPODS_TRUNK_TOKEN:-~/.netrc session}"
   echo "==> pod trunk push (dependency order — each waits for its deps on trunk)"
   for pod in "${PODS[@]}"; do
     echo "    push $pod"
