@@ -1,3 +1,316 @@
+diff --git b/IntegrationTests/IntegrationScenarios/URLSessionTestsHelpers.swift a/IntegrationTests/IntegrationScenarios/URLSessionTestsHelpers.swift
+index c854c00b4..a0a2d187a 100644
+--- b/IntegrationTests/IntegrationScenarios/URLSessionTestsHelpers.swift
++++ a/IntegrationTests/IntegrationScenarios/URLSessionTestsHelpers.swift
+@@ -18,37 +18,47 @@ protocol URLSessionTestsHelpers {
+ }
+ 
+ extension URLSessionTestsHelpers {
++    /// Reads `traceparent`, formatted as `<version>-<trace-id>-<parent-id>-<trace-flags>`.
++    private func getTraceparentComponents(from request: Request) -> [String]? {
++        request.httpHeaders[W3CHTTPHeaders.traceparent]?
++            .components(separatedBy: W3CHTTPHeaders.Constants.separator)
++    }
++
+     func getTraceID(from request: Request) -> TraceID? {
+-        guard let traceIDLoValue = request.httpHeaders["x-datadog-trace-id"] else {
++        guard let components = getTraceparentComponents(from: request), components.count > 1 else {
+             return nil
+         }
+-
+-        let tags = getRequestTags(request)
+-        let traceIDHiValue = tags[TracingHTTPHeaders.TagKeys.traceIDHi] ?? "0"
+-
+-        return .init(
+-            idHi: UInt64(traceIDHiValue, radix: 16) ?? 0,
+-            idLo: UInt64(traceIDLoValue, radix: 10) ?? 0
+-        )
++        return .init(components[1], representation: .hexadecimal)
+     }
+ 
+     func getSpanID(from request: Request) -> SpanID? {
+-        guard let spanId = request.httpHeaders["x-datadog-parent-id"] else {
++        guard let components = getTraceparentComponents(from: request), components.count > 2 else {
+             return nil
+         }
+-        return .init(spanId, representation: .decimal)
++        return .init(components[2], representation: .hexadecimal)
+     }
+ 
+     func isValid(sampleRate: Double) -> Bool { sampleRate >= 0 && sampleRate <= 1 }
+ 
+     func getRequestTags(_ request: Request) -> [String : String] {
+-        // tags are comma separated key=value pairs
+-        return request.httpHeaders[TracingHTTPHeaders.tagsField]?.split(separator: ",")
+-            .map { $0.split(separator: "=") }
++        // tags live in the `dd` list-member of `tracestate`, formatted as `dd=key1:value1;key2:value2`
++        guard let tracestate = request.httpHeaders[W3CHTTPHeaders.tracestate] else {
++            return [:]
++        }
++
++        let prefix = W3CHTTPHeaders.Constants.dd + "="
++        guard tracestate.hasPrefix(prefix) else {
++            return [:]
++        }
++
++        return tracestate
++            .dropFirst(prefix.count)
++            .components(separatedBy: W3CHTTPHeaders.Constants.tracestatePairSeparator)
+             .reduce(into: [String: String]()) { result, pair in
+-                if pair.count == 2 {
+-                    result[String(pair[0])] = String(pair[1])
++                let elements = pair.components(separatedBy: W3CHTTPHeaders.Constants.tracestateKeyValueSeparator)
++                if elements.count == 2 {
++                    result[elements[0]] = elements[1]
+                 }
+-            } ?? [:]
++            }
+     }
+ }
+diff --git b/OpenObserve/Example/Debugging/DebugManualTraceInjectionViewController.swift a/OpenObserve/Example/Debugging/DebugManualTraceInjectionViewController.swift
+index 2e6cafac4..f86cc2b60 100644
+--- b/OpenObserve/Example/Debugging/DebugManualTraceInjectionViewController.swift
++++ a/OpenObserve/Example/Debugging/DebugManualTraceInjectionViewController.swift
+@@ -31,7 +31,6 @@ extension TraceContextInjection {
+ @available(iOS 13, tvOS 13, *)
+ internal struct DebugManualTraceInjectionView: View {
+     enum TraceHeaderType: String, CaseIterable, Identifiable {
+-        case datadog = "OpenObserve"
+         case w3c = "W3C"
+         case b3Single = "B3-Single"
+         case b3Multiple = "B3-Multiple"
+@@ -41,7 +40,7 @@ internal struct DebugManualTraceInjectionView: View {
+ 
+     @State private var spanName = "network request"
+     @State private var requestURL = "https://httpbin.org/get"
+-    @State private var selectedTraceHeaderTypes: Set<TraceHeaderType> = [.datadog, .w3c]
++    @State private var selectedTraceHeaderTypes: Set<TraceHeaderType> = [.w3c]
+     @State private var selectedTraceContextInjection: TraceContextInjection = .sampled
+     @State private var isRequestPending = false
+ 
+@@ -116,12 +115,6 @@ internal struct DebugManualTraceInjectionView: View {
+ 
+         for selectedTraceHeaderType in selectedTraceHeaderTypes {
+             switch selectedTraceHeaderType {
+-            case .datadog:
+-                let writer = HTTPHeadersWriter(
+-                    traceContextInjection: selectedTraceContextInjection
+-                )
+-                Tracer.shared().inject(spanContext: span.context, writer: writer)
+-                writer.traceHeaderFields.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
+             case .w3c:
+                 let writer = W3CHTTPHeadersWriter(
+                     tracestate: [:],
+diff --git b/OpenObserve/Example/ExampleAppDelegate.swift a/OpenObserve/Example/ExampleAppDelegate.swift
+index 6bd5b3538..d06642327 100644
+--- b/OpenObserve/Example/ExampleAppDelegate.swift
++++ a/OpenObserve/Example/ExampleAppDelegate.swift
+@@ -80,7 +80,7 @@ class ExampleAppDelegate: UIResponder, UIApplicationDelegate {
+             with: RUM.Configuration(
+                 applicationID: Environment.readRUMApplicationID(),
+                 urlSessionTracking: .init(
+-                    firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["api.shopist.io": [.datadog]],sampleRate: 100),
++                    firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["api.shopist.io": [.tracecontext]],sampleRate: 100),
+                     resourceAttributesProvider: { req, resp, data, err in
+                         print("⭐️ [Attributes Provider] data: \(String(describing: data))")
+                         return [:]
+diff --git b/OpenObserve/IntegrationUnitTests/Public/NetworkInstrumentationIntegrationTests.swift a/OpenObserve/IntegrationUnitTests/Public/NetworkInstrumentationIntegrationTests.swift
+index ca8dcf663..31745a13a 100644
+--- b/OpenObserve/IntegrationUnitTests/Public/NetworkInstrumentationIntegrationTests.swift
++++ a/OpenObserve/IntegrationUnitTests/Public/NetworkInstrumentationIntegrationTests.swift
+@@ -30,7 +30,7 @@ class NetworkInstrumentationIntegrationTests: XCTestCase {
+         var config = Trace.Configuration(
+             urlSessionTracking: Trace.Configuration.URLSessionTracking(
+                 firstPartyHostsTracing: .traceWithHeaders(
+-                    hostsWithHeaders: ["www.example.com": [.datadog]],
++                    hostsWithHeaders: ["www.example.com": [.tracecontext]],
+                     sampleRate: 100
+                 )
+             )
+diff --git b/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift a/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift
+index 8f090e62e..74aab3dc8 100644
+--- b/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift
++++ a/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift
+@@ -243,13 +243,10 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertTrue(span.samplingPriority.isKept, "Span must be sampled")
+ 
+         // Then
+-        let expectedTraceIDField = String(span.traceID.idLo)
+-        let expectedSpanIDField = String(span.spanID, representation: .decimal)
+-        let expectedTagsField = "_oo.p.tid=\(span.traceID.idHiHex),_oo.p.dm=-1"
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
++        let expectedTraceparent = "00-\(String(span.traceID, representation: .hexadecimal32Chars))-\(String(span.spanID, representation: .hexadecimal16Chars))-01"
++        let expectedTracestate = "dd=p:\(String(span.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
+     }
+ 
+     func testSendingDroppedDistributedTraceWithNoParent_throughURLSessionInstrumentationAPI() throws {
+@@ -277,10 +274,10 @@ class HeadBasedSamplingTests: XCTestCase {
+ 
+         // Then
+         XCTAssertNil(core.waitAndReturnSpanEvents().first, "It should not send span event")
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
++        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
++        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
++        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
++        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
+     }
+ 
+     func testSendingSampledDistributedTraceWithParent_throughURLSessionInstrumentationAPI() throws {
+@@ -323,13 +320,10 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertEqual(urlsessionSpan.parentID, activeSpan.spanID)
+ 
+         // Then
+-        let expectedTraceIDField = String(activeSpan.traceID.idLo)
+-        let expectedSpanIDField = String(urlsessionSpan.spanID, representation: .decimal)
+-        let expectedTagsField = "_oo.p.tid=\(activeSpan.traceID.idHiHex),_oo.p.dm=-1"
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
++        let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars))-01"
++        let expectedTracestate = "dd=p:\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
+     }
+ 
+     func testSendingDroppedDistributedTraceWithParent_throughURLSessionInstrumentationAPI() throws {
+@@ -365,10 +359,10 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertNil(spanEvents.first(where: { $0.operationName == "urlsession.request" }))
+ 
+         // Then
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
++        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
++        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
++        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
++        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
+     }
+ 
+     func testSendingDroppedDistributedTraceWithParent_throughURLSessionInstrumentationAPI_noInjection() throws {
+@@ -404,10 +398,8 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertEqual(spanEvents.count, 0)
+ 
+         // Then
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
++        XCTAssertNil(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
++        XCTAssertNil(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
+     }
+ 
+     // MARK: - Distributed Tracing (through Tracer API)
+@@ -428,7 +420,7 @@ class HeadBasedSamplingTests: XCTestCase {
+ 
+         // When
+         var request: URLRequest = .mockAny()
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
++        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
+         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
+         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
+         writer.traceHeaderFields.forEach { field, value in request.setValue(value, forHTTPHeaderField: field) }
+@@ -441,13 +433,10 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertTrue(networkSpan.samplingPriority.isKept, "Span must be sampled")
+ 
+         // Then
+-        let expectedTraceIDField = String(networkSpan.traceID.idLo)
+-        let expectedSpanIDField = String(networkSpan.spanID, representation: .decimal)
+-        let expectedTagsField = "_oo.p.tid=\(networkSpan.traceID.idHiHex),_oo.p.dm=-1"
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
++        let expectedTraceparent = "00-\(String(networkSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
++        let expectedTracestate = "dd=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
+     }
+ 
+     func testSendingDroppedDistributedTraceWithNoParent_throughTracerAPI() throws {
+@@ -466,7 +455,7 @@ class HeadBasedSamplingTests: XCTestCase {
+ 
+         // When
+         var request: URLRequest = .mockAny()
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
++        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
+         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
+         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
+         writer.traceHeaderFields.forEach { field, value in request.setValue(value, forHTTPHeaderField: field) }
+@@ -476,10 +465,10 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertNil(core.waitAndReturnSpanEvents().first, "It should not send span event")
+ 
+         // Then
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
++        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
++        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
++        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
++        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
+     }
+ 
+     func testSendingSampledDistributedTraceWithParent_throughTracerAPI() throws {
+@@ -500,7 +489,7 @@ class HeadBasedSamplingTests: XCTestCase {
+ 
+         // When
+         var request: URLRequest = .mockAny()
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
++        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
+         let parentSpan = Tracer.shared(in: core).startSpan(operationName: "active.span").setActive()
+         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
+         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
+@@ -521,13 +510,10 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertEqual(networkSpan.parentID, activeSpan.spanID)
+ 
+         // Then
+-        let expectedTraceIDField = String(activeSpan.traceID.idLo)
+-        let expectedSpanIDField = String(networkSpan.spanID, representation: .decimal)
+-        let expectedTagsField = "_oo.p.tid=\(activeSpan.traceID.idHiHex),_oo.p.dm=-1"
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
++        let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
++        let expectedTracestate = "dd=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
++        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
+     }
+ 
+     func testSendingDroppedDistributedTraceWithParent_throughTracerAPI() throws {
+@@ -548,7 +534,7 @@ class HeadBasedSamplingTests: XCTestCase {
+ 
+         // When
+         var request: URLRequest = .mockAny()
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
++        let writer = W3CHTTPHeadersWriter(traceContextInjection: .all)
+         let parentSpan = Tracer.shared(in: core).startSpan(operationName: "active.span").setActive()
+         let span = Tracer.shared(in: core).startSpan(operationName: "network.span")
+         Tracer.shared(in: core).inject(spanContext: span.context, writer: writer)
+@@ -562,9 +548,9 @@ class HeadBasedSamplingTests: XCTestCase {
+         XCTAssertNil(spanEvents.first(where: { $0.operationName == "network.span" }))
+ 
+         // Then
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNotNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField))
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "0")
++        let traceparent = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent))
++        let tracestate = try XCTUnwrap(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate))
++        XCTAssertTrue(traceparent.hasSuffix("-\(W3CHTTPHeaders.Constants.unsampledValue)"), "Trace context must be injected as unsampled")
++        XCTAssertTrue(tracestate.contains("s:0"), "Trace context must be injected as unsampled")
+     }
+ }
 diff --git b/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift a/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift
 index 624ebea59..c469045bb 100644
 --- b/OpenObserveCore/Sources/Core/Context/ServerOffsetPublisher.swift
@@ -43,6 +356,76 @@ index 624ebea59..c469045bb 100644
  ]
  
  /// Abstract the monotonic clock synchronized with the server using NTP.
+diff --git b/OpenObserveCore/Sources/OpenObserveConfiguration.swift a/OpenObserveCore/Sources/OpenObserveConfiguration.swift
+index 2dab6326e..f6812c425 100644
+--- b/OpenObserveCore/Sources/OpenObserveConfiguration.swift
++++ a/OpenObserveCore/Sources/OpenObserveConfiguration.swift
+@@ -8,7 +8,6 @@ import Foundation
+ import OpenObserveInternal
+ 
+ @_exported import class OpenObserveInternal.CoreRegistry
+-@_exported import class OpenObserveInternal.HTTPHeadersWriter
+ @_exported import class OpenObserveInternal.B3HTTPHeadersWriter
+ @_exported import class OpenObserveInternal.W3CHTTPHeadersWriter
+ 
+diff --git b/OpenObserveCore/Tests/Objc/DDRUMConfigurationTests.swift a/OpenObserveCore/Tests/Objc/DDRUMConfigurationTests.swift
+index 8c2b08569..85ff40be2 100644
+--- b/OpenObserveCore/Tests/Objc/DDRUMConfigurationTests.swift
++++ a/OpenObserveCore/Tests/Objc/DDRUMConfigurationTests.swift
+@@ -107,13 +107,13 @@ class DDRUMConfigurationTests: XCTestCase {
+         objc.setURLSessionTracking(tracking)
+         DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .trace(hosts: ["foo.com"], sampleRate: 99)))
+ 
+-        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .datadog]]))
++        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .tracecontext]]))
+         objc.setURLSessionTracking(tracking)
+-        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .datadog]])))
++        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .tracecontext]])))
+ 
+-        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .datadog]], sampleRate: 99))
++        tracking.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["foo.com": [.b3, .tracecontext]], sampleRate: 99))
+         objc.setURLSessionTracking(tracking)
+-        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .datadog]], sampleRate: 99)))
++        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .tracecontext]], sampleRate: 99)))
+     }
+ 
+     func testSetDDRUMURLSessionTrackingWithTrackResourceHeaders() {
+diff --git b/OpenObserveCore/Tests/Objc/DDTraceConfigurationTests.swift a/OpenObserveCore/Tests/Objc/DDTraceConfigurationTests.swift
+index 08d0d7650..1eb279502 100644
+--- b/OpenObserveCore/Tests/Objc/DDTraceConfigurationTests.swift
++++ a/OpenObserveCore/Tests/Objc/DDTraceConfigurationTests.swift
+@@ -45,13 +45,13 @@ class DDTraceConfigurationTests: XCTestCase {
+         objc.setURLSessionTracking(tracking)
+         DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .trace(hosts: ["foo.com"], sampleRate: 99)))
+ 
+-        tracking = objc_TraceURLSessionTracking(firstPartyHostsTracing: .init(hostsWithHeaderTypes: ["foo.com": [.b3, .datadog]]))
++        tracking = objc_TraceURLSessionTracking(firstPartyHostsTracing: .init(hostsWithHeaderTypes: ["foo.com": [.b3, .tracecontext]]))
+         objc.setURLSessionTracking(tracking)
+-        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .datadog]])))
++        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .tracecontext]])))
+ 
+-        tracking = objc_TraceURLSessionTracking(firstPartyHostsTracing: .init(hostsWithHeaderTypes: ["foo.com": [.b3, .datadog]], sampleRate: 99))
++        tracking = objc_TraceURLSessionTracking(firstPartyHostsTracing: .init(hostsWithHeaderTypes: ["foo.com": [.b3, .tracecontext]], sampleRate: 99))
+         objc.setURLSessionTracking(tracking)
+-        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .datadog]], sampleRate: 99)))
++        DDAssertReflectionEqual(swift.urlSessionTracking, .init(firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["foo.com": [.b3, .tracecontext]], sampleRate: 99)))
+     }
+ 
+     func testBundleWithRUM() {
+diff --git b/OpenObserveCore/Tests/Objc/DDURLSessionInstrumentationConfigurationTests.swift a/OpenObserveCore/Tests/Objc/DDURLSessionInstrumentationConfigurationTests.swift
+index 094d9fcf6..d574ed7be 100644
+--- b/OpenObserveCore/Tests/Objc/DDURLSessionInstrumentationConfigurationTests.swift
++++ a/OpenObserveCore/Tests/Objc/DDURLSessionInstrumentationConfigurationTests.swift
+@@ -22,7 +22,7 @@ final class DDURLSessionInstrumentationConfigurationTests: XCTestCase {
+         objc.setFirstPartyHostsTracing(.init(hosts: ["example.com", "example.org"]))
+         DDAssertReflectionEqual(swift.firstPartyHostsTracing, .trace(hosts: ["example.com", "example.org"]))
+ 
+-        objc.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["example.com": [.b3, .datadog]]))
+-        DDAssertReflectionEqual(swift.firstPartyHostsTracing, .traceWithHeaders(hostsWithHeaders: ["example.com": [.b3, .datadog]]))
++        objc.setFirstPartyHostsTracing(.init(hostsWithHeaderTypes: ["example.com": [.b3, .tracecontext]]))
++        DDAssertReflectionEqual(swift.firstPartyHostsTracing, .traceWithHeaders(hostsWithHeaders: ["example.com": [.b3, .tracecontext]]))
+     }
+ }
 diff --git b/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift a/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift
 index 1dc6f4c35..95a09fe00 100644
 --- b/OpenObserveCore/Tests/OpenObserve/OpenObserveCore/Context/ServerOffsetPublisherTests.swift
@@ -62,6 +445,75 @@ index 1dc6f4c35..95a09fe00 100644
              pools.insert(pool)
          }
  
+diff --git b/OpenObserveCore/Tests/OpenObserve/TracerTests.swift a/OpenObserveCore/Tests/OpenObserve/TracerTests.swift
+index 2fc667700..0ae8dffa2 100644
+--- b/OpenObserveCore/Tests/OpenObserve/TracerTests.swift
++++ a/OpenObserveCore/Tests/OpenObserve/TracerTests.swift
+@@ -822,28 +822,6 @@ class TracerTests: XCTestCase {
+ 
+     // MARK: - Injecting span context into carrier
+ 
+-    func testInjectingAndExtractingSpanContextUsingOpenObserveCarrier() {
+-        // Given
+-        Trace.enable(with: config, in: core)
+-        let tracer = Tracer.shared(in: core)
+-        let injectedContext = tracer.startSpan(operationName: .mockAny()).context
+-
+-        // When
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-        tracer.inject(spanContext: injectedContext, writer: writer)
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        let extractedContext = tracer.extract(reader: reader)!
+-
+-        // Then
+-        XCTAssertEqual(injectedContext.dd.traceID, extractedContext.dd.traceID)
+-        XCTAssertEqual(injectedContext.dd.spanID, extractedContext.dd.spanID)
+-        XCTAssertEqual(injectedContext.dd.parentSpanID, extractedContext.dd.parentSpanID)
+-        XCTAssertEqual(injectedContext.dd.sampleRate, extractedContext.dd.sampleRate)
+-        XCTAssertEqual(injectedContext.dd.samplingDecision.samplingPriority, extractedContext.dd.samplingDecision.samplingPriority)
+-        XCTAssertEqual(injectedContext.dd.samplingDecision.decisionMaker, extractedContext.dd.samplingDecision.decisionMaker)
+-    }
+-
+     func testInjectingAndExtractingSpanContextUsingB3SingleCarrier() {
+         // Given
+         Trace.enable(with: config, in: core)
+diff --git b/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift a/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift
+index da2f4f041..495fa16bc 100644
+--- b/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift
++++ a/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift
+@@ -38,7 +38,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             contextReceiver: receiver,
+             samplingRate: .maxSampleRate,
+             firstPartyHosts: .init([
+-                "www.example.com": [.datadog]
++                "www.example.com": [.tracecontext]
+             ]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+@@ -229,7 +229,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         _ = handler.contextReceiver.receive(message: message, from: core)
+         let (modifiedRequest, _, _) = handler.modify(
+             request: request,
+-            headerTypes: [.datadog, .tracecontext, .b3, .b3multi],
++            headerTypes: [.tracecontext, .b3, .b3multi],
+             networkContext: NetworkContext(
+                 rumContext: .mockWith(
+                     applicationID: .mockRandom(),
+@@ -246,12 +246,8 @@ class TracingURLSessionHandlerTests: XCTestCase {
+                 "X-B3-Sampled": "1",
+                 "X-B3-TraceId": "000000000000000a0000000000000064",
+                 "b3": "000000000000000a0000000000000064-0000000000000064-1",
+-                "x-datadog-trace-id": "100",
+-                "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1",
+                 "baggage": "session.id=\(fakeSessionId.uuidString.lowercased())",
+-                "tracestate": "dd=p:0000000000000064;s:1;t.dm:-1",
+-                "x-datadog-parent-id": "100",
+-                "x-datadog-sampling-priority": "1"
++                "tracestate": "dd=p:0000000000000064;s:1;t.dm:-1"
+             ]
+         )
+     }
 diff --git b/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift a/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift
 index ddb9b5251..e17aa5a24 100644
 --- b/OpenObserveCrashReporting/Sources/KSCrashIntegration/KSCrashPlugin.swift
@@ -124,3 +576,1567 @@ index a8d48d04a..7b33572b8 100644
 +    static let openobserve = Logger(subsystem: "openobserve-sdk-ios", category: "OpenObserveInternal")
  }
  #endif
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/FirstPartyHosts.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/FirstPartyHosts.swift
+index 9e0337047..ec4bf4a8f 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/FirstPartyHosts.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/FirstPartyHosts.swift
+@@ -21,13 +21,19 @@ public struct FirstPartyHosts: Equatable {
+         self.init(hostsWithTracingHeaderTypes: hostsWithTracingHeaderTypes)
+     }
+ 
+-    /// Creates a `FirstPartyHosts` instance with the given set of host names by assigning `.datadog` and `.tracecontext` header types to each.
++    /// Creates a `FirstPartyHosts` instance with the given set of host names by assigning the
++    /// `.tracecontext` header type to each.
++    ///
++    /// openobserve: upstream defaulted to `[.datadog, .tracecontext]`, which silently injected
++    /// the upstream vendor's proprietary `x-<vendor>-*` headers into every first-party request —
++    /// no opt-in required. That propagator has been removed (see `TracingHeaderType`), leaving
++    /// W3C Trace Context, which is what OpenObserve actually reads.
+     ///
+     /// - Parameter hosts: The set of host names.
+     public init(_ hosts: Set<String>) {
+         self.init(
+             hostsWithTracingHeaderTypes: hosts.reduce(into: [:], { partialResult, host in
+-                partialResult[host] = [.datadog, .tracecontext]
++                partialResult[host] = [.tracecontext]
+             })
+         )
+     }
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/NetworkInstrumentationFeature.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/NetworkInstrumentationFeature.swift
+index 6e5956ca0..3e71c621e 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/NetworkInstrumentationFeature.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/NetworkInstrumentationFeature.swift
+@@ -465,9 +465,10 @@ extension NetworkInstrumentationFeature {
+                 interception.register(trace: traceContext)
+             }
+ 
+-            if let origin = request.ooOriginHeaderValue {
+-                interception.register(origin: origin)
+-            }
++            // openobserve: upstream registered an origin here from the vendor-proprietary
++            // `x-<vendor>-origin` request header. That header's only writer was the
++            // vendor-proprietary propagator, now removed (see `TracingHeaderType`), so the value
++            // was always nil and the branch dead.
+ 
+             self.interceptions[task] = interception
+ 
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/HTTPHeadersReader.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/HTTPHeadersReader.swift
+deleted file mode 100644
+index 23055462e..000000000
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/HTTPHeadersReader.swift
++++ /dev/null
+@@ -1,77 +0,0 @@
+-/*
+- * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+- * This product includes software developed at Datadog (https://www.datadoghq.com/).
+- * Copyright 2019-Present Datadog, Inc.
+- */
+-
+-import Foundation
+-
+-public class HTTPHeadersReader: TracePropagationHeadersReader {
+-    private let httpHeaderFields: [String: String]
+-
+-    public init(httpHeaderFields: [String: String]) {
+-        self.httpHeaderFields = httpHeaderFields
+-    }
+-
+-    public func read() -> (traceID: TraceID, spanID: SpanID, parentSpanID: SpanID?)? {
+-        guard let traceIDLoValue = httpHeaderFields[TracingHTTPHeaders.traceIDField],
+-              let spanIDValue = httpHeaderFields[TracingHTTPHeaders.parentSpanIDField],
+-              let spanID = SpanID(spanIDValue, representation: .decimal)
+-        else {
+-            return nil
+-        }
+-
+-        // tags are comma separated key=value pairs
+-        let tags = httpHeaderFields[TracingHTTPHeaders.tagsField]?.split(separator: ",")
+-            .map { $0.split(separator: "=") }
+-            .reduce(into: [String: String]()) { result, pair in
+-                if pair.count == 2 {
+-                    result[String(pair[0])] = String(pair[1])
+-                }
+-            } ?? [:]
+-
+-        let traceIDHiValue = tags[TracingHTTPHeaders.TagKeys.traceIDHi] ?? "0"
+-
+-        let traceID = TraceID(
+-            idHi: UInt64(traceIDHiValue, radix: 16) ?? 0,
+-            idLo: UInt64(traceIDLoValue, radix: 10) ?? 0
+-        )
+-
+-        return (
+-            traceID: traceID,
+-            spanID: spanID,
+-            parentSpanID: nil
+-        )
+-    }
+-
+-    public var samplingPriority: SamplingPriority? {
+-        guard let sampling = httpHeaderFields[TracingHTTPHeaders.samplingPriorityField] else {
+-            return nil
+-        }
+-
+-        return SamplingPriority(string: sampling)
+-    }
+-
+-    public var samplingDecisionMaker: SamplingMechanismType? {
+-        guard let tagsField = httpHeaderFields[TracingHTTPHeaders.tagsField] else {
+-            return nil
+-        }
+-
+-        let tags = tagsField.split(separator: ",")
+-
+-        return tags.lazy
+-            .compactMap {
+-                guard
+-                    case let tagElements = $0.split(separator: "="),
+-                    tagElements.count == 2,
+-                    let key = tagElements.first,
+-                    key == "_oo.p.dm",
+-                    case let value = tagElements[1],
+-                    let tagValue = Self.parseDecisionMakerTag(fromValue: value),
+-                    let mechanismType = SamplingMechanismType(rawValue: String(tagValue))
+-                else { return nil }
+-                return mechanismType
+-            }
+-            .first
+-    }
+-}
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/HTTPHeadersWriter.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/HTTPHeadersWriter.swift
+deleted file mode 100644
+index 9b8a51142..000000000
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/HTTPHeadersWriter.swift
++++ /dev/null
+@@ -1,89 +0,0 @@
+-/*
+- * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+- * This product includes software developed at Datadog (https://www.datadoghq.com/).
+- * Copyright 2019-Present Datadog, Inc.
+- */
+-
+-import Foundation
+-
+-/// The `HTTPHeadersWriter` class facilitates the injection of trace propagation headers into network requests
+-/// targeted at a backend instrumented with OpenObserve and expecting `x-datadog-*` headers.
+-///
+-/// Usage:
+-///
+-///     var request = URLRequest(...)
+-///
+-///     let writer = HTTPHeadersWriter()
+-///     let span = Tracer.shared().startRootSpan(operationName: "network request")
+-///     Tracer.shared().inject(spanContext: span.context, writer: writer)
+-///
+-///     writer.traceHeaderFields.forEach { (field, value) in
+-///         request.setValue(value, forHTTPHeaderField: field)
+-///     }
+-///
+-///     // call span.finish() when the request completes
+-///
+-public class HTTPHeadersWriter: TracePropagationHeadersWriter {
+-    /// A dictionary containing the required HTTP Headers for propagating trace information.
+-    ///
+-    /// Usage:
+-    ///
+-    ///     writer.traceHeaderFields.forEach { (field, value) in
+-    ///         request.setValue(value, forHTTPHeaderField: field)
+-    ///     }
+-    ///
+-    public private(set) var traceHeaderFields: [String: String] = [:]
+-
+-    private let traceContextInjection: TraceContextInjection
+-
+-    /// Initializes the headers writer.
+-    ///
+-    /// - Parameter traceContextInjection: The strategy for injecting trace context into requests.
+-    public init(traceContextInjection: TraceContextInjection) {
+-        self.traceContextInjection = traceContextInjection
+-    }
+-
+-    /// Writes the trace ID, span ID, and optional parent span ID into the trace propagation headers.
+-    ///
+-    /// - Parameter traceID: The trace ID.
+-    /// - Parameter spanID: The span ID.
+-    /// - Parameter parentSpanID: The parent span ID, if applicable.
+-    public func write(traceContext: TraceContext) {
+-        typealias Constants = W3CHTTPHeaders.Constants
+-
+-        let sampled = traceContext.samplingPriority.isKept
+-        let shouldInject: Bool = {
+-            switch traceContextInjection {
+-            case .all:      return true
+-            case .sampled:  return sampled
+-            }
+-        }()
+-        guard shouldInject else {
+-            return
+-        }
+-
+-        traceHeaderFields = [
+-            TracingHTTPHeaders.samplingPriorityField: "\(traceContext.samplingPriority.rawValue)"
+-        ]
+-        traceHeaderFields[TracingHTTPHeaders.traceIDField] = String(traceContext.traceID.idLo)
+-        traceHeaderFields[TracingHTTPHeaders.parentSpanIDField] = String(traceContext.spanID, representation: .decimal)
+-        var tags = ["_oo.p.tid=\(traceContext.traceID.idHiHex)"]
+-        if traceContext.samplingPriority.isKept {
+-            tags.append("_oo.p.dm=-\(traceContext.samplingDecisionMaker.rawValue)")
+-        }
+-        traceHeaderFields[TracingHTTPHeaders.tagsField] = tags.joined(separator: ",")
+-        var baggageItems: [String] = []
+-        if let sessionId = traceContext.rumSessionId {
+-            baggageItems.append("\(W3CHTTPHeaders.Constants.rumSessionBaggageKey)=\(sessionId)")
+-        }
+-        if let userId = traceContext.userId {
+-            baggageItems.append("\(W3CHTTPHeaders.Constants.userBaggageKey)=\(userId)")
+-        }
+-        if let accountId = traceContext.accountId {
+-            baggageItems.append("\(W3CHTTPHeaders.Constants.accountBaggageKey)=\(accountId)")
+-        }
+-        if baggageItems.isEmpty == false {
+-            traceHeaderFields[W3CHTTPHeaders.baggage] = baggageItems.joined(separator: ",")
+-        }
+-    }
+-}
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/TracingHTTPHeaders.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/TracingHTTPHeaders.swift
+deleted file mode 100644
+index 52679b518..000000000
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/OpenObserve/TracingHTTPHeaders.swift
++++ /dev/null
+@@ -1,38 +0,0 @@
+-/*
+- * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+- * This product includes software developed at Datadog (https://www.datadoghq.com/).
+- * Copyright 2019-Present Datadog, Inc.
+- */
+-
+-import Foundation
+-
+-/// Trace propagation headers as explained in
+-/// https://openobserve.ai/docs/real_user_monitoring/connect_rum_and_traces/?tab=browserrum#how-are-rum-resources-linked-to-traces
+-public enum TracingHTTPHeaders {
+-    /// Trace propagation header.
+-    /// It is used both in Tracing and RUM features.
+-    public static let traceIDField = "x-datadog-trace-id"
+-
+-    /// Trace propagation header.
+-    /// In RUM - it allows OpenObserve to generate the first span from the trace.
+-    /// In Tracing - it injects the `spanID` of mobile span so downstream spans can be properly linked in distributed tracing.
+-    public static let parentSpanIDField = "x-datadog-parent-id"
+-
+-    /// To make sure that the Agent keeps the trace.
+-    /// It is used both in Tracing and RUM features.
+-    public static let samplingPriorityField = "x-datadog-sampling-priority"
+-
+-    /// The OpenObserve origin of the Trace.
+-    ///
+-    /// Setting the value to 'rum' will indicate that the span is reported as a RUM Resource.
+-    public static let originField = "x-datadog-origin"
+-
+-    /// The OpenObserve tags of the Trace.
+-    public static let tagsField = "x-datadog-tags"
+-
+-    /// Keys for OpenObserve tags.
+-    public enum TagKeys {
+-        /// The OpenObserve tag key for the higher order 64 bits of the trace ID.
+-        public static let traceIDHi = "_oo.p.tid"
+-    }
+-}
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType+objc.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType+objc.swift
+index 574c139b4..967958acb 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType+objc.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType+objc.swift
+@@ -17,8 +17,9 @@ public final class objc_TracingHeaderType: NSObject {
+         self.swiftType = swiftType
+     }
+ 
+-    /// [OpenObserve's `x-datadog-*` header](https://openobserve.ai/docs/real_user_monitoring/connect_rum_and_traces/?tab=browserrum#how-are-rum-resources-linked-to-traces).
+-    public static let datadog = objc_TracingHeaderType(.datadog)
++    // openobserve: the upstream-proprietary propagator was removed, not renamed — see
++    // TracingHeaderType. Its headers only ever interoperated with an upstream-instrumented
++    // backend; OpenObserve reads W3C `traceparent`. Use `tracecontext` or `b3`.
+     /// Open Telemetry B3 [Multiple headers](https://github.com/openzipkin/b3-propagation#multiple-headers).
+     public static let b3multi = objc_TracingHeaderType(.b3multi)
+     /// Open Telemetry B3 [Single header](https://github.com/openzipkin/b3-propagation#single-headers).
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType.swift
+index a4adb2ba2..586cdffc1 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType.swift
+@@ -8,12 +8,20 @@ import Foundation
+ 
+ /// The type of the tracing header injected to requests.
+ ///
+-/// - `datadog` - [OpenObserve's `x-datadog-*` header](https://openobserve.ai/docs/real_user_monitoring/connect_rum_and_traces/?tab=browserrum#how-are-rum-resources-linked-to-traces).
+ /// - `b3` - Open Telemetry B3 [Single header](https://github.com/openzipkin/b3-propagation#single-headers).
+ /// - `b3multi` - Open Telemetry B3 [Multiple headers](https://github.com/openzipkin/b3-propagation#multiple-headers).
+ /// - `tracecontext` - W3C [Trace Context header](https://www.w3.org/TR/trace-context/#tracestate-header)
++///
++/// openobserve: upstream also offered its own proprietary propagator, which injected
++/// `x-<upstream-vendor>-*` headers. It was REMOVED rather than renamed. These headers are
++/// injected into the app's outbound requests to the CUSTOMER's own backend so that backend's
++/// APM can link the RUM resource to a server-side trace — the reader is never OpenObserve's
++/// intake, which speaks W3C `traceparent` and never parsed those headers at all. So the
++/// propagator was only useful against an upstream-instrumented backend, and renaming its
++/// headers to `oo-*` would not have rebranded it: no APM reads `oo-trace-id`, so it would have
++/// emitted headers nothing understands and silently linked nothing.
++/// Use `tracecontext` (W3C) — what OpenObserve actually reads — or `b3`.
+ public enum TracingHeaderType: Hashable {
+-    case datadog
+     case b3
+     case b3multi
+     case tracecontext
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/URLSession/ImmutableRequest.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/URLSession/ImmutableRequest.swift
+index 963730fbf..d0855a01f 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/URLSession/ImmutableRequest.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/URLSession/ImmutableRequest.swift
+@@ -16,19 +16,19 @@ public struct ImmutableRequest {
+     public let url: URL?
+     /// The HTTP method of the request.
+     public let httpMethod: String?
+-    /// The value of `x-datadog-origin` header (if any).
+-    public let ooOriginHeaderValue: String?
+     /// A reference to the original `URLRequest` object provided during initialization. Direct use is discouraged
+     /// due to thread safety concerns. Instead, necessary attributes should be accessed through `ImmutableRequest` fields.
+     public let unsafeOriginal: URLRequest
+ 
++    // openobserve: upstream also captured `ooOriginHeaderValue`, read from the vendor's
++    // proprietary `x-<vendor>-origin` request header, and registered it on the interception so
++    // its APM would not double-count RUM-originated spans. The only writer of that header was
++    // the vendor-proprietary propagator, which has been removed (see `TracingHeaderType`), so
++    // nothing sets it and the value was always nil. Dropped rather than left as dead public API.
++
+     public init(request: URLRequest) {
+         self.url = request.url
+         self.httpMethod = request.httpMethod
+-        // RUM-3183: As observed in https://github.com/openobserve/openobserve-sdk-ios/issues/1638, accessing `request.allHTTPHeaderFields` is not
+-        // safe and can lead to crashes with undefined root cause. To avoid issues we should prefer `request.value(forHTTPHeaderField:)`
+-        // when interacting with `URLRequest`.
+-        self.ooOriginHeaderValue = request.value(forHTTPHeaderField: TracingHTTPHeaders.originField)
+         self.unsafeOriginal = request
+     }
+ }
+diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift
+index 4bc56bdf9..69b6e2dc4 100644
+--- b/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift
++++ a/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift
+@@ -55,13 +55,13 @@ class FirstPartyHostsTests: XCTestCase {
+     func testGivenValidDictionary_itReturnsTracingHeaderTypes_forSubdomainURL() {
+         let firstPartyHosts = FirstPartyHosts([
+             "first-party.com": .init([.b3multi]),
+-            "example.com": [.datadog, .b3multi],
++            "example.com": [.b3multi],
+             "subdomain.example.com": [.tracecontext],
+             "otherdomain.com": [.b3]
+         ])
+ 
+-        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://example.com/path1")), [.datadog, .b3multi])
+-        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "https://subdomain.example.com/path2")), [.tracecontext, .datadog, .b3multi])
++        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://example.com/path1")), [.b3multi])
++        XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "https://subdomain.example.com/path2")), [.tracecontext, .b3multi])
+         XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://otherdomain.com/path3")), [.b3])
+         XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "https://somedomain.com/path4")), [])
+         XCTAssertEqual(firstPartyHosts.tracingHeaderTypes(for: URL(string: "http://api.first-party.com")), [.b3multi])
+@@ -81,17 +81,17 @@ class FirstPartyHostsTests: XCTestCase {
+         }
+     }
+ 
+-    func testGivenValidSet_itAssignsOpenObserveAndTracecontextHeaderType() {
++    func testGivenValidSet_itAssignsTracecontextHeaderType() {
+         let hosts = FirstPartyHosts(Set(otherHosts))
+         otherHosts.forEach {
+             let url = URL(string: $0)
+-            XCTAssertEqual(hosts.tracingHeaderTypes(for: url), [.datadog, .tracecontext])
++            XCTAssertEqual(hosts.tracingHeaderTypes(for: url), [.tracecontext])
+         }
+     }
+ 
+     func testFalsePositiveURL_itReturnsEmptyTracingHeaderTypes() {
+         let filter = FirstPartyHosts(
+-            hostsWithTracingHeaderTypes: ["example.com": [.datadog, .b3multi]]
++            hostsWithTracingHeaderTypes: ["example.com": [.b3multi]]
+         )
+         let url = URL(string: "http://foo.com/something.example.com")
+ 
+@@ -111,7 +111,7 @@ class FirstPartyHostsTests: XCTestCase {
+ 
+     func testGivenURLHostIsSubdomain_itIsConsideredFirstParty() {
+         let filter = FirstPartyHosts([
+-            "first-party.com": .init([.datadog])
++            "first-party.com": .init([.tracecontext])
+         ])
+         let url = URL(string: "https://api.first-party.com")!
+         XCTAssertTrue(
+@@ -122,7 +122,7 @@ class FirstPartyHostsTests: XCTestCase {
+ 
+     func testGivenURLHostIsNotSubdomain_itIsNotConsideredFirstParty() {
+         let filter = FirstPartyHosts([
+-            "first-party.com": .init([.datadog])
++            "first-party.com": .init([.tracecontext])
+         ])
+         let urlString = "https://apifirst-party.com"
+         let url = URL(string: urlString)!
+@@ -138,7 +138,7 @@ class FirstPartyHostsTests: XCTestCase {
+ 
+     func testGivenWRongURL_itIsNotConsideredFirstParty() {
+         let filter = FirstPartyHosts([
+-            "first-party.com": .init([.datadog])
++            "first-party.com": .init([.tracecontext])
+         ])
+         let badUrlString = ""
+         let badUrl = URL(string: badUrlString)
+diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/HTTPHeadersReaderTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/HTTPHeadersReaderTests.swift
+deleted file mode 100644
+index 3a4eed49c..000000000
+--- b/OpenObserveInternal/Tests/NetworkInstrumentation/HTTPHeadersReaderTests.swift
++++ /dev/null
+@@ -1,94 +0,0 @@
+-/*
+- * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+- * This product includes software developed at Datadog (https://www.datadoghq.com/).
+- * Copyright 2019-Present Datadog, Inc.
+- */
+-
+-import XCTest
+-import TestUtilities
+-@testable import OpenObserveInternal
+-
+-class HTTPHeadersReaderTests: XCTestCase {
+-    func testReadingSampledTraceContext() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-        writer.write(traceContext: .mockWith(
+-            samplingPriority: .autoKeep,
+-            samplingDecisionMaker: .agentRate
+-        ))
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        XCTAssertNotNil(reader.read(), "When sampled, it should return trace context")
+-        XCTAssertEqual(reader.samplingPriority, .autoKeep)
+-        XCTAssertEqual(reader.samplingDecisionMaker, .agentRate)
+-        XCTAssertEqual(reader.sampled, true)
+-    }
+-
+-    func testReadingManuallyKeptTraceContext() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-        writer.write(traceContext: .mockWith(
+-            samplingPriority: .manualKeep,
+-            samplingDecisionMaker: .manual
+-        ))
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        XCTAssertNotNil(reader.read(), "When sampled, it should return trace context")
+-        XCTAssertEqual(reader.samplingPriority, .manualKeep)
+-        XCTAssertEqual(reader.samplingDecisionMaker, .manual)
+-        XCTAssertEqual(reader.sampled, true)
+-    }
+-
+-    func testReadingNotSampledTraceContext_givenTraceContextInjectionIsAll() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-        writer.write(traceContext: .mockWith(
+-            samplingPriority: .autoDrop,
+-            samplingDecisionMaker: .agentRate
+-        ))
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        XCTAssertNotNil(reader.read(), "When not sampled, it should return no trace context")
+-        XCTAssertEqual(reader.samplingPriority, .autoDrop)
+-        XCTAssertNil(reader.samplingDecisionMaker)
+-        XCTAssertEqual(reader.sampled, false)
+-    }
+-
+-    func testReadingNotSampledTraceContext_givenTraceContextInjectionIsSampled() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-        writer.write(traceContext: .mockWith(
+-            samplingPriority: .autoDrop,
+-            samplingDecisionMaker: .agentRate
+-        ))
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        XCTAssertNil(reader.read(), "When not sampled, it should return no trace context")
+-        XCTAssertNil(reader.samplingPriority)
+-        XCTAssertNil(reader.samplingDecisionMaker)
+-        XCTAssertNil(reader.sampled)
+-    }
+-
+-    func testReadingManuallyDroppedTraceContext_givenTraceContextInjectionIsAll() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-        writer.write(traceContext: .mockWith(
+-            samplingPriority: .manualDrop,
+-            samplingDecisionMaker: .manual
+-        ))
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        XCTAssertNotNil(reader.read(), "When not sampled, it should return no trace context")
+-        XCTAssertEqual(reader.samplingPriority, .manualDrop)
+-        XCTAssertNil(reader.samplingDecisionMaker)
+-        XCTAssertEqual(reader.sampled, false)
+-    }
+-
+-    func testReadingManuallyDroppedTraceContext_givenTraceContextInjectionIsSampled() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-        writer.write(traceContext: .mockWith(
+-            samplingPriority: .manualDrop,
+-            samplingDecisionMaker: .manual
+-        ))
+-
+-        let reader = HTTPHeadersReader(httpHeaderFields: writer.traceHeaderFields)
+-        XCTAssertNil(reader.read(), "When not sampled, it should return no trace context")
+-        XCTAssertNil(reader.samplingPriority)
+-        XCTAssertNil(reader.samplingDecisionMaker)
+-    }
+-}
+diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/HTTPHeadersWriterTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/HTTPHeadersWriterTests.swift
+deleted file mode 100644
+index 5c17318f2..000000000
+--- b/OpenObserveInternal/Tests/NetworkInstrumentation/HTTPHeadersWriterTests.swift
++++ /dev/null
+@@ -1,216 +0,0 @@
+-/*
+- * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+- * This product includes software developed at Datadog (https://www.datadoghq.com/).
+- * Copyright 2019-Present Datadog, Inc.
+- */
+-
+-import XCTest
+-import TestUtilities
+-import OpenObserveInternal
+-
+-class HTTPHeadersWriterTests: XCTestCase {
+-    func testWritingSampledTraceContext_withHeadBasedSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .autoKeep,
+-                samplingDecisionMaker: .agentRate,
+-                rumSessionId: "abcdef01-2345-6789-abcd-ef0123456789"
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "1")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-1")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+-    }
+-
+-    func testWritingDroppedTraceContext_withHeadBasedSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .autoDrop,
+-                samplingDecisionMaker: .agentRate
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertNil(headers[TracingHTTPHeaders.samplingPriorityField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.traceIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.parentSpanIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.tagsField])
+-    }
+-
+-    func testWritingManuallyKeptTraceContext_withHeadBasedSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .all)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .manualKeep,
+-                samplingDecisionMaker: .manual,
+-                rumSessionId: "abcdef01-2345-6789-abcd-ef0123456789"
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "2")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-4")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+-    }
+-
+-    func testWritingManuallyDroppedTraceContext_withHeadBasedSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .manualDrop,
+-                samplingDecisionMaker: .manual
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertNil(headers[TracingHTTPHeaders.samplingPriorityField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.traceIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.parentSpanIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.tagsField])
+-    }
+-
+-    func testWritingSampledTraceContext_withCustomSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .autoKeep,
+-                samplingDecisionMaker: .agentRate,
+-                rumSessionId: "abcdef01-2345-6789-abcd-ef0123456789"
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "1")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-1")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+-    }
+-
+-    // The sampling based on session ID should pass at 18% sampling rate and fail at 17% 
+-    func testWritingSampledTraceContext_withCustomSamplingStrategy_18percent() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .autoKeep,
+-                samplingDecisionMaker: .agentRate,
+-                rumSessionId: "abcdef01-2345-6789-abcd-ef0123456789"
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "1")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-1")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+-    }
+-
+-    func testWritingDroppedTraceContext_withCustomSamplingStrategy_17percent() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .autoDrop,
+-                samplingDecisionMaker: .agentRate,
+-                rumSessionId: "abcdef01-2345-6789-abcd-ef0123456789"
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertNil(headers[TracingHTTPHeaders.samplingPriorityField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.traceIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.parentSpanIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.tagsField])
+-        XCTAssertNil(headers[W3CHTTPHeaders.baggage])
+-    }
+-
+-    func testWritingDroppedTraceContext_withCustomSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .autoDrop,
+-                samplingDecisionMaker: .agentRate
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertNil(headers[TracingHTTPHeaders.samplingPriorityField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.traceIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.parentSpanIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.tagsField])
+-        XCTAssertNil(headers[W3CHTTPHeaders.baggage])
+-    }
+-
+-    func testWritingManuallyKeptTraceContext_withCustomSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .manualKeep,
+-                samplingDecisionMaker: .manual,
+-                rumSessionId: "abcdef01-2345-6789-abcd-ef0123456789"
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "2")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-4")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+-    }
+-
+-    func testWritingManuallyDroppedTraceContext_withCustomSamplingStrategy() {
+-        let writer = HTTPHeadersWriter(traceContextInjection: .sampled)
+-
+-        writer.write(
+-            traceContext: .mockWith(
+-                traceID: .init(idHi: 1_234, idLo: 1_234),
+-                spanID: 2_345,
+-                samplingPriority: .manualDrop,
+-                samplingDecisionMaker: .manual
+-            )
+-        )
+-
+-        let headers = writer.traceHeaderFields
+-        XCTAssertNil(headers[TracingHTTPHeaders.samplingPriorityField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.traceIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.parentSpanIDField])
+-        XCTAssertNil(headers[TracingHTTPHeaders.tagsField])
+-        XCTAssertNil(headers[W3CHTTPHeaders.baggage])
+-    }
+-}
+diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/ImmutableRequestTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/ImmutableRequestTests.swift
+index 40ffdbaae..35aaad966 100644
+--- b/OpenObserveInternal/Tests/NetworkInstrumentation/ImmutableRequestTests.swift
++++ a/OpenObserveInternal/Tests/NetworkInstrumentation/ImmutableRequestTests.swift
+@@ -21,17 +21,6 @@ class ImmutableRequestTests: XCTestCase {
+         XCTAssertEqual(immutable.httpMethod, original.httpMethod)
+     }
+ 
+-    func testReadingOpenObserveOriginHeader() {
+-        let expectedValue: String = .mockRandom(length: 128)
+-        let original: URLRequest = .mockWith(
+-            headers: [
+-                TracingHTTPHeaders.originField: expectedValue
+-            ]
+-        )
+-        let immutable = ImmutableRequest(request: original)
+-        XCTAssertEqual(immutable.ooOriginHeaderValue, expectedValue)
+-    }
+-
+     func testPreservingUnsafeOriginal() {
+         let original: URLRequest = .mockAny()
+         let immutable = ImmutableRequest(request: original)
+diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/NetworkInstrumentationFeatureTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/NetworkInstrumentationFeatureTests.swift
+index 6b03564d1..dc08a28fa 100644
+--- b/OpenObserveInternal/Tests/NetworkInstrumentation/NetworkInstrumentationFeatureTests.swift
++++ a/OpenObserveInternal/Tests/NetworkInstrumentation/NetworkInstrumentationFeatureTests.swift
+@@ -120,7 +120,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+         // Given
+         let url: URL = .mockAny()
+         handler.firstPartyHosts = .init(
+-            hostsWithTracingHeaderTypes: [url.host!: [.datadog]]
++            hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]]
+         )
+         try URLSessionInstrumentation.enableOrThrow(with: nil, in: core)
+         // Registered delegate mode
+@@ -431,7 +431,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+ 
+         let url: URL = .mockAny()
+         handler.firstPartyHosts = .init(
+-            hostsWithTracingHeaderTypes: [url.host!: [.datadog]]
++            hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]]
+         )
+ 
+         // Registered delegate mode
+@@ -1999,7 +1999,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+         // Given - Configure first-party hosts
+         let url = URL(string: "https://api.example.com")!
+         handler.firstPartyHosts = .init(
+-            hostsWithTracingHeaderTypes: [url.host!: [.datadog]]
++            hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]]
+         )
+ 
+         handler.onInterceptionDidStart = { interception in
+@@ -2030,7 +2030,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+         // Given - Configure first-party hosts
+         let url = URL(string: "https://api.example.com")!
+         handler.firstPartyHosts = .init(
+-            hostsWithTracingHeaderTypes: [url.host!: [.datadog, .tracecontext]]
++            hostsWithTracingHeaderTypes: [url.host!: [.b3, .tracecontext]]
+         )
+ 
+         var capturedHeaderTypes: Set<TracingHeaderType>?
+@@ -2053,7 +2053,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+ 
+         // Then - Verify request mutation (header injection) was called with correct header types
+         waitForExpectations(timeout: 5, handler: nil)
+-        XCTAssertEqual(capturedHeaderTypes, [.datadog, .tracecontext], "Should pass configured header types for injection")
++        XCTAssertEqual(capturedHeaderTypes, [.b3, .tracecontext], "Should pass configured header types for injection")
+         _ = server.waitAndReturnRequests(count: 1)
+     }
+ 
+@@ -2064,7 +2064,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+ 
+         // Given - Configure first-party hosts that don't match the request URL
+         handler.firstPartyHosts = .init(
+-            hostsWithTracingHeaderTypes: ["api.first-party.com": [.datadog]]
++            hostsWithTracingHeaderTypes: ["api.first-party.com": [.tracecontext]]
+         )
+ 
+         var requestMutationCalled = false
+@@ -2098,7 +2098,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+         // Given
+         try URLSessionInstrumentation.enableOrThrow(with: nil, in: core)
+         let delegate = SessionDataDelegateMock()
+-        let firstPartyHosts: URLSessionInstrumentation.FirstPartyHostsTracing = .traceWithHeaders(hostsWithHeaders: ["test.com": [.datadog]])
++        let firstPartyHosts: URLSessionInstrumentation.FirstPartyHostsTracing = .traceWithHeaders(hostsWithHeaders: ["test.com": [.tracecontext]])
+         try URLSessionInstrumentation.enableOrThrow(with: .init(delegateClass: SessionDataDelegateMock.self, firstPartyHostsTracing: firstPartyHosts), in: core)
+ 
+         let session = server.getInterceptedURLSession(delegate: delegate)
+@@ -2127,7 +2127,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
+         let feature = try XCTUnwrap(core.get(feature: NetworkInstrumentationFeature.self))
+ 
+         let url = URL(string: "https://api.example.com/graphql")!
+-        handler.firstPartyHosts = .init(hostsWithTracingHeaderTypes: [url.host!: [.datadog]])
++        handler.firstPartyHosts = .init(hostsWithTracingHeaderTypes: [url.host!: [.tracecontext]])
+ 
+         var request = URLRequest(url: url)
+         request.setValue("GetUser", forHTTPHeaderField: GraphQLHeaders.operationName)
+diff --git b/OpenObserveLogs/Tests/LoggerTests.swift a/OpenObserveLogs/Tests/LoggerTests.swift
+index 6cdc5ec48..15c2fed48 100644
+--- b/OpenObserveLogs/Tests/LoggerTests.swift
++++ a/OpenObserveLogs/Tests/LoggerTests.swift
+@@ -15,7 +15,7 @@ class LoggerTests: XCTestCase {
+ 
+     override func setUp() {
+         super.setUp()
+-        core = SingleFeatureCoreMock(context: .mockWith(applicationBundleIdentifier: "com.datadog.unit-tests"))
++        core = SingleFeatureCoreMock(context: .mockWith(applicationBundleIdentifier: "com.openobserve.unit-tests"))
+         Logs.enable(in: core)
+     }
+ 
+diff --git b/OpenObserveRUM/Sources/Instrumentation/Resources/URLSessionRUMResourcesHandler.swift a/OpenObserveRUM/Sources/Instrumentation/Resources/URLSessionRUMResourcesHandler.swift
+index 49ea92958..72304982c 100644
+--- b/OpenObserveRUM/Sources/Instrumentation/Resources/URLSessionRUMResourcesHandler.swift
++++ a/OpenObserveRUM/Sources/Instrumentation/Resources/URLSessionRUMResourcesHandler.swift
+@@ -302,10 +302,6 @@ extension DistributedTracing {
+         headerTypes.forEach {
+             let writer: TracePropagationHeadersWriter
+             switch $0 {
+-            case .datadog:
+-                writer = HTTPHeadersWriter(traceContextInjection: traceContextInjection)
+-                // To make sure the generated traces from RUM don’t affect APM Index Spans counts.
+-                request.setValue("rum", forHTTPHeaderField: TracingHTTPHeaders.originField)
+             case .b3:
+                 writer = B3HTTPHeadersWriter(
+                     injectEncoding: .single,
+diff --git b/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift a/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift
+index 705fe9007..8e1b36960 100644
+--- b/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift
++++ a/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift
+@@ -32,46 +32,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+ 
+     private lazy var handler = createHandler(rumAttributesProvider: nil)
+ 
+-    func testGivenFirstPartyInterception_withSampledTrace_itInjectDDTraceHeaders() throws {
+-        // Given
+-        let handler = createHandler(
+-            distributedTracing: .init(
+-                samplingRate: .maxSampleRate,
+-                firstPartyHosts: .init(),
+-                traceIDGenerator: RelativeTracingUUIDGenerator(startingFrom: .init(idHi: 10, idLo: 100)),
+-                spanIDGenerator: RelativeSpanIDGenerator(startingFrom: 100, advancingByCount: 0),
+-                traceContextInjection: .all
+-            )
+-        )
+-
+-        // When
+-        let (request, traceContext, _) = handler.modify(
+-            request: .mockWith(url: "https://www.example.com"),
+-            headerTypes: [.datadog],
+-            networkContext: NetworkContext(
+-                rumContext: .mockWith(
+-                    applicationID: .mockRandom(),
+-                    sessionID: .mockWith("abcdef01-2345-6789-abcd-ef0123456789")
+-                )
+-            )
+-        )
+-
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField), "rum")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.baggage), "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+-
+-        let injectedTraceContext = try XCTUnwrap(traceContext, "It must return injected trace context")
+-        XCTAssertEqual(injectedTraceContext.traceID, .init(idHi: 10, idLo: 100))
+-        XCTAssertEqual(injectedTraceContext.spanID, 100)
+-        XCTAssertNil(injectedTraceContext.parentSpanID)
+-        XCTAssertEqual(injectedTraceContext.sampleRate, 100)
+-        XCTAssertEqual(injectedTraceContext.samplingPriority, SamplingPriority.autoKeep)
+-        XCTAssertEqual(injectedTraceContext.samplingDecisionMaker, SamplingMechanismType.agentRate)
+-        XCTAssertEqual(injectedTraceContext.rumSessionId, "abcdef01-2345-6789-abcd-ef0123456789")
+-    }
+ 
+     func testGivenFirstPartyInterception_withSampledTrace_itInjectB3TraceHeaders() throws {
+         // Given
+@@ -97,7 +57,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Single.b3Field), "000000000000000a0000000000000064-0000000000000064-1")
+ 
+         let injectedTraceContext = try XCTUnwrap(traceContext, "It must return injected trace context")
+@@ -134,7 +93,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000064")
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
+@@ -174,7 +132,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
+         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), "00-000000000000000a0000000000000064-0000000000000064-01")
+ 
+         let injectedTraceContext = try XCTUnwrap(traceContext, "It must return injected trace context")
+@@ -187,37 +144,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         XCTAssertEqual(injectedTraceContext.rumSessionId, "abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+-    func testGivenFirstPartyInterception_withRejectedTrace_itDoesNotInjectDDTraceHeaders() throws {
+-        /// Given
+-        let handler = createHandler(
+-            distributedTracing: .init(
+-                samplingRate: 0,
+-                firstPartyHosts: .init(),
+-                traceIDGenerator: RelativeTracingUUIDGenerator(startingFrom: .init(idHi: 10, idLo: 100)),
+-                spanIDGenerator: RelativeSpanIDGenerator(startingFrom: 100, advancingByCount: 0),
+-                traceContextInjection: .sampled
+-            )
+-        )
+-
+-        // When
+-        let (request, traceContext, _) = handler.modify(
+-            request: .mockWith(url: "https://www.example.com"),
+-            headerTypes: [.datadog],
+-            networkContext: NetworkContext(
+-                rumContext: .mockWith(
+-                    applicationID: .mockRandom(),
+-                    sessionID: .mockWith("abcdef01-2345-6789-abcd-ef0123456789")
+-                )
+-            )
+-        )
+-
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField), "rum")
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
+-
+-        XCTAssertNil(traceContext, "It must return no trace context")
+-    }
+ 
+     func testGivenFirstPartyInterception_withRejectedTrace_itDoesNotInjectB3TraceHeaders() throws {
+         /// Given
+@@ -243,7 +169,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Single.b3Field), "000000000000000a0000000000000064-0000000000000064-0")
+ 
+         XCTAssertNil(traceContext, "It must return no trace context")
+@@ -273,7 +198,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000064")
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
+@@ -306,7 +230,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField))
+         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), "00-000000000000000a0000000000000064-0000000000000064-00")
+ 
+         XCTAssertNil(traceContext, "It must return no trace context")
+@@ -326,10 +249,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+ 
+         // When
+         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
+@@ -343,7 +262,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         let (request, _, _) = handler.modify(
+             request: orgRequest,
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -358,10 +276,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
+@@ -386,10 +300,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+ 
+         // When
+         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
+@@ -415,10 +325,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
+@@ -445,10 +351,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+ 
+         // When
+         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
+@@ -471,10 +373,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
+@@ -761,7 +659,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         let request: URLRequest = .mockWith(httpMethod: "GET")
+         let (modifiedRequest, _, _) = handler.modify(
+             request: request,
+-            headerTypes: [.datadog, .tracecontext, .b3, .b3multi],
++            headerTypes: [.tracecontext, .b3, .b3multi],
+             networkContext: NetworkContext(
+                 rumContext: .mockWith(
+                     applicationID: .mockRandom(),
+@@ -779,11 +677,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+                 "X-B3-Sampled": "1",
+                 "X-B3-TraceId": "000000000000000a0000000000000064",
+                 "b3": "000000000000000a0000000000000064-0000000000000064-1",
+-                "x-datadog-trace-id": "100",
+-                "x-datadog-parent-id": "100",
+-                "x-datadog-sampling-priority": "1",
+-                "x-datadog-origin": "rum",
+-                "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1",
+                 "baggage": "session.id=abcdef01-2345-6789-abcd-ef0123456789",
+             ]
+         )
+@@ -809,7 +702,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         // When
+         let (modifiedRequest, _, _) = handler.modify(
+             request: request,
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: NetworkContext(
+                 rumContext: .mockWith(
+                     applicationID: .mockRandom(),
+@@ -969,7 +862,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         // When
+         let (modifiedRequest, _, _) = handler.modify(
+             request: request,
+-            headerTypes: [.datadog, .tracecontext], // Both inject baggage headers
++            headerTypes: [.b3, .tracecontext],
+             networkContext: NetworkContext(
+                 rumContext: .mockWith(
+                     applicationID: .mockRandom(),
+@@ -1014,7 +907,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         // When
+         let (_, traceContext, _) = handler.modify(
+             request: mockRequest,
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: NetworkContext(
+                 rumContext: .mockWith(
+                     applicationID: .mockRandom(),
+@@ -1145,7 +1038,7 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         for _ in 1...10 {
+             let (_, traceContext, _) = handler.modify(
+                 request: .mockWith(url: "https://www.example.com"),
+-                headerTypes: [.datadog],
++                headerTypes: [.tracecontext],
+                 networkContext: NetworkContext(
+                     rumContext: .mockWith(
+                         applicationID: .mockRandom(),
+diff --git b/OpenObserveRUM/Tests/RUMMonitor/Scopes/RUMResourceScopeTests.swift a/OpenObserveRUM/Tests/RUMMonitor/Scopes/RUMResourceScopeTests.swift
+index 9d88d184e..fa7a34738 100644
+--- b/OpenObserveRUM/Tests/RUMMonitor/Scopes/RUMResourceScopeTests.swift
++++ a/OpenObserveRUM/Tests/RUMMonitor/Scopes/RUMResourceScopeTests.swift
+@@ -34,7 +34,7 @@ class RUMResourceScopeTests: XCTestCase {
+     )
+ 
+     private let dependencies: RUMScopeDependencies = .mockWith(
+-        firstPartyHosts: FirstPartyHosts(["firstparty.com": [.datadog]])
++        firstPartyHosts: FirstPartyHosts(["firstparty.com": [.tracecontext]])
+     )
+ 
+     private let provider = RUMContextProviderMock(
+diff --git b/OpenObserveTrace/Sources/DDFormat.swift a/OpenObserveTrace/Sources/DDFormat.swift
+index 7931c128e..5f55c08f6 100644
+--- b/OpenObserveTrace/Sources/DDFormat.swift
++++ a/OpenObserveTrace/Sources/DDFormat.swift
+@@ -7,11 +7,9 @@
+ import Foundation
+ import OpenObserveInternal
+ 
+-extension HTTPHeadersReader: OTFormatReader {}
+ extension W3CHTTPHeadersReader: OTFormatReader {}
+ extension B3HTTPHeadersReader: OTFormatReader {}
+ 
+-extension HTTPHeadersWriter: OTFormatWriter {}
+ extension W3CHTTPHeadersWriter: OTFormatWriter {}
+ extension B3HTTPHeadersWriter: OTFormatWriter {}
+ 
+diff --git b/OpenObserveTrace/Sources/Integrations/TracingURLSessionHandler.swift a/OpenObserveTrace/Sources/Integrations/TracingURLSessionHandler.swift
+index 2ae793158..1d7abf14a 100644
+--- b/OpenObserveTrace/Sources/Integrations/TracingURLSessionHandler.swift
++++ a/OpenObserveTrace/Sources/Integrations/TracingURLSessionHandler.swift
+@@ -94,8 +94,6 @@ internal struct TracingURLSessionHandler: OpenObserveURLSessionHandler {
+         headerTypes.forEach {
+             let writer: TracePropagationHeadersWriter
+             switch $0 {
+-            case .datadog:
+-                writer = HTTPHeadersWriter(traceContextInjection: traceContextInjection)
+             case .b3:
+                 writer = B3HTTPHeadersWriter(
+                     injectEncoding: .single,
+diff --git b/OpenObserveTrace/Sources/Objc/Tracing/Propagation/HTTPHeadersWriter+objc.swift a/OpenObserveTrace/Sources/Objc/Tracing/Propagation/HTTPHeadersWriter+objc.swift
+deleted file mode 100644
+index 141d13a17..000000000
+--- b/OpenObserveTrace/Sources/Objc/Tracing/Propagation/HTTPHeadersWriter+objc.swift
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/*
+- * Unless explicitly stated otherwise all files in this repository are licensed under the Apache License Version 2.0.
+- * This product includes software developed at Datadog (https://www.datadoghq.com/).
+- * Copyright 2019-Present Datadog, Inc.
+- */
+-
+-import Foundation
+-import class OpenObserveInternal.HTTPHeadersWriter
+-
+-@objc(DDHTTPHeadersWriter)
+-@objcMembers
+-@_spi(objc)
+-public final class objc_HTTPHeadersWriter: NSObject {
+-    let swiftHTTPHeadersWriter: HTTPHeadersWriter
+-
+-    public var traceHeaderFields: [String: String] {
+-        swiftHTTPHeadersWriter.traceHeaderFields
+-    }
+-
+-    public init(traceContextInjection: objc_TraceContextInjection) {
+-        swiftHTTPHeadersWriter = HTTPHeadersWriter(traceContextInjection: traceContextInjection.swiftType)
+-    }
+-}
+diff --git b/OpenObserveTrace/Sources/Objc/Tracing/Trace+objc.swift a/OpenObserveTrace/Sources/Objc/Tracing/Trace+objc.swift
+index d7be62dfd..a0daf74b1 100644
+--- b/OpenObserveTrace/Sources/Objc/Tracing/Trace+objc.swift
++++ a/OpenObserveTrace/Sources/Objc/Tracing/Trace+objc.swift
+@@ -206,15 +206,9 @@ public final class objc_Tracer: NSObject, objc_OTTracer {
+     }
+ 
+     public func inject(_ spanContext: objc_OTSpanContext, format: String, carrier: Any) throws {
+-        if let objcWriter = carrier as? objc_HTTPHeadersWriter, format == OT.formatTextMap {
+-            guard let ddspanContext = spanContext.dd else {
+-                return
+-            }
+-            swiftTracer.inject(
+-                spanContext: ddspanContext.swiftSpanContext,
+-                writer: objcWriter.swiftHTTPHeadersWriter
+-            )
+-        } else if let objcWriter = carrier as? objc_B3HTTPHeadersWriter, format == OT.formatTextMap {
++        // openobserve: the branch for the vendor-proprietary writer was removed along with the
++        // propagator itself (see `TracingHeaderType`). B3 and W3C remain.
++        if let objcWriter = carrier as? objc_B3HTTPHeadersWriter, format == OT.formatTextMap {
+             guard let ddspanContext = spanContext.dd else {
+                 return
+             }
+diff --git b/OpenObserveTrace/Sources/OpenObserveTracer.swift a/OpenObserveTrace/Sources/OpenObserveTracer.swift
+index d77cc075c..b466ec701 100644
+--- b/OpenObserveTrace/Sources/OpenObserveTracer.swift
++++ a/OpenObserveTrace/Sources/OpenObserveTracer.swift
+@@ -111,7 +111,7 @@ internal final class OpenObserveTracer: OTTracer, OpenTelemetryApi.Tracer {
+     }
+ 
+     func extract(reader: OTFormatReader) -> OTSpanContext? {
+-        // TODO: RUMM-385 - make `HTTPHeadersReader` available in public API
++        // openobserve: upstream TODO RUMM-385 dropped — the vendor-proprietary header reader was removed (see TracingHeaderType).
+         guard let context = reader.extract() as? DDSpanContext else {
+             return nil
+         }
+diff --git b/OpenObserveTrace/Sources/TraceConfiguration.swift a/OpenObserveTrace/Sources/TraceConfiguration.swift
+index b2437b5ab..04f2495c5 100644
+--- b/OpenObserveTrace/Sources/TraceConfiguration.swift
++++ a/OpenObserveTrace/Sources/TraceConfiguration.swift
+@@ -11,7 +11,6 @@ import OpenObserveInternal
+ // swiftlint:disable duplicate_imports
+ @_exported import enum OpenObserveInternal.URLSessionInstrumentation
+ 
+-@_exported import class OpenObserveInternal.HTTPHeadersWriter
+ @_exported import class OpenObserveInternal.B3HTTPHeadersWriter
+ @_exported import class OpenObserveInternal.W3CHTTPHeadersWriter
+ @_exported import enum OpenObserveInternal.TraceContextInjection
+diff --git b/OpenObserveTrace/Tests/DDNoopTracerTests.swift a/OpenObserveTrace/Tests/DDNoopTracerTests.swift
+index a98add0ac..4bec663a6 100644
+--- b/OpenObserveTrace/Tests/DDNoopTracerTests.swift
++++ a/OpenObserveTrace/Tests/DDNoopTracerTests.swift
+@@ -22,9 +22,9 @@ class DDNoopTracerTests: XCTestCase {
+         let context = DDSpanContext.mockAny()
+         noop.inject(
+             spanContext: context,
+-            writer: HTTPHeadersWriter(traceContextInjection: .sampled)
++            writer: W3CHTTPHeadersWriter(traceContextInjection: .sampled)
+         )
+-        _ = noop.extract(reader: HTTPHeadersReader(httpHeaderFields: [:]))
++        _ = noop.extract(reader: W3CHTTPHeadersReader(httpHeaderFields: [:]))
+         let root = noop.startRootSpan(operationName: "root operation").setActive()
+         let child = noop.startSpan(operationName: "child operation")
+         child.finish()
+diff --git b/OpenObserveTrace/Tests/TraceTests.swift a/OpenObserveTrace/Tests/TraceTests.swift
+index 42391f566..9cd4cfdf7 100644
+--- b/OpenObserveTrace/Tests/TraceTests.swift
++++ a/OpenObserveTrace/Tests/TraceTests.swift
+@@ -135,7 +135,7 @@ class TraceTests: XCTestCase {
+             )
+             },
+             { self.config.urlSessionTracking = .init(
+-                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.datadog, .b3]])
++                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.tracecontext, .b3]])
+             )
+             },
+         ])
+@@ -186,7 +186,7 @@ class TraceTests: XCTestCase {
+             )
+             },
+             { self.config.urlSessionTracking = .init(
+-                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.datadog, .b3]], sampleRate: random)
++                firstPartyHostsTracing: .traceWithHeaders(hostsWithHeaders: ["example.com": [.tracecontext, .b3]], sampleRate: random)
+             )
+             },
+         ])
+diff --git b/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift a/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift
+index 8eb031ef1..08c7d42ab 100644
+--- b/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift
++++ a/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift
+@@ -33,7 +33,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             contextReceiver: receiver,
+             samplingRate: .maxSampleRate,
+             firstPartyHosts: .init([
+-                "www.example.com": [.datadog]
++                "www.example.com": [.tracecontext]
+             ]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+@@ -60,7 +60,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: .mockWith(url: "https://www.example.com"),
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -74,10 +73,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000064")
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
+@@ -108,10 +103,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+ 
+         // When
+         var orgRequest: URLRequest = .mockWith(url: "https://www.example.com")
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.traceIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.tagsField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField)
+-        orgRequest.setValue("custom", forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField)
+         orgRequest.setValue("custom", forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField)
+@@ -123,7 +114,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: orgRequest,
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -137,10 +127,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "custom")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "custom")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "custom")
+@@ -168,7 +154,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: .mockWith(url: "https://www.example.com"),
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -182,9 +167,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField))
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField))
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
+@@ -214,7 +196,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: .mockWith(url: "https://www.example.com"),
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -230,10 +211,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+ 
+         span.finish()
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000065")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "0000000000000064")
+@@ -269,7 +246,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: .mockWith(url: "https://www.example.com"),
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -285,10 +261,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+ 
+         span.finish()
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-4")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "2")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000065")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "0000000000000064")
+@@ -324,7 +296,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: .mockWith(url: "https://www.example.com"),
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -340,10 +311,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+ 
+         span.finish()
+ 
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "-1")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField), "0000000000000065")
+         XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField), "0000000000000064")
+@@ -379,7 +346,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         let (request, traceContext, capturedState) = handler.modify(
+             request: .mockWith(url: "https://www.example.com"),
+             headerTypes: [
+-                .datadog,
+                 .b3,
+                 .b3multi,
+                 .tracecontext
+@@ -393,9 +359,6 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             )
+         )
+ 
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField))
+-        XCTAssertNil(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField))
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField))
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.spanIDField))
+         XCTAssertNil(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.parentSpanIDField))
+@@ -560,10 +523,8 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         core.onEventWriteContext = { _ in expectation.fulfill() }
+ 
+         // Given - with duration breakdown
+-        let request: ImmutableRequest = .mockWith(
+-            allHTTPHeaderFields: [TracingHTTPHeaders.originField: "rum"]
+-        )
+-        let interception = URLSessionTaskInterception(request: request, isFirstParty: false, trackingMode: .registeredDelegate)
++        let interception = URLSessionTaskInterception(request: .mockAny(), isFirstParty: false, trackingMode: .registeredDelegate)
++        interception.register(origin: "rum")
+         interception.register(response: .mockAny(), error: nil)
+         interception.register(
+             metrics: .mockWith(
+@@ -588,10 +549,8 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         core.onEventWriteContext = { _ in expectation.fulfill() }
+ 
+         // Given - automatic mode
+-        let request: ImmutableRequest = .mockWith(
+-            allHTTPHeaderFields: [TracingHTTPHeaders.originField: "rum"]
+-        )
+-        let interception = URLSessionTaskInterception(request: request, isFirstParty: false, trackingMode: .automatic)
++        let interception = URLSessionTaskInterception(request: .mockAny(), isFirstParty: false, trackingMode: .automatic)
++        interception.register(origin: "rum")
+         interception.register(response: .mockAny(), error: nil)
+         interception.register(startDate: .mockDecember15th2019At10AMUTC())
+         interception.register(endDate: .mockDecember15th2019At10AMUTC(addingTimeInterval: 1))
+@@ -862,7 +821,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: ContextMessageReceiver(samplerProvider: SamplerProvider(sampleRate: .maxSampleRate)),
+             samplingRate: .maxSampleRate,
+-            firstPartyHosts: .init(["www.example.com": [.datadog]]),
++            firstPartyHosts: .init(["www.example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+         )
+@@ -894,7 +853,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: ContextMessageReceiver(samplerProvider: SamplerProvider(sampleRate: .maxSampleRate)),
+             samplingRate: .maxSampleRate,
+-            firstPartyHosts: .init(["www.example.com": [.datadog]]),
++            firstPartyHosts: .init(["www.example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry(),
+             redactedStatusCodes: []
+@@ -927,7 +886,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: ContextMessageReceiver(samplerProvider: SamplerProvider(sampleRate: .maxSampleRate)),
+             samplingRate: .maxSampleRate,
+-            firstPartyHosts: .init(["www.example.com": [.datadog]]),
++            firstPartyHosts: .init(["www.example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry(),
+             redactedStatusCodes: [404, 500]
+@@ -984,7 +943,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: receiver,
+             samplingRate: 80.0,
+-            firstPartyHosts: .init(["example.com": [.datadog]]),
++            firstPartyHosts: .init(["example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+         )
+@@ -992,12 +951,12 @@ class TracingURLSessionHandlerTests: XCTestCase {
+         // When — modify is called twice with the same networkContext
+         let (_, ctx1, _) = handler.modify(
+             request: .mockWith(url: "https://example.com/path"),
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: networkContext
+         )
+         let (_, ctx2, _) = handler.modify(
+             request: .mockWith(url: "https://example.com/path"),
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: networkContext
+         )
+ 
+@@ -1026,14 +985,14 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: receiver,
+             samplingRate: traceRate,
+-            firstPartyHosts: .init(["example.com": [.datadog]]),
++            firstPartyHosts: .init(["example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+         )
+ 
+         let (_, traceContext, _) = handler.modify(
+             request: .mockWith(url: "https://example.com/resource"),
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: NetworkContext(rumContext: RUMCoreContext(applicationID: "app-id", sessionID: sessionUUID, sessionSampler: sessionSampler))
+         )
+ 
+@@ -1050,14 +1009,14 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: receiver,
+             samplingRate: 80.0,
+-            firstPartyHosts: .init(["example.com": [.datadog]]),
++            firstPartyHosts: .init(["example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+         )
+ 
+         let (_, traceContext, _) = handler.modify(
+             request: .mockWith(url: "https://example.com/path"),
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: NetworkContext(rumContext: nil)
+         )
+ 
+@@ -1085,14 +1044,14 @@ class TracingURLSessionHandlerTests: XCTestCase {
+             tracer: tracer,
+             contextReceiver: receiver,
+             samplingRate: traceRate,
+-            firstPartyHosts: .init(["example.com": [.datadog]]),
++            firstPartyHosts: .init(["example.com": [.tracecontext]]),
+             traceContextInjection: .all,
+             telemetry: NOPTelemetry()
+         )
+ 
+         let (_, traceContext, _) = handler.modify(
+             request: .mockWith(url: "https://example.com/resource"),
+-            headerTypes: [.datadog],
++            headerTypes: [.tracecontext],
+             networkContext: NetworkContext(rumContext: RUMCoreContext(applicationID: "app-id", sessionID: sessionUUID, sessionSampler: sessionSampler))
+         )
+ 
