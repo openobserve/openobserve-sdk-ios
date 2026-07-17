@@ -27,6 +27,37 @@ while [ $# -gt 0 ]; do case "$1" in
 esac; done
 [ -n "$VERSION" ] || { echo "ERROR: --version X.Y.Z[-alpha.N] required" >&2; exit 2; }
 
+# --- 0. toolchain guard (fail FAST, before gates/build) -----------------------
+# CocoaPods lives under Homebrew's prefix, which only reaches PATH via the user's
+# profile. A NON-LOGIN shell — CI, cron, or any tool-invoked bash — does not source
+# that profile, so `pod` resolves in an interactive terminal but not here. Left
+# unguarded, publish.sh runs the gates and a full multi-platform xcodebuild (minutes)
+# and only then dies with "pod: command not found" at the first lint. Resolve it now.
+if ! command -v pod > /dev/null 2>&1; then
+  for p in /opt/homebrew/bin /usr/local/bin; do
+    if [ -x "$p/pod" ]; then export PATH="$p:$PATH"; break; fi
+  done
+fi
+if [ "$SPM_ONLY" = "0" ] && ! command -v pod > /dev/null 2>&1; then
+  echo "ERROR: CocoaPods (pod) not found in PATH." >&2
+  echo "       Looked in: \$PATH, /opt/homebrew/bin, /usr/local/bin" >&2
+  echo "       Install with 'brew install cocoapods', or re-run with --spm-only." >&2
+  exit 2
+fi
+# xcodebuild needs full Xcode, not the CommandLineTools instance that `xcode-select`
+# points at by default — otherwise every build fails with "requires Xcode, but active
+# developer directory is a command line tools instance".
+if ! xcodebuild -version > /dev/null 2>&1; then
+  if [ -d /Applications/Xcode.app/Contents/Developer ]; then
+    export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+  else
+    echo "ERROR: xcodebuild requires full Xcode. Set DEVELOPER_DIR or run:" >&2
+    echo "       sudo xcode-select -s /Applications/Xcode.app/Contents/Developer" >&2
+    exit 2
+  fi
+fi
+echo "    toolchain: $(pod --version 2>/dev/null || echo 'pod n/a (spm-only)') | Xcode $(xcodebuild -version 2>/dev/null | head -1 | awk '{print $2}')"
+
 # Publish order: base first, then Core, then the features. Every other pod declares
 # exactly one local dependency — OpenObserveInternal — so this order is sufficient:
 # once Internal is on trunk, each later pod resolves it from there.
