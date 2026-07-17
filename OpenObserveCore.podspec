@@ -4,15 +4,18 @@ Pod::Spec.new do |s|
   s.summary      = "Official OpenObserve Swift SDK for iOS."
   
   s.homepage     = "https://www.openobserve.ai"
-  s.social_media_url   = "https://twitter.com/openobserve"
 
   s.license            = { :type => "Apache", :file => 'LICENSE' }
-  s.authors            = { 
-    "Maciek Grzybowski" => "maciek.grzybowski@openobserve.ai",
-    "Maxime Epain" => "maxime.epain@openobserve.ai",
-    "Ganesh Jangir" => "ganesh.jangir@openobserve.ai",
-    "Maciej Burda" => "maciej.burda@openobserve.ai"
-  }
+  # openobserve: upstream listed four named Datadog engineers here. The rebrand rewrote
+  # their addresses to @openobserve.ai, fabricating contact details for real people who do
+  # not work here and never consented — inaccurate personal data, and an implied endorsement
+  # that does not exist. Restoring the upstream addresses would be no better: it would imply
+  # those engineers author or maintain THIS fork and would route our support mail to their
+  # inboxes. `authors` is package-MAINTAINER metadata, and the maintainer is OpenObserve.
+  # Apache-2.0 attribution is untouched and lives where the licence requires it: the per-file
+  # "developed at Datadog" headers, the Copyright lines, NOTICE and LICENSE (see
+  # scripts/openobserve/check-attribution.mjs). Matches the Android POM <developer> block.
+  s.authors            = { "OpenObserve" => "info@openobserve.ai" }
 
   s.swift_version = '5.9'
   s.ios.deployment_target = '12.0'

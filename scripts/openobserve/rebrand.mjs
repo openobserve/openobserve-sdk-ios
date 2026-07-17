@@ -67,11 +67,28 @@ const compiled = rules.map((r) => ({ ...r, matcher: r.regex ? new RegExp(r.regex
 // verbatim; the OpenObserve modification statement lives in NOTICE + README (kept
 // via keep-ours.txt).
 const ATTRIBUTION_RE = /software developed at Datadog \(https:\/\/www\.datadoghq\.com\/\)|Copyright\b[^\n]*\bDatadog, Inc\./
+
+// NEVER rewrite a real person's identity. The `datadoghq.com -> openobserve.ai` rule is right
+// for URLs and WRONG for email addresses: upstream's podspecs list four named Datadog engineers
+// as `s.authors`, and the rule silently rewrote e.g.
+//   "Maciek Grzybowski" => "maciek.grzybowski@datadoghq.com"
+//     ->                    "maciek.grzybowski@openobserve.ai"
+// fabricating contact details for real people who do not work here and never consented. That
+// shipped in the published 0.1.0-alpha.1 pods. It is inaccurate personal data (GDPR Art. 5(1)(d))
+// and an implied endorsement — worse than either leaving it or removing it.
+//
+// Matching `"Name" => "local@datadoghq.com"` leaves the block EXACTLY as upstream wrote it, and
+// patches/ then replaces the whole block with the OpenObserve organisation entry. Keeping the
+// pre-image identical to upstream is what makes that patch stable across syncs.
+//
+// Guard the identity, not the file: a broad podspec skip would also miss real renames.
+const PERSONAL_IDENTITY_RE = /"[^"]+"\s*=>\s*"[^"@]+@datadoghq\.com"/
+
 const applyRules = (s) =>
   s
     .split('\n')
     .map((line) =>
-      ATTRIBUTION_RE.test(line)
+      ATTRIBUTION_RE.test(line) || PERSONAL_IDENTITY_RE.test(line)
         ? line
         : compiled.reduce((out, r) => (r.matcher ? out.replace(r.matcher, r.to) : out.split(r.literal).join(r.to)), line)
     )

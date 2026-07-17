@@ -44,5 +44,26 @@ if [ -n "$HITS" ]; then
   FAIL=1
 fi
 
+# --- 3. PUBLISHED METADATA: no fabricated human identities --------------------
+# The podspecs are what CocoaPods publishes. Upstream lists four named Datadog engineers as
+# `s.authors`; the datadoghq.com -> openobserve.ai rule rewrote their EMAIL ADDRESSES, inventing
+# contact details for real people who do not work here — inaccurate personal data and an implied
+# endorsement. It shipped in 0.1.0-alpha.1 before anyone noticed, because the gate only ever read
+# source, never the metadata we actually publish.
+#
+# `authors` is package-MAINTAINER metadata: it must name OpenObserve. Apache-2.0 attribution is a
+# separate mechanism and is NOT touched here — it lives in the per-file headers, the Copyright
+# lines, NOTICE and LICENSE, and is verified by check-attribution.mjs.
+IDENT_HITS=$(grep -nE '"[^"]+"\s*=>\s*"[^"@]+@(datadoghq\.com|openobserve\.ai)"' ./*.podspec 2>/dev/null \
+  | grep -viE '"OpenObserve"\s*=>\s*"info@openobserve\.ai"' || true)
+if [ -n "$IDENT_HITS" ]; then
+  echo "ZERO-DATADOG GATE FAILED — individual identity in published podspec metadata:"
+  echo "$IDENT_HITS" | head -20
+  echo "  s.authors must be the maintaining ORG: { \"OpenObserve\" => \"info@openobserve.ai\" }"
+  echo "  Never an upstream engineer's name — neither with their real address (false endorsement)"
+  echo "  nor rewritten to @openobserve.ai (fabricated personal data)."
+  FAIL=1
+fi
+
 [ "$FAIL" = "0" ] || exit 1
-echo "zero-Datadog gate: PASS (shipped pod sources clean — paths + content)"
+echo "zero-Datadog gate: PASS (shipped pod sources + published metadata clean)"

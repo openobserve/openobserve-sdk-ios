@@ -4,7 +4,6 @@ Pod::Spec.new do |s|
   s.summary      = "Official OpenObserve Feature Flags module of the Swift SDK."
 
   s.homepage     = "https://www.openobserve.ai"
-  s.social_media_url   = "https://twitter.com/openobserve"
 
   s.license            = { :type => "Apache", :file => 'LICENSE' }
   s.authors            = "OpenObserve, Inc."
