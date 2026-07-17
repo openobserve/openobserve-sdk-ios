@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "OpenObserveSessionReplay"
-  s.version      = "0.1.0-alpha.1"
+  s.version      = "0.1.0-alpha.2"
   s.summary      = "Official OpenObserve Session Replay SDK for iOS."
 
   s.homepage     = "https://www.openobserve.ai"

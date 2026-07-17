@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "TestUtilities"
-  s.version      = "0.1.0-alpha.1"
+  s.version      = "0.1.0-alpha.2"
   s.summary      = "OpenObserve Testing Utilities. This module is for internal testing and should not be published."
 
   s.homepage     = "https://www.openobserve.ai"

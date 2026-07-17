@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "OpenObserveRUM"
-  s.version      = "0.1.0-alpha.1"
+  s.version      = "0.1.0-alpha.2"
   s.summary      = "OpenObserve Real User Monitoring Module."
 
   s.homepage     = "https://www.openobserve.ai"
