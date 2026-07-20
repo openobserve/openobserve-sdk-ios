@@ -128,7 +128,7 @@ index ca8dcf663..31745a13a 100644
                  )
              )
 diff --git b/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift a/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift
-index 8f090e62e..74aab3dc8 100644
+index 8f090e62e..1d558aadf 100644
 --- b/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift
 +++ a/OpenObserve/IntegrationUnitTests/Trace/HeadBasedSamplingTests.swift
 @@ -243,13 +243,10 @@ class HeadBasedSamplingTests: XCTestCase {
@@ -312,14 +312,14 @@ index 8f090e62e..74aab3dc8 100644
      }
  }
 diff --git b/OpenObserveCore.podspec a/OpenObserveCore.podspec
-index 9161d6aaf..396e93113 100644
+index 9161d6aaf..0c2a50724 100644
 --- b/OpenObserveCore.podspec
 +++ a/OpenObserveCore.podspec
 @@ -1,24 +1,26 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveCore"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "Official OpenObserve Swift SDK for iOS."
    
    s.homepage     = "https://www.openobserve.ai"
@@ -519,7 +519,7 @@ index 2fc667700..0ae8dffa2 100644
          // Given
          Trace.enable(with: config, in: core)
 diff --git b/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift a/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift
-index da2f4f041..495fa16bc 100644
+index 8452d3bf7..349972938 100644
 --- b/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift
 +++ a/OpenObserveCore/Tests/OpenObserve/Tracing/TracingURLSessionHandlerTests.swift
 @@ -38,7 +38,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
@@ -555,14 +555,14 @@ index da2f4f041..495fa16bc 100644
          )
      }
 diff --git b/OpenObserveCrashReporting.podspec a/OpenObserveCrashReporting.podspec
-index 37140f196..905358e46 100644
+index 37140f196..c7aeb3243 100644
 --- b/OpenObserveCrashReporting.podspec
 +++ a/OpenObserveCrashReporting.podspec
 @@ -1,24 +1,26 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveCrashReporting"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "Official OpenObserve Crash Reporting SDK for iOS."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -630,14 +630,14 @@ index c96f22467..e3bef2138 100644
          // Then
          XCTAssertTrue(config.installPath?.contains("/Library/Caches/ai.openobserve.crash-reporting/v2") ?? false)
 diff --git b/OpenObserveFlags.podspec a/OpenObserveFlags.podspec
-index 7b774085a..0f1cbe456 100644
+index 7b774085a..c08480100 100644
 --- b/OpenObserveFlags.podspec
 +++ a/OpenObserveFlags.podspec
 @@ -1,10 +1,9 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveFlags"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "Official OpenObserve Feature Flags module of the Swift SDK."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -654,14 +654,14 @@ index 7b774085a..0f1cbe456 100644
    s.source = { :git => "https://github.com/openobserve/openobserve-sdk-ios.git", :tag => s.version.to_s }
  
 diff --git b/OpenObserveInternal.podspec a/OpenObserveInternal.podspec
-index 6e8a651b0..e1c2c3d9e 100644
+index 6e8a651b0..41d3105d9 100644
 --- b/OpenObserveInternal.podspec
 +++ a/OpenObserveInternal.podspec
 @@ -1,24 +1,26 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveInternal"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "OpenObserve Internal Package. This module is not for public use."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -1059,6 +1059,32 @@ index 963730fbf..d0855a01f 100644
          self.unsafeOriginal = request
      }
  }
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeaders.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeaders.swift
+index d41e9d76b..f6faf1bcb 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeaders.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeaders.swift
+@@ -55,7 +55,7 @@ public enum W3CHTTPHeaders {
+         public static let separator = "-"
+ 
+         // MARK: - OpenObserve specific tracestate keys
+-        public static let dd = "dd"
++        public static let oo = "oo"
+         public static let sampling = "s"
+         public static let samplingDecisionMaker = "t.dm"
+         public static let origin = "o"
+diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeadersWriter.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeadersWriter.swift
+index f9e3d8724..e7949fb92 100644
+--- b/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeadersWriter.swift
++++ a/OpenObserveInternal/Sources/NetworkInstrumentation/W3C/W3CHTTPHeadersWriter.swift
+@@ -99,7 +99,7 @@ public class W3CHTTPHeadersWriter: TracePropagationHeadersWriter {
+             .sorted()
+             .joined(separator: Constants.tracestatePairSeparator)
+ 
+-        traceHeaderFields[W3CHTTPHeaders.tracestate] = "\(Constants.dd)=\(ddtracestate)"
++        traceHeaderFields[W3CHTTPHeaders.tracestate] = "\(Constants.oo)=\(ddtracestate)"
+ 
+         var baggageItems: [String] = []
+         if let sessionId = traceContext.rumSessionId {
 diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift
 index 4bc56bdf9..69b6e2dc4 100644
 --- b/OpenObserveInternal/Tests/NetworkInstrumentation/FirstPartyHostsTests.swift
@@ -1548,15 +1574,82 @@ index 6b03564d1..dc08a28fa 100644
  
          var request = URLRequest(url: url)
          request.setValue("GetUser", forHTTPHeaderField: GraphQLHeaders.operationName)
+diff --git b/OpenObserveInternal/Tests/NetworkInstrumentation/W3CHTTPHeadersWriterTests.swift a/OpenObserveInternal/Tests/NetworkInstrumentation/W3CHTTPHeadersWriterTests.swift
+index 77eaec3ab..769b4ce66 100644
+--- b/OpenObserveInternal/Tests/NetworkInstrumentation/W3CHTTPHeadersWriterTests.swift
++++ a/OpenObserveInternal/Tests/NetworkInstrumentation/W3CHTTPHeadersWriterTests.swift
+@@ -29,7 +29,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:1;t.dm:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:1;t.dm:-1")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+@@ -54,7 +54,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-00")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:0")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:0")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+@@ -78,7 +78,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:2;t.dm:-4")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:2;t.dm:-4")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+@@ -103,7 +103,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-00")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:-1")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+@@ -127,7 +127,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:1;t.dm:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:1;t.dm:-1")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+@@ -176,7 +176,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:2;t.dm:-4")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:2;t.dm:-4")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
+@@ -227,7 +227,7 @@ class W3CHTTPHeadersWriterTests: XCTestCase {
+ 
+         let headers = writer.traceHeaderFields
+         XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
+-        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:1;t.dm:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:1;t.dm:-1")
+         XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
+     }
+ 
 diff --git b/OpenObserveLogs.podspec a/OpenObserveLogs.podspec
-index 88ecbc747..46c32e650 100644
+index 88ecbc747..e5ff784c2 100644
 --- b/OpenObserveLogs.podspec
 +++ a/OpenObserveLogs.podspec
 @@ -1,24 +1,26 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveLogs"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "OpenObserve Logs Module."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -1602,14 +1695,14 @@ index 6cdc5ec48..15c2fed48 100644
      }
  
 diff --git b/OpenObserveProfiling.podspec a/OpenObserveProfiling.podspec
-index a943f1db5..3db2d15b3 100644
+index a943f1db5..25131ed09 100644
 --- b/OpenObserveProfiling.podspec
 +++ a/OpenObserveProfiling.podspec
 @@ -1,10 +1,9 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveProfiling"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "Official OpenObserve Profiling module of the Swift SDK."
    
    s.homepage     = "https://www.openobserve.ai"
@@ -1626,14 +1719,14 @@ index a943f1db5..3db2d15b3 100644
    s.source = { :git => "https://github.com/openobserve/openobserve-sdk-ios.git", :tag => s.version.to_s }
    
 diff --git b/OpenObserveRUM.podspec a/OpenObserveRUM.podspec
-index 0b09d05e4..a279bd3d6 100644
+index 0b09d05e4..93bc8d9ee 100644
 --- b/OpenObserveRUM.podspec
 +++ a/OpenObserveRUM.podspec
 @@ -1,24 +1,26 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveRUM"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "OpenObserve Real User Monitoring Module."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -1681,7 +1774,7 @@ index 49ea92958..72304982c 100644
                  writer = B3HTTPHeadersWriter(
                      injectEncoding: .single,
 diff --git b/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift a/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift
-index 705fe9007..8e1b36960 100644
+index 705fe9007..1ca7fccc7 100644
 --- b/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift
 +++ a/OpenObserveRUM/Tests/Instrumentation/Resources/URLSessionRUMResourcesHandlerTests.swift
 @@ -32,46 +32,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
@@ -1900,7 +1993,14 @@ index 705fe9007..8e1b36960 100644
              networkContext: NetworkContext(
                  rumContext: .mockWith(
                      applicationID: .mockRandom(),
-@@ -779,11 +677,6 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+@@ -773,17 +671,12 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
+         XCTAssertEqual(
+             modifiedRequest.allHTTPHeaderFields,
+             [
+-                "tracestate": "dd=o:rum;p:0000000000000064;s:1;t.dm:-1",
++                "tracestate": "oo=o:rum;p:0000000000000064;s:1;t.dm:-1",
+                 "traceparent": "00-000000000000000a0000000000000064-0000000000000064-01",
+                 "X-B3-SpanId": "0000000000000064",
                  "X-B3-Sampled": "1",
                  "X-B3-TraceId": "000000000000000a0000000000000064",
                  "b3": "000000000000000a0000000000000064-0000000000000064-1",
@@ -1962,14 +2062,14 @@ index 9d88d184e..fa7a34738 100644
  
      private let provider = RUMContextProviderMock(
 diff --git b/OpenObserveSessionReplay.podspec a/OpenObserveSessionReplay.podspec
-index d0cc26fa5..721bf5599 100644
+index d0cc26fa5..c409bc491 100644
 --- b/OpenObserveSessionReplay.podspec
 +++ a/OpenObserveSessionReplay.podspec
 @@ -1,18 +1,21 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveSessionReplay"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "Official OpenObserve Session Replay SDK for iOS."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -1996,14 +2096,14 @@ index d0cc26fa5..721bf5599 100644
    s.swift_version = '5.9'
    s.ios.deployment_target = '12.0'
 diff --git b/OpenObserveTrace.podspec a/OpenObserveTrace.podspec
-index cf9f256f0..57b5d9f49 100644
+index cf9f256f0..3f3a45fb5 100644
 --- b/OpenObserveTrace.podspec
 +++ a/OpenObserveTrace.podspec
 @@ -1,24 +1,26 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveTrace"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "OpenObserve Trace Module."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -2180,7 +2280,7 @@ index 42391f566..9cd4cfdf7 100644
              },
          ])
 diff --git b/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift a/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift
-index 8eb031ef1..08c7d42ab 100644
+index fa791574a..c7087d714 100644
 --- b/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift
 +++ a/OpenObserveTrace/Tests/TracingURLSessionHandlerTests.swift
 @@ -33,7 +33,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
@@ -2463,14 +2563,14 @@ index 8eb031ef1..08c7d42ab 100644
          )
  
 diff --git b/OpenObserveWebViewTracking.podspec a/OpenObserveWebViewTracking.podspec
-index ac62e88cb..607c2d5c9 100644
+index ac62e88cb..c37ff216c 100644
 --- b/OpenObserveWebViewTracking.podspec
 +++ a/OpenObserveWebViewTracking.podspec
 @@ -1,22 +1,24 @@
  Pod::Spec.new do |s|
    s.name         = "OpenObserveWebViewTracking"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "OpenObserve WebView Tracking Module."
  
    s.homepage     = "https://www.openobserve.ai"
@@ -2515,14 +2615,14 @@ index 52f47b3a2..14c04a396 100644
      products: [
          .library(
 diff --git b/TestUtilities.podspec a/TestUtilities.podspec
-index 5356c7b96..95782bd6a 100644
+index 5356c7b96..7bc639818 100644
 --- b/TestUtilities.podspec
 +++ a/TestUtilities.podspec
 @@ -1,18 +1,21 @@
  Pod::Spec.new do |s|
    s.name         = "TestUtilities"
 -  s.version      = "3.11.0"
-+  s.version      = "0.1.0-alpha.1"
++  s.version      = "0.1.0-alpha.2"
    s.summary      = "OpenObserve Testing Utilities. This module is for internal testing and should not be published."
  
    s.homepage     = "https://www.openobserve.ai"
