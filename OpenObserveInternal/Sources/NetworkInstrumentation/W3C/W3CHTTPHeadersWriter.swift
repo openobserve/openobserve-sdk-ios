@@ -99,7 +99,7 @@ public class W3CHTTPHeadersWriter: TracePropagationHeadersWriter {
             .sorted()
             .joined(separator: Constants.tracestatePairSeparator)
 
-        traceHeaderFields[W3CHTTPHeaders.tracestate] = "\(Constants.dd)=\(ddtracestate)"
+        traceHeaderFields[W3CHTTPHeaders.tracestate] = "\(Constants.oo)=\(ddtracestate)"
 
         var baggageItems: [String] = []
         if let sessionId = traceContext.rumSessionId {

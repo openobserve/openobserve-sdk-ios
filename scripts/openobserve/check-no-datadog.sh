@@ -35,7 +35,7 @@ fi
 # uppercase letter or the `hq` suffix. That gap shipped a default-on DNS lookup naming the
 # upstream vendor in the published Android alpha1. Do not remove it.
 HITS=$(echo "$PATHS" | xargs grep -nE \
-  '\bDatadog[A-Za-z]|\bDATADOG|datad0g|ddog-gov|\bddtags\b|\bddsource\b|DD-API-KEY|com\.datadoghq|datadog\.pool|datadog\.[a-z]+\.(org|com|net)' \
+  '\bDatadog[A-Za-z]|\bDATADOG|datad0g|ddog-gov|\bddtags\b|\bddsource\b|DD-API-KEY|com\.datadoghq|\bdd=s:|\bdd=p:|datadog\.pool|datadog\.[a-z]+\.(org|com|net)' \
   2>/dev/null | grep -viE 'developed at Datadog|Copyright .*Datadog|licensed under' || true)
 if [ -n "$HITS" ]; then
   echo "ZERO-DATADOG GATE FAILED — Datadog token in shipped source CONTENT:"

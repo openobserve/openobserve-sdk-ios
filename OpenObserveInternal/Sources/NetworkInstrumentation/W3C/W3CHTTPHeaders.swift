@@ -55,7 +55,7 @@ public enum W3CHTTPHeaders {
         public static let separator = "-"
 
         // MARK: - OpenObserve specific tracestate keys
-        public static let dd = "dd"
+        public static let oo = "oo"
         public static let sampling = "s"
         public static let samplingDecisionMaker = "t.dm"
         public static let origin = "o"
