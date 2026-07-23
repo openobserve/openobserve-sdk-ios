@@ -98,6 +98,16 @@ lint_includes() {
   esac
 }
 
+# Is <pod> already published at <version>? Trunk is the only authority: `pod trunk push`
+# reports failure on a 500 that sometimes still landed the pod, and reports nothing useful
+# about a version pushed by an earlier aborted run. Queried by exact "name":"<version>" so a
+# substring like 0.1.0-alpha.4 cannot match 0.1.0-alpha.40. Network failure returns non-zero
+# (treated as "not published"), which is the safe direction: it retries rather than skipping.
+trunk_has() {
+  curl -sf "https://trunk.cocoapods.org/api/v1/pods/$1" 2>/dev/null \
+    | grep -q "\"name\":\"$2\""
+}
+
 echo "==> OpenObserve iOS publish: $VERSION (publish=$PUBLISH, spm-only=$SPM_ONLY)"
 
 # --- 1. set version in every podspec ------------------------------------------
@@ -149,10 +159,39 @@ if [ "$SPM_ONLY" = "0" ]; then
     exit 2
   fi
   echo "    trunk auth: ${COCOAPODS_TRUNK_TOKEN:+env token}${COCOAPODS_TRUNK_TOKEN:-~/.netrc session}"
+  # RESUMABLE + RETRYING. Publishing 10 pods is not atomic: each `pod trunk push` re-runs a
+  # full `xcodebuild clean build` across every platform the podspec declares, so the loop takes
+  # ~45 minutes and has ~10 independent chances to hit a transient trunk failure. It did:
+  # 0.1.0-alpha.4 died on OpenObserveLogs with "[!] An internal server error occurred" (a trunk
+  # HTTP 500), and because this loop had no skip and no retry under `set -e`, the run aborted
+  # with 2 pods published and the remaining 7 never attempted. Re-running the script then failed
+  # instantly on OpenObserveInternal, since trunk rejects a duplicate version — leaving no way
+  # forward except pushing by hand.
+  #
+  # Trunk is also not transactional with its own API: a 500 SOMETIMES still lands the pod
+  # server-side (that is what happened to WebViewTracking in alpha.3, where the error was
+  # cosmetic). So a failure is never conclusive — re-query trunk before deciding.
   echo "==> pod trunk push (dependency order — each waits for its deps on trunk)"
   for pod in "${PODS[@]}"; do
-    echo "    push $pod"
-    pod trunk push "$pod.podspec" --allow-warnings --synchronous
+    if trunk_has "$pod" "$VERSION"; then
+      echo "    skip $pod (already on trunk at $VERSION)"
+      continue
+    fi
+    pushed=0
+    for attempt in 1 2 3; do
+      echo "    push $pod (attempt $attempt/3)"
+      if pod trunk push "$pod.podspec" --allow-warnings --synchronous; then pushed=1; break; fi
+      if trunk_has "$pod" "$VERSION"; then
+        echo "    $pod landed server-side despite the error"; pushed=1; break
+      fi
+      [ "$attempt" -lt 3 ] && { echo "    transient failure; retrying in 60s"; sleep 60; }
+    done
+    [ "$pushed" = "1" ] || {
+      echo "ERROR: $pod failed 3 push attempts and is not on trunk." >&2
+      echo "       Fix the cause, then re-run this script: published pods are skipped," >&2
+      echo "       so it resumes from here rather than failing on a duplicate." >&2
+      exit 1
+    }
   done
 fi
 echo "OK. Published OpenObserve* $VERSION to CocoaPods trunk + tagged for SPM."

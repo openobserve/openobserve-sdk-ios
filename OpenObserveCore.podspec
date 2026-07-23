@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "OpenObserveCore"
-  s.version      = "0.1.0-alpha.3"
+  s.version      = "0.1.0-alpha.4"
   s.summary      = "Official OpenObserve Swift SDK for iOS."
   
   s.homepage     = "https://www.openobserve.ai"
