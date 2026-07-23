@@ -44,7 +44,32 @@ if [ -n "$HITS" ]; then
   FAIL=1
 fi
 
-# --- 3. PUBLISHED METADATA: no fabricated human identities --------------------
+# --- 3. GENERATED API SURFACE -------------------------------------------------
+# api-surface-swift / api-surface-objc are `make api-surface` output committed at the REPO ROOT,
+# so they fall outside the */Sources/* glob above. They are a snapshot of public declarations
+# INCLUDING their default values, which means a behavioural fix in a patch does not update them —
+# only re-running the generator does.
+#
+# Concretely: patches/0002 replaces the upstream NTP vendor pool with neutral providers in
+# ServerOffsetPublisher.swift, but a freshly synced tree still carries the OLD list here:
+#   public let OpenObserveNTPServers = ["0.datadog.pool.ntp.org", ...]
+# Nothing ships it (no podspec globs the repo root), but it is upstream identity sitting in a
+# public repo, and every pattern in section 2 would have caught it had the file been in scope.
+# Regenerate after each sync — `make api-surface` — rather than hand-editing.
+SURFACE=$(git ls-files 'api-surface-*' 2>/dev/null || true)
+if [ -n "$SURFACE" ]; then
+  SURF_HITS=$(echo "$SURFACE" | xargs grep -nE \
+    '\bDatadog[A-Za-z]|\bDATADOG|datad0g|ddog-gov|com\.datadoghq|datadog\.pool|datadog\.[a-z]+\.(org|com|net)' \
+    2>/dev/null | grep -viE 'developed at Datadog|Copyright .*Datadog|licensed under' || true)
+  if [ -n "$SURF_HITS" ]; then
+    echo "ZERO-DATADOG GATE FAILED — upstream identity in the generated API surface:"
+    echo "$SURF_HITS" | head -10
+    echo "  Regenerate it: make api-surface   (it is generator output, do not hand-edit)"
+    FAIL=1
+  fi
+fi
+
+# --- 4. PUBLISHED METADATA: no fabricated human identities --------------------
 # The podspecs are what CocoaPods publishes. Upstream lists four named Datadog engineers as
 # `s.authors`; the datadoghq.com -> openobserve.ai rule rewrote their EMAIL ADDRESSES, inventing
 # contact details for real people who do not work here — inaccurate personal data and an implied

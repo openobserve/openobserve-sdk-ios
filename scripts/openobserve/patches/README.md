@@ -33,6 +33,22 @@ a build-system change that must be validated on its own, not smuggled into a rel
 ## Not patched — generated at release time
 - `*.podspec` `s.version` is stamped by `publish.sh` (`perl -0pi -e 's/s\.version.../'`).
   Never patch it; the fork's committed value is just whatever was last released.
+- `api-surface-swift` / `api-surface-objc` are `make api-surface` output. **Run it after every
+  sync and commit the result.** These are the only expected content drift besides the podspec
+  version — a sync reproduces everything else byte-for-byte.
+
+  They matter more than typical generated files: the surface records public declarations *with
+  their default values*, so a behavioural change made in a patch does not appear here until the
+  generator re-runs. A freshly synced tree therefore still reads
+
+  ```
+  public let OpenObserveNTPServers = ["0.datadog.pool.ntp.org", ...]
+  ```
+
+  even though patches/0002 already replaced that list in `ServerOffsetPublisher.swift`. Nothing
+  ships it — no podspec globs the repo root — but it is upstream identity sitting in a public
+  repo. `check-no-datadog.sh` now scans these two files specifically (they fall outside its
+  `*/Sources/*` glob) and fails with a pointer to `make api-surface`.
 
 ## Regenerating / adding a patch
 Simulate a sync in a throwaway worktree, then diff against `openobserve`:
