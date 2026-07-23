@@ -65,7 +65,7 @@ internal struct SegmentRequestBuilder: FeatureRequestBuilder {
                     device: context.device,
                     os: context.os
                 ),
-                .ooAPIKeyHeader(clientToken: context.clientToken),
+                .o2APIKeyHeader(clientToken: context.clientToken),
                 .ooEVPOriginHeader(source: context.source),
                 .ooEVPOriginVersionHeader(sdkVersion: context.sdkVersion),
                 .ooRequestIDHeader(),

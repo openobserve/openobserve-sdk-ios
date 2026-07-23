@@ -41,12 +41,12 @@ extension URLSessionTestsHelpers {
     func isValid(sampleRate: Double) -> Bool { sampleRate >= 0 && sampleRate <= 1 }
 
     func getRequestTags(_ request: Request) -> [String : String] {
-        // tags live in the `dd` list-member of `tracestate`, formatted as `dd=key1:value1;key2:value2`
+        // tags live in the `oo` list-member of `tracestate`, formatted as `oo=key1:value1;key2:value2`
         guard let tracestate = request.httpHeaders[W3CHTTPHeaders.tracestate] else {
             return [:]
         }
 
-        let prefix = W3CHTTPHeaders.Constants.dd + "="
+        let prefix = W3CHTTPHeaders.Constants.oo + "="
         guard tracestate.hasPrefix(prefix) else {
             return [:]
         }

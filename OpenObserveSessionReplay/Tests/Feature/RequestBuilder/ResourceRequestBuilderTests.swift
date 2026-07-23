@@ -123,7 +123,7 @@ class ResourceRequestBuilderTests: XCTestCase {
             \(randomApplicationName)/\(randomVersion) CFNetwork (\(randomDeviceName); \(randomDeviceOSName)/\(randomDeviceOSVersion))
             """
         )
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-API-KEY"], randomClientToken)
         XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomSource)
         XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Encoding"], "It must us no compression, because multipart file is compressed separately")

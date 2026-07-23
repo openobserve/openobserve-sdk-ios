@@ -18,7 +18,7 @@
       "skip": [
         ".xcworkspace"
       ],
-      "why": "Datadog-named directories NESTED at any depth \u2014 pathRenames.topLevelPrefix only inspects the first path segment (f.split('/')[0]) and cannot reach them. The SHIPPED violation was OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files): OpenObserveInternal is a PUBLISHED pod \u2014 the first one we push \u2014 and CocoaPods globs source_files as '**/*.swift', so the directory name lands inside the artifact even though every file's CONTENT was clean, which is why a content-only check-no-datadog.sh reported PASS. TestUtilities/Sources/Mocks/Datadog* (58 files) is also renamed, but for repo hygiene only: TestUtilities is NOT published (trunk 404; upstream does not publish it either, and it is absent from publish.sh PODS). ALSO renames OpenObserve/Datadog.xcodeproj -> OpenObserve/OpenObserve.xcodeproj: it ships in no pod, but it is the last upstream-named path visible to anyone browsing this public repo. Safe because it lives in a SUBDIRECTORY \u2014 `xcodebuild -scheme` at the repo root only inspects the root, finds no project/workspace there, and resolves via Package.swift; nothing references the project by name. SKIPS .xcworkspace on purpose: patches/0001 DELETES the root Datadog.xcworkspace, and a rename here would make that patch fail to apply. Deleting it is also what keeps `xcodebuild -scheme` on the verified Package.swift path rather than the Xcode project path."
+      "why": "Datadog-named directories NESTED at any depth — pathRenames.topLevelPrefix only inspects the first path segment (f.split('/')[0]) and cannot reach them. The SHIPPED violation was OpenObserveInternal/Sources/NetworkInstrumentation/Datadog (3 files): OpenObserveInternal is a PUBLISHED pod — the first one we push — and CocoaPods globs source_files as '**/*.swift', so the directory name lands inside the artifact even though every file's CONTENT was clean, which is why a content-only check-no-datadog.sh reported PASS. TestUtilities/Sources/Mocks/Datadog* (58 files) is also renamed, but for repo hygiene only: TestUtilities is NOT published (trunk 404; upstream does not publish it either, and it is absent from publish.sh PODS). ALSO renames OpenObserve/Datadog.xcodeproj -> OpenObserve/OpenObserve.xcodeproj: it ships in no pod, but it is the last upstream-named path visible to anyone browsing this public repo. Safe because it lives in a SUBDIRECTORY — `xcodebuild -scheme` at the repo root only inspects the root, finds no project/workspace there, and resolves via Package.swift; nothing references the project by name. SKIPS .xcworkspace on purpose: patches/0001 DELETES the root Datadog.xcworkspace, and a rename here would make that patch fail to apply. Deleting it is also what keeps `xcodebuild -scheme` on the verified Package.swift path rather than the Xcode project path."
     }
   ],
   "fileRenames": [
@@ -100,6 +100,21 @@
       "why": "REQ#2 wire prefix: the ?ddtags= intake query param + tags field. Backend reads ootags/o2tags (doc 02)."
     },
     {
+      "literal": "DD-API-KEY",
+      "to": "O2-API-KEY",
+      "why": "AUTH HEADER ONLY. Aligns the intake auth key with the browser-sdk, which ships o2-api-key (browser-core endpointBuilder.ts + intakeSites.ts) in production; the mobile forks had drifted to oo-. Every OTHER wire key stays oo- deliberately (ootags, oosource, _oo, the oo= tracestate vendor key, oo-client-token, oo-application-id, OO-REQUEST-ID): those already shipped in alpha.1-alpha.3 and re-spelling them churns the wire for no gain. MUST stay ordered before the broad \\bDD-/\\bdd-/\\bdd([A-Z]) rules — rules apply SEQUENTIALLY per line, so once DD-API-KEY becomes O2-API-KEY there is nothing left for them to match. Backend takes either spelling: validator.rs extract_rum_token reads oo-api-key then falls back to o2-api-key, in both the query param and the header, and HTTP header names are case-insensitive. Mirrors the same three rules in the Android fork's map."
+    },
+    {
+      "literal": "dd-api-key",
+      "to": "o2-api-key",
+      "why": "AUTH HEADER ONLY. Aligns the intake auth key with the browser-sdk, which ships o2-api-key (browser-core endpointBuilder.ts + intakeSites.ts) in production; the mobile forks had drifted to oo-. Every OTHER wire key stays oo- deliberately (ootags, oosource, _oo, the oo= tracestate vendor key, oo-client-token, oo-application-id, OO-REQUEST-ID): those already shipped in alpha.1-alpha.3 and re-spelling them churns the wire for no gain. MUST stay ordered before the broad \\bDD-/\\bdd-/\\bdd([A-Z]) rules — rules apply SEQUENTIALLY per line, so once DD-API-KEY becomes O2-API-KEY there is nothing left for them to match. Backend takes either spelling: validator.rs extract_rum_token reads oo-api-key then falls back to o2-api-key, in both the query param and the header, and HTTP header names are case-insensitive. Mirrors the same three rules in the Android fork's map. Lowercase spelling as it appears in URLs and docs."
+    },
+    {
+      "literal": "ddAPIKeyHeader",
+      "to": "o2APIKeyHeader",
+      "why": "AUTH HEADER ONLY. Aligns the intake auth key with the browser-sdk, which ships o2-api-key (browser-core endpointBuilder.ts + intakeSites.ts) in production; the mobile forks had drifted to oo-. Every OTHER wire key stays oo- deliberately (ootags, oosource, _oo, the oo= tracestate vendor key, oo-client-token, oo-application-id, OO-REQUEST-ID): those already shipped in alpha.1-alpha.3 and re-spelling them churns the wire for no gain. MUST stay ordered before the broad \\bDD-/\\bdd-/\\bdd([A-Z]) rules — rules apply SEQUENTIALLY per line, so once DD-API-KEY becomes O2-API-KEY there is nothing left for them to match. Backend takes either spelling: validator.rs extract_rum_token reads oo-api-key then falls back to o2-api-key, in both the query param and the header, and HTTP header names are case-insensitive. Mirrors the same three rules in the Android fork's map. Identifier kept in step with the value it holds — a field named ooAPIKeyHeaderField containing \"O2-API-KEY\" is a trap for the next reader. Also guards the public symbol: 7 shipped pods reference it."
+    },
+    {
       "regex": "\\bdd([A-Z][A-Za-z0-9]*)",
       "to": "oo$1",
       "why": "REQ#2: dd-prefixed Swift identifiers for the intake headers (ddAPIKeyHeader, ddEVPOriginHeader, ddEVPOriginVersionHeader, ddRequestID, ddRequestIDHeaderField, ddIdempotencyKey). \\b guards add/odd."
@@ -122,17 +137,17 @@
     {
       "literal": "dd=s:",
       "to": "oo=s:",
-      "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator \u2014 so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
+      "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator — so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
     },
     {
       "literal": "dd=p:",
       "to": "oo=p:",
-      "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator \u2014 so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
+      "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator — so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
     },
     {
       "literal": "\"dd=\"",
       "to": "\"oo=\"",
-      "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator \u2014 so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
+      "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator — so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
     },
     {
       "literal": "'dd='",
@@ -148,14 +163,14 @@
   "intentionallyNotRebranded": {
     "comment": "Deferred, mirroring the Android fork.",
     "items": [
-      "ddtags / ddsource query params + DD-API-KEY intake header: wire-protocol bytes; renaming to oo* needs backend + browser-sdk agreement (wire-token task, doc 08 \u00a73.2).",
+      "ddtags / ddsource query params + DD-API-KEY intake header: wire-protocol bytes; renaming to oo* needs backend + browser-sdk agreement (wire-token task, doc 08 §3.2).",
       "lowercase x-datadog-* distributed-trace propagation headers: distributed trace excluded from v1 (Q4).",
       "keep-ours identity files (README, LICENSE/NOTICE, .github) + .xcodeproj/.xcworkspace (dev-only, regenerated).",
       "NTP host list (ServerOffsetPublisher.OpenObserveNTPServers): NOT a codemod rule. Upstream ships 4 hosts of the form '<N>.<vendor>.pool.ntp.org'; the fork replaces the whole ARRAY with 2 neutral anycast providers. Any literal rule leaves the '<N>.' prefix behind and yields bogus hosts like '0.time.cloudflare.com', silently breaking clock sync. This is a behavioural change to a hand-maintained list, so it lives in patches/0002 and is enforced by check-no-datadog.sh, which fails on any upstream-named network host."
     ]
   },
   "openQuestions": {
-    "Q1_casing": "OpenObserveRUM (long form) chosen \u2014 must match the RN codemod's deferredRules and the Podfile the RN fork will reference.",
-    "Q4_module_scope": "The RN bridge (3.5.3) DatadogSDKReactNative.podspec pins DatadogCore/Logs/Trace/RUM/CrashReporting/Flags + DatadogWebViewTracking at 3.11.0 \u2014 includes Trace/Flags/WebViewTracking which doc 03 wanted to exclude. Same call as Android Q4: fork what the bridge needs; disable the features at the JS layer, don't remove native products."
+    "Q1_casing": "OpenObserveRUM (long form) chosen — must match the RN codemod's deferredRules and the Podfile the RN fork will reference.",
+    "Q4_module_scope": "The RN bridge (3.5.3) DatadogSDKReactNative.podspec pins DatadogCore/Logs/Trace/RUM/CrashReporting/Flags + DatadogWebViewTracking at 3.11.0 — includes Trace/Flags/WebViewTracking which doc 03 wanted to exclude. Same call as Android Q4: fork what the bridge needs; disable the features at the JS layer, don't remove native products."
   }
 }

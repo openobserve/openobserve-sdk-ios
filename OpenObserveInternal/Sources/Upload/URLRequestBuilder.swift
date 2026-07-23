@@ -19,7 +19,7 @@ public struct URLRequestBuilder {
         public static let contentTypeHeaderField = "Content-Type"
         public static let contentEncodingHeaderField = "Content-Encoding"
         public static let userAgentHeaderField = "User-Agent"
-        public static let ooAPIKeyHeaderField = "OO-API-KEY"
+        public static let o2APIKeyHeaderField = "O2-API-KEY"
         public static let ooEVPOriginHeaderField = "OO-EVP-ORIGIN"
         public static let ooEVPOriginVersionHeaderField = "OO-EVP-ORIGIN-VERSION"
         public static let ooRequestIDHeaderField = "OO-REQUEST-ID"
@@ -79,8 +79,8 @@ public struct URLRequestBuilder {
         // MARK: - OpenObserve Headers
 
         /// OpenObserve request authentication header.
-        public static func ooAPIKeyHeader(clientToken: String) -> HTTPHeader {
-            return HTTPHeader(field: ooAPIKeyHeaderField, value: { clientToken })
+        public static func o2APIKeyHeader(clientToken: String) -> HTTPHeader {
+            return HTTPHeader(field: o2APIKeyHeaderField, value: { clientToken })
         }
 
         /// An observability and troubleshooting OpenObserve header for tracking the origin which is sending the request.

@@ -179,7 +179,7 @@ The SDK must **never throw exceptions** to customer code:
 
 ## HTTP Upload Details
 
-- **Auth**: Client token passed as `OO-API-KEY` header
+- **Auth**: Client token passed as `O2-API-KEY` header
 - **Custom headers**: `OO-EVP-ORIGIN`, `OO-EVP-ORIGIN-VERSION`, `OO-REQUEST-ID`
 - **Formats**: JSON, NDJSON (batches), multipart/form-data (Session Replay, crashes)
 - **Compression**: Gzip (`Content-Encoding: gzip`)

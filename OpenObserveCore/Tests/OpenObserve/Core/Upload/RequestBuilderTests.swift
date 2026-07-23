@@ -95,9 +95,9 @@ class RequestBuilderTests: XCTestCase {
 
     func testBuildingRequestWithDDAPIKeyHeader() {
         let randomClientToken: String = .mockRandom()
-        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooAPIKeyHeader(clientToken: randomClientToken)])
+        let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.o2APIKeyHeader(clientToken: randomClientToken)])
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-API-KEY"], randomClientToken)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-API-KEY"], randomClientToken)
     }
 
     func testBuildingRequestWithDDEVPOriginHeader() {
@@ -139,7 +139,7 @@ class RequestBuilderTests: XCTestCase {
             headers: [
                 .contentTypeHeader(contentType: .textPlainUTF8),
                 .userAgentHeader(appName: .mockAny(), appVersion: .mockAny(), device: .mockAny(), os: .mockAny()),
-                .ooAPIKeyHeader(clientToken: .mockAny()),
+                .o2APIKeyHeader(clientToken: .mockAny()),
                 .ooEVPOriginHeader(source: .mockAny()),
                 .ooEVPOriginVersionHeader(sdkVersion: .mockAny()),
                 .ooRequestIDHeader(),
@@ -150,7 +150,7 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Type"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Encoding"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["User-Agent"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-API-KEY"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["O2-API-KEY"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["OO-REQUEST-ID"])

@@ -89,7 +89,7 @@ extension URLRequestBuilder.HTTPHeader: RandomMockable, AnyMockable {
                 device: .mockAny(),
                 os: .mockAny()
             ),
-            .ooAPIKeyHeader(clientToken: .mockRandom(among: .alphanumerics)),
+            .o2APIKeyHeader(clientToken: .mockRandom(among: .alphanumerics)),
             .ooEVPOriginHeader(source: .mockRandom(among: .alphanumerics)),
             .ooEVPOriginVersionHeader(sdkVersion: .mockRandom(among: .alphanumerics)),
             .ooRequestIDHeader()

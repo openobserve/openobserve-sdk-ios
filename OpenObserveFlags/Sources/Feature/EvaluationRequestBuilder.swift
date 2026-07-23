@@ -42,7 +42,7 @@ internal struct EvaluationRequestBuilder: FeatureRequestBuilder {
                     device: context.device,
                     os: context.os
                 ),
-                .ooAPIKeyHeader(clientToken: context.clientToken),
+                .o2APIKeyHeader(clientToken: context.clientToken),
                 .ooEVPOriginHeader(source: context.ciAppOrigin ?? context.source),
                 .ooEVPOriginVersionHeader(sdkVersion: context.sdkVersion),
                 .ooRequestIDHeader()

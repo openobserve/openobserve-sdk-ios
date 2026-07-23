@@ -68,14 +68,14 @@ class OpenObserve_MultipleInstancesIntegrationTests: XCTestCase {
 
         defaultInstanceRequests.forEach { request in
             XCTAssertEqual(
-                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooAPIKeyHeaderField),
+                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.o2APIKeyHeaderField),
                 defaultInstanceConfig.clientToken,
                 "Default instance should authenticate data using '\(defaultInstanceConfig.clientToken)' client token"
             )
         }
         customInstanceRequests.forEach { request in
             XCTAssertEqual(
-                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooAPIKeyHeaderField),
+                request.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.o2APIKeyHeaderField),
                 customInstanceConfig.clientToken,
                 "Custom instance should authenticate data using '\(customInstanceConfig.clientToken)' client token"
             )

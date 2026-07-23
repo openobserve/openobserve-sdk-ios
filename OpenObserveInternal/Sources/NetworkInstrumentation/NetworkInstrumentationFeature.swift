@@ -360,11 +360,11 @@ extension NetworkInstrumentationFeature {
     /// - Parameter request: The URLRequest to check.
     /// - Returns: `true` if the request is an SDK internal request, `false` otherwise.
     private func isOpenObserveIntakeRequest(_ request: URLRequest?) -> Bool {
-        // Every OpenObserve intake request authenticates with `OO-API-KEY`. This catches both this SDK's
+        // Every OpenObserve intake request authenticates with `O2-API-KEY`. This catches both this SDK's
         // own uploads (preventing recursion) and other OpenObserve tooling that may run in the same
         // process (e.g. `OpenObserveSDKTesting`'s CI Visibility uploader, which would otherwise pollute
         // interception expectations via the global `__NSCFLocalSessionTask.resume` swizzle in tests).
-        return request?.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.ooAPIKeyHeaderField) != nil
+        return request?.value(forHTTPHeaderField: URLRequestBuilder.HTTPHeader.o2APIKeyHeaderField) != nil
     }
 
     /// Helper structure that optionally contains a trace context and captured state, used to pass this
