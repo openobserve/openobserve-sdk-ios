@@ -195,3 +195,38 @@ if [ "$SPM_ONLY" = "0" ]; then
   done
 fi
 echo "OK. Published OpenObserve* $VERSION to CocoaPods trunk + tagged for SPM."
+cat <<EOF
+
+────────────────────────────────────────────────────────────────────────────
+MANUAL STEPS — this script does NOT do these. See RELEASING.md.
+────────────────────────────────────────────────────────────────────────────
+
+1. VERIFY every pod on trunk. Do NOT trust the output above: 'pod trunk push' prints
+   "🎉 Congrats" once PER POD, and this loop has exited reporting success with only
+   2 of 10 pushed. Ask trunk directly:
+
+     for p in ${PODS[*]}; do
+       curl -s "https://trunk.cocoapods.org/api/v1/pods/\$p" \\
+         | grep -q '"name":"$VERSION"' && echo "OK   \$p" || echo "MISSING \$p"
+       sleep 0.4
+     done
+
+   If any are MISSING, just re-run this script — the push loop skips pods already on
+   trunk at this version, so it resumes instead of failing on a duplicate.
+
+2. COMMIT + PUSH this branch. The script force-pushes the SPM tag but not the branch,
+   so without this the tagged commit is reachable only via the tag.
+
+3. REGENERATE THE API SURFACE if this release followed an upstream sync:
+
+     make api-surface     # then commit api-surface-swift / api-surface-objc
+
+   It snapshots public declarations INCLUDING default values, so a behavioural change
+   made in a patch does not appear until the generator re-runs. check-no-datadog.sh
+   fails on it if stale.
+
+4. RELEASE REACT NATIVE LAST, and only once all 10 pods above resolve:
+     openobserve-react-native-rum/RELEASING.md      (manual — no script exists)
+   npm cannot unpublish after 72h, so a pin that 404s is permanent for consumers.
+
+EOF
