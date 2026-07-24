@@ -133,7 +133,7 @@ extension Logs {
     public struct Attributes {
         /// Add a custom fingerprint to the error in this log. Requires that the log is supplied with an Error.
         /// The value of this attribute must be a `String`.
-        public static let errorFingerprint = "_oo.error.fingerprint"
+        public static let errorFingerprint = "_o2.error.fingerprint"
     }
 }
 

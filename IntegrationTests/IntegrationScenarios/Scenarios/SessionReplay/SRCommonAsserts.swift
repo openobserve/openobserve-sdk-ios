@@ -29,9 +29,9 @@ extension SRCommonAsserts {
             XCTAssertEqual(request.httpHeaders["Content-Type"]?.matches(regex: contentTypeRegex), true, file: file, line: line)
             XCTAssertEqual(request.httpHeaders["User-Agent"]?.matches(regex: userAgentRegex), true, file: file, line: line)
             XCTAssertEqual(request.httpHeaders["O2-API-KEY"], "ui-tests-client-token", file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-EVP-ORIGIN"], "ios", file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-EVP-ORIGIN-VERSION"]?.matches(regex: semverRegex), true, file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-REQUEST-ID"]?.matches(regex: ooRequestIDRegex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-EVP-ORIGIN"], "ios", file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-EVP-ORIGIN-VERSION"]?.matches(regex: semverRegex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-REQUEST-ID"]?.matches(regex: ooRequestIDRegex), true, file: file, line: line)
         }
     }
 }

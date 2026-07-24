@@ -32,7 +32,7 @@ internal struct EvaluationRequestBuilder: FeatureRequestBuilder {
         let builder = URLRequestBuilder(
             url: url(with: context),
             queryItems: [
-                .oosource(source: context.source)
+                .o2source(source: context.source)
             ],
             headers: [
                 .contentTypeHeader(contentType: .applicationJSON),

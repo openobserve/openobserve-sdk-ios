@@ -90,9 +90,9 @@ if [ "$CI" = "true" ]; then
     datadog-ci version
     
     echo ""
-    echo_succ "oo-octo-sts:"
-    check_if_installed oo-octo-sts
-    oo-octo-sts version
+    echo_succ "o2-octo-sts:"
+    check_if_installed o2-octo-sts
+    o2-octo-sts version
 
     # Check if all secrets are available:
     ./tools/secrets/check-secrets.sh

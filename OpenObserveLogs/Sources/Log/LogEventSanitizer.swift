@@ -13,7 +13,7 @@ internal struct LogEventSanitizer {
         /// Attribute names reserved for OpenObserve.
         /// If any of those is used by the user, the attribute will be ignored.
         static let reservedAttributeNames: Set<String> = [
-            "host", "message", "status", "service", "source", "ootags",
+            "host", "message", "status", "service", "source", "o2tags",
             "dd.trace_id", "dd.span_id",
             "application_id", "session_id", "view.id", "user_action.id",
             "build_id",

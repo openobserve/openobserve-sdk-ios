@@ -70,7 +70,7 @@ class RUMFeatureOperationManagerTests: XCTestCase {
         XCTAssertNotNil(event.connectivity)
         XCTAssertNil(event.container)
         XCTAssertNotNil(event.context)
-        XCTAssertNotNil(event.ootags)
+        XCTAssertNotNil(event.o2tags)
         XCTAssertNotNil(event.device)
         XCTAssertNil(event.display)
         XCTAssertNotNil(event.os)

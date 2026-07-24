@@ -247,7 +247,7 @@ class TracingURLSessionHandlerTests: XCTestCase {
                 "X-B3-TraceId": "000000000000000a0000000000000064",
                 "b3": "000000000000000a0000000000000064-0000000000000064-1",
                 "baggage": "session.id=\(fakeSessionId.uuidString.lowercased())",
-                "tracestate": "oo=p:0000000000000064;s:1;t.dm:-1"
+                "tracestate": "o2=p:0000000000000064;s:1;t.dm:-1"
             ]
         )
     }

@@ -181,7 +181,7 @@ public enum Logs
     public static func removeAttribute(forKey key: AttributeKey, in core: OpenObserveCoreProtocol = CoreRegistry.default)
 [?] extension Logs
     public struct Attributes
-        public static let errorFingerprint = "_oo.error.fingerprint"
+        public static let errorFingerprint = "_o2.error.fingerprint"
 [?] extension InternalExtension where ExtendedType == Logs.Configuration
     public mutating func setLogEventMapper(_ mapper: LogEventMapper)
 public protocol LogEventMapper
@@ -383,7 +383,7 @@ public enum RUM
     public static func enable(with configuration: RUM.Configuration,in core: OpenObserveCoreProtocol = CoreRegistry.default)
 [?] extension RUM
     public struct Attributes
-        public static let errorFingerprint = "_oo.error.fingerprint"
+        public static let errorFingerprint = "_o2.error.fingerprint"
 [?] extension RUM
     public typealias ViewEventMapper = (RUMViewEvent) -> RUMViewEvent
     public typealias ResourceEventMapper = (RUMResourceEvent) -> RUMResourceEvent?

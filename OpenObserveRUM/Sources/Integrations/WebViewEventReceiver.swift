@@ -117,10 +117,10 @@ internal final class WebViewEventReceiver: FeatureMessageReceiver {
                 event["session"] = session
             }
 
-            if var dd = event["_oo"] as? JSON, context.hasReplay != true {
+            if var dd = event["_o2"] as? JSON, context.hasReplay != true {
                 // Remove stats if native replay is disabled
                 dd["replay_stats"] = nil
-                event["_oo"] = dd
+                event["_o2"] = dd
             }
 
             // Add native anonymous_id to the event's usr object

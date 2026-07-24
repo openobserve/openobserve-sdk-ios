@@ -235,7 +235,7 @@ internal final class TelemetryReceiver: FeatureMessageReceiver {
 
         let date = dateProvider.now
 
-        self.record(event: "_oo.configuration") { context, writer in
+        self.record(event: "_o2.configuration") { context, writer in
             let rum = context.additionalContext(ofType: RUMCoreContext.self)
 
             let event = TelemetryConfigurationEvent(

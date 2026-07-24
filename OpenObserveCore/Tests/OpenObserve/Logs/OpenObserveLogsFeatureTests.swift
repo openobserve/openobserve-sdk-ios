@@ -84,7 +84,7 @@ class OpenObserveLogsFeatureTests: XCTestCase {
         let requestURL = try XCTUnwrap(request.url)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertTrue(requestURL.absoluteString.starts(with: randomUploadURL.absoluteString + "?"))
-        XCTAssertEqual(requestURL.query, "oosource=\(randomSource)")
+        XCTAssertEqual(requestURL.query, "o2source=\(randomSource)")
         XCTAssertEqual(
             request.allHTTPHeaderFields?["User-Agent"],
             """
@@ -94,9 +94,9 @@ class OpenObserveLogsFeatureTests: XCTestCase {
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Type"], "application/json")
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Encoding"], "deflate")
         XCTAssertEqual(request.allHTTPHeaderFields?["O2-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomOrigin)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN"], randomOrigin)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     // MARK: - HTTP Payload

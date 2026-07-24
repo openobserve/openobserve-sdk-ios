@@ -37,7 +37,7 @@ internal struct RequestBuilder: FeatureRequestBuilder {
 
         let builder = URLRequestBuilder(
             url: url(with: context),
-            queryItems: [.oosource(source: context.source)] + execution.retryQueryItems,
+            queryItems: [.o2source(source: context.source)] + execution.retryQueryItems,
             headers: [
                 .contentTypeHeader(contentType: .textPlainUTF8),
                 .userAgentHeader(

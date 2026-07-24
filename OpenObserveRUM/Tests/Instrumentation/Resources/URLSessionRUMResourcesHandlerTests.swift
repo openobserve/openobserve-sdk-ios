@@ -1153,8 +1153,8 @@ class URLSessionRUMResourcesHandlerTests: XCTestCase {
 // MARK: - Test Helpers
 
 struct ExpectedGraphQLHeaders {
-    static let operationName: String = "_oo-custom-header-graph-ql-operation-name"
-    static let operationType: String = "_oo-custom-header-graph-ql-operation-type"
-    static let variables: String = "_oo-custom-header-graph-ql-variables"
-    static let payload: String = "_oo-custom-header-graph-ql-payload"
+    static let operationName: String = "_o2-custom-header-graph-ql-operation-name"
+    static let operationType: String = "_o2-custom-header-graph-ql-operation-type"
+    static let variables: String = "_o2-custom-header-graph-ql-variables"
+    static let payload: String = "_o2-custom-header-graph-ql-payload"
 }

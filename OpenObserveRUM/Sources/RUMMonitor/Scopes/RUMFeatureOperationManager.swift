@@ -102,7 +102,7 @@ internal class RUMFeatureOperationManager {
             container: nil,
             context: .init(contextInfo: mergedAttributes),
             date: command.time.addingTimeInterval(context.serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             os: context.os,

@@ -58,7 +58,7 @@ echo_info "Publishing '$GH_ASSET_WITHOUT_ARM64E' and '$GH_ASSET_WITH_ARM64E' to 
 echo_info "▸ Using DRY_RUN = $DRY_RUN"
 echo_info "▸ Using OVERWRITE_EXISTING = $overwrite_existing"
 
-export GITHUB_TOKEN=$(oo-octo-sts --disable-tracing token --scope openobserve/openobserve-sdk-ios --policy self.release)
+export GITHUB_TOKEN=$(o2-octo-sts --disable-tracing token --scope openobserve/openobserve-sdk-ios --policy self.release)
 verify_gh_auth
 upload
-oo-octo-sts --disable-tracing revoke
+o2-octo-sts --disable-tracing revoke

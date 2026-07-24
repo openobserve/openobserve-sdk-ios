@@ -12,7 +12,7 @@ internal enum OpenObserveTagKeys: String {
     case spanKind = "span.kind"
     case errorType = "error.type"
     case errorMessage = "error.message"
-    case spanLinks = "_oo.span_links"
+    case spanLinks = "_o2.span_links"
 }
 
 extension OpenTelemetryApi.TraceId {
@@ -214,7 +214,7 @@ internal class OTelSpan: OpenTelemetryApi.Span {
         // SpanKind maps to the `span.kind` tag in OpenObserve
         ooSpan.setTag(key: OpenObserveTagKeys.spanKind.rawValue, value: kind.rawValue)
 
-        // OpenObserve uses `_oo.span_links` tag to send span links
+        // OpenObserve uses `_o2.span_links` tag to send span links
         if !spanLinks.isEmpty {
             ooSpan.setTag(key: OpenObserveTagKeys.spanLinks.rawValue, value: spanLinks)
         }

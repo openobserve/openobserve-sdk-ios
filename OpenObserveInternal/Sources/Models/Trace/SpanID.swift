@@ -111,8 +111,8 @@ public protocol SpanIDGenerator {
 public struct DefaultSpanIDGenerator: SpanIDGenerator {
     /// Describes the lower and upper boundary of tracing ID generation.
     ///
-    /// * Lower: starts with `1` as `0` is reserved for historical reason: 0 == "unset", ref: oo-trace-java:DDId.java.
-    /// * Upper: equals to `2 ^ 63 - 1` as some tracers can't handle the `2 ^ 64 -1` range, ref: oo-trace-java:DDId.java.
+    /// * Lower: starts with `1` as `0` is reserved for historical reason: 0 == "unset", ref: o2-trace-java:DDId.java.
+    /// * Upper: equals to `2 ^ 63 - 1` as some tracers can't handle the `2 ^ 64 -1` range, ref: o2-trace-java:DDId.java.
     public static let defaultGenerationRange = (1...UInt64.max >> 1)
 
     /// The generator's range.

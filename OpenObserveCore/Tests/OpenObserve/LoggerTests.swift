@@ -68,7 +68,7 @@ class LoggerTests: XCTestCase {
         {
           "status": "debug",
           "message": "message",
-          "_oo": {
+          "_o2": {
             "device": {
               "architecture": "testArch"
             }
@@ -95,7 +95,7 @@ class LoggerTests: XCTestCase {
           "date" : "2019-12-15T10:00:00.000Z",
           "version": "1.0.0",
           "build_version": "1",
-          "ootags": "sdk_version:1.2.3,service:default-service-name,version:1.0.0,env:tests",
+          "o2tags": "sdk_version:1.2.3,service:default-service-name,version:1.0.0,env:tests",
           "os": {
             "build": "FFFFFF",
             "name": "testOS",
@@ -104,7 +104,7 @@ class LoggerTests: XCTestCase {
           }
         }
         """, usingCustomKeyComparators: [
-            "ootags": { lhs, rhs, file, line in
+            "o2tags": { lhs, rhs, file, line in
                 guard let lhs = lhs as? String,
                       let rhs = rhs as? String
                 else {
@@ -294,7 +294,7 @@ class LoggerTests: XCTestCase {
                    errorMessage: errorMessage,
                    stackTrace: stackTrace,
                    attributes: [
-                    "_oo.error.source_type": "flutter"
+                    "_o2.error.source_type": "flutter"
                    ]
         )
 
@@ -892,10 +892,10 @@ class LoggerTests: XCTestCase {
 
         // when
         logger.error("error message", attributes: [
-            "_oo.error.source_type": "flutter"
+            "_o2.error.source_type": "flutter"
         ])
         logger.critical("critical message", attributes: [
-            "_oo.error.source_type": "react-native"
+            "_o2.error.source_type": "react-native"
         ])
 
         // then
@@ -927,10 +927,10 @@ class LoggerTests: XCTestCase {
 
         // when
         logger.error("error message", attributes: [
-            "_oo.error.is_crash": false
+            "_o2.error.is_crash": false
         ])
         logger.critical("critical message", attributes: [
-            "_oo.error.is_crash": true
+            "_o2.error.is_crash": true
         ])
 
         // then

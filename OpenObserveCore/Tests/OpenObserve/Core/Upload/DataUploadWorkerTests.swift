@@ -10,7 +10,7 @@ import OpenObserveInternal
 @testable import OpenObserveCore
 
 class DataUploadWorkerTests: XCTestCase {
-    private let uploaderQueue = DispatchQueue(label: "oo-tests-uploader", target: .global(qos: .utility))
+    private let uploaderQueue = DispatchQueue(label: "o2-tests-uploader", target: .global(qos: .utility))
 
     lazy var dateProvider = RelativeDateProvider(advancingBySeconds: 1)
     lazy var orchestrator = FilesOrchestrator(

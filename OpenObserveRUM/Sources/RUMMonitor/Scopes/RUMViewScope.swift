@@ -175,9 +175,9 @@ internal class RUMViewScope: RUMScope, RUMContextProvider {
 
         // Notify Synthetics if needed
         if dependencies.syntheticsTest != nil {
-            NSLog("_oo.session.id=" + self.context.sessionID.toRUMDataFormat)
-            NSLog("_oo.application.id=" + self.context.rumApplicationID)
-            NSLog("_oo.view.id=" + self.viewUUID.toRUMDataFormat)
+            NSLog("_o2.session.id=" + self.context.sessionID.toRUMDataFormat)
+            NSLog("_o2.application.id=" + self.context.rumApplicationID)
+            NSLog("_o2.view.id=" + self.viewUUID.toRUMDataFormat)
         }
     }
 
@@ -597,7 +597,7 @@ extension RUMViewScope {
             container: nil,
             context: .init(contextInfo: attributes),
             date: viewStartTime.addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             featureFlags: .init(featureFlagsInfo: featureFlags),
@@ -750,7 +750,7 @@ extension RUMViewScope {
             container: nil,
             context: .init(contextInfo: commandAttributes),
             date: command.time.addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             error: .init(
@@ -842,7 +842,7 @@ extension RUMViewScope {
             container: nil,
             context: .init(contextInfo: commandAttributes),
             date: (command.time - command.duration).addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             longTask: .init(

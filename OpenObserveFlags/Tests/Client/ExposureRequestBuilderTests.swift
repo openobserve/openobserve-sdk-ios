@@ -95,7 +95,7 @@ final class ExposureRequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: .mockAny())
 
         // Then
-        let expectedQuery = "oosource=\(randomSource)"
+        let expectedQuery = "o2source=\(randomSource)"
         XCTAssertEqual(request.url?.query, expectedQuery)
     }
 
@@ -141,9 +141,9 @@ final class ExposureRequestBuilderTests: XCTestCase {
         )
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Type"], "text/plain;charset=UTF-8")
         XCTAssertEqual(request.allHTTPHeaderFields?["O2-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomOrigin)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN"], randomOrigin)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     func testItSetsHTTPBodyInExpectedFormat() throws {

@@ -49,11 +49,11 @@ setup_test_visibility() {
     export DD_DISABLE_CRASH_HANDLER=0
 
     # Debugging:
-    # - If `DD_TRACE_DEBUG` is enabled, the `oo-sdk-swift-testing` will print extra debug logs.
+    # - If `DD_TRACE_DEBUG` is enabled, the `o2-sdk-swift-testing` will print extra debug logs.
     export DD_TRACE_DEBUG=0
 
     # Git metadata:
-    # - While `oo-sdk-swift-testing` can read Git metadata from `.git` folder, following info must be overwritten
+    # - While `o2-sdk-swift-testing` can read Git metadata from `.git` folder, following info must be overwritten
     # due to our GH → GitLab mirroring configuration (otherwise it will point to GitLab mirror not GH repo).
     export DD_GIT_REPOSITORY_URL="git@github.com:openobserve/openobserve-sdk-ios.git"
 

@@ -244,7 +244,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // Then
         let expectedTraceparent = "00-\(String(span.traceID, representation: .hexadecimal32Chars))-\(String(span.spanID, representation: .hexadecimal16Chars))-01"
-        let expectedTracestate = "oo=p:\(String(span.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        let expectedTracestate = "o2=p:\(String(span.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
@@ -321,7 +321,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // Then
         let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars))-01"
-        let expectedTracestate = "oo=p:\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        let expectedTracestate = "o2=p:\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
@@ -434,7 +434,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // Then
         let expectedTraceparent = "00-\(String(networkSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
-        let expectedTracestate = "oo=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        let expectedTracestate = "o2=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }
@@ -511,7 +511,7 @@ class HeadBasedSamplingTests: XCTestCase {
 
         // Then
         let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
-        let expectedTracestate = "oo=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
+        let expectedTracestate = "o2=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
         XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
     }

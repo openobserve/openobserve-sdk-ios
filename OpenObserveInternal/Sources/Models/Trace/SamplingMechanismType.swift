@@ -6,7 +6,7 @@
 
 /// The mechanism used to make a span sampling decision.
 ///
-/// The raw values are the ones used in propagation headers like `_oo.p.dm`. They do not include the `-` character,
+/// The raw values are the ones used in propagation headers like `_o2.p.dm`. They do not include the `-` character,
 /// since that character is a separator and not part of the value itself.
 public enum SamplingMechanismType: String, Equatable, Comparable, Sendable {
     /// Fallback mechanism. This mechanism samples all spans. It should never be used, but it's included for completion.

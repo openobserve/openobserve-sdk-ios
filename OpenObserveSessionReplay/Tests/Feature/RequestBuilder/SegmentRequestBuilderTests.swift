@@ -129,10 +129,10 @@ class SegmentRequestBuilderTests: XCTestCase {
             """
         )
         XCTAssertEqual(request.allHTTPHeaderFields?["O2-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomSource)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN"], randomSource)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN-VERSION"], randomSDKVersion)
         XCTAssertNil(request.allHTTPHeaderFields?["Content-Encoding"], "It must us no compression, because multipart file is compressed separately")
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     func testItSetsHTTPBodyInExpectedFormat() throws {
@@ -273,7 +273,7 @@ class SegmentRequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: .mockRandom(), execution: execution)
 
         // Then
-        XCTAssertEqual(request.url!.query, "ootags=retry_count:\(randomAttempt),retry_after:\(randomStatus)")
+        XCTAssertEqual(request.url!.query, "o2tags=retry_count:\(randomAttempt),retry_after:\(randomStatus)")
     }
 
     func testItSetsRetryQueryParametersOnNetworkErrorRetry() throws {
@@ -285,7 +285,7 @@ class SegmentRequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: .mockRandom(), execution: execution)
 
         // Then
-        XCTAssertEqual(request.url!.query, "ootags=retry_count:1") // no retry_after without response code
+        XCTAssertEqual(request.url!.query, "o2tags=retry_count:1") // no retry_after without response code
     }
 }
 #endif

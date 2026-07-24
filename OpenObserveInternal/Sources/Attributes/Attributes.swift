@@ -70,131 +70,131 @@ public struct CrossPlatformAttributes {
     /// Custom app version passed from CP SDK. Used for all events issued by the SDK (both coming from cross-platform SDK and produced internally, like RUM long tasks).
     /// It should replace the default native `version` read from `Info.plist`.
     /// Expects `String` value (semantic version).
-    public static let version: String = "_oo.version"
+    public static let version: String = "_o2.version"
 
     /// Custom SDK version passed from CP SDK. Used for all events issued by the SDK (both coming from cross-platform SDK and produced internally, like RUM long tasks).
     /// It should replace the default native `sdkVersion`.
     /// Expects `String` value (semantic version).
-    public static let sdkVersion: String = "_oo.sdk_version"
+    public static let sdkVersion: String = "_o2.sdk_version"
 
     /// Custom SDK `source` passed from CP SDK. Used for all events issued by the SDK (both coming from cross-platform SDK and produced internally, like RUM long tasks).
-    /// It should replace the default native `oosource` value (`"ios"`).
+    /// It should replace the default native `o2source` value (`"ios"`).
     /// Expects `String` value.
-    public static let oosource: String = "_oo.source"
+    public static let o2source: String = "_o2.source"
 
     /// Custom Variant passed from a CP SDK. This is the 'flavor' parameter used in Android and Flutter, Used for all events issued by the SDK (both coming from cross-platform
     /// SDK and produced internally, like RUM long tasks).
     /// It does not replace any default native properties as iOS does not have the concept of 'flavors' or variants.
-    public static let variant: String = "_oo.variant"
+    public static let variant: String = "_o2.variant"
 
     /// A custom unique id that identifies this build of the application, used from symbolication and deobfuscation
     ///  Id does not replace any default native properties and is sent in addition to version and build number
-    public static let buildId: String = "_oo.build_id"
+    public static let buildId: String = "_o2.build_id"
 
     /// Event timestamp passed from CP SDK. Used for all RUM events issued by cross platform SDK.
     /// It should replace event time obtained from `DateProvider` to ensure that events are not skewed due to time difference in native and cross-platform SDKs.
     /// Expects `Int64` value (milliseconds).
-    public static let timestampInMilliseconds = "_oo.timestamp"
+    public static let timestampInMilliseconds = "_o2.timestamp"
 
     /// Custom "source type" of the error passed from CP SDK. Used in RUM errors reported by cross platform SDK.
     /// It names the language or platform of the RUM error stack trace, so the SCI backend knows how to symbolicate it.
     /// Expects `String` value.
-    public static let errorSourceType = "_oo.error.source_type"
+    public static let errorSourceType = "_o2.error.source_type"
 
     /// Custom attribute of the error passed from CP SDK. Used in RUM errors reported by cross platform SDK.
     /// It flags the error has being fatal for the host application.
     /// Expects `Bool` value.
-    public static let errorIsCrash = "_oo.error.is_crash"
+    public static let errorIsCrash = "_o2.error.is_crash"
 
     /// Trace ID passed from CP SDK. Used in RUM resources created by cross platform SDK.
     /// When cross-platform SDK injects tracing headers to intercepted resource, we pass tracing information through this attribute
     /// and send it within the RUM resource, so the RUM backend can issue corresponding APM span on behalf of the mobile app.
     /// Expects `String` value.
-    public static let traceID = "_oo.trace_id"
+    public static let traceID = "_o2.trace_id"
 
     /// Span ID passed from CP SDK. Used in RUM resources created by cross platform SDK.
     /// When cross-platform SDK injects tracing headers to intercepted resource, we pass tracing information through this attribute
     /// and send it within the RUM resource, so the RUM backend can issue corresponding APM span on behalf of the mobile app.
     /// Expects `String` value.
-    public static let spanID = "_oo.span_id"
+    public static let spanID = "_o2.span_id"
 
     /// Parent span ID passed from CP SDK. Used in RUM resources created by cross platform SDK.
     /// When cross-platform SDK injects tracing headers to intercepted resource, we pass tracing information through this attribute
     /// and send it within the RUM resource, so the RUM backend can issue corresponding APM span on behalf of the mobile app.
     /// Expects `String` value.
-    public static let parentSpanID = "_oo.parent_span_id"
+    public static let parentSpanID = "_o2.parent_span_id"
 
     /// Trace sample rate applied to RUM resources created by cross platform SDK.
     /// We send cross-platform SDK's sample rate within RUM resource in order to provide accurate visibility into what settings are
     /// configured at the SDK level. This gets displayed on APM's traffic ingestion control page.
     /// Expects `Double` value between `0.0` and `1.0`.
-    public static let rulePSR = "_oo.rule_psr"
+    public static let rulePSR = "_o2.rule_psr"
 
     /// Custom attribute passed when starting GraphQL RUM resources from a cross platform SDK.
     /// It sets the GraphQL operation name if it was defined by the developer.
     /// Expects `String` value.
-    public static let graphqlOperationName = "_oo.graphql.operation_name"
+    public static let graphqlOperationName = "_o2.graphql.operation_name"
 
     /// Custom attribute passed when starting GraphQL RUM resources from a cross platform SDK.
     /// It sets the GraphQL operation type.
     /// Expects `String` value of either `query`, `mutation` or `subscription`.
-    public static let graphqlOperationType = "_oo.graphql.operation_type"
+    public static let graphqlOperationType = "_o2.graphql.operation_type"
 
     /// Custom attribute passed when starting GraphQL RUM resources from a cross platform SDK.
     /// It sets the GraphQL payload as a JSON string when it is specified.
     /// Expects `String` value.
-    public static let graphqlPayload = "_oo.graphql.payload"
+    public static let graphqlPayload = "_o2.graphql.payload"
 
     /// Custom attribute passed when starting GraphQL RUM resources resources from a cross platform SDK.
     /// It sets the GraphQL variables as a JSON string if they were defined by the developer.
     /// Expects `String` value.
-    public static let graphqlVariables = "_oo.graphql.variables"
+    public static let graphqlVariables = "_o2.graphql.variables"
 
     /// Custom attribute passed when completing GraphQL RUM resources that contain errors in the response.
     /// It sets the GraphQL errors array as a JSON string.
     /// Expects `String` value containing a JSON array of errors.
-    public static let graphqlErrors = "_oo.graphql.errors"
+    public static let graphqlErrors = "_o2.graphql.errors"
 
     /// Override the `source_type` of errors reported by the native crash handler. This is used on
     /// platforms that can supply extra steps or information on a native crash (such as Unity's IL2CPP)
-    public static let nativeSourceType = "_oo.native_source_type"
+    public static let nativeSourceType = "_o2.native_source_type"
 
     /// Add "binary images" to the reportted error to assist with symbolication. Used by Unity for IL2CPP symbolicaiton
-    public static let includeBinaryImages = "_oo.error.include_binary_images"
+    public static let includeBinaryImages = "_o2.error.include_binary_images"
 
     /// Custom Flutter vital - First Build Complete. The amount of time between a route change (the start of a view) and when the first
     /// `build` method is complete. In nanoseconds since view start
-    public static let flutterFirstBuildComplete: String = "_oo.performance.first_build_complete"
+    public static let flutterFirstBuildComplete: String = "_o2.performance.first_build_complete"
 
     /// Custom value for Interaction To Next view.
     /// For Flutter this is the amount of time between an action occurring and the First Build Complete occurring on the next view.
-    public static let customINVValue: String = "_oo.view.custom_inv_value"
+    public static let customINVValue: String = "_o2.view.custom_inv_value"
 
     /// Request headers passed from Cross-Platform SDK or captured from native URLSession interception.
     /// Used in RUM resources to transport request headers through the RUM command pipeline.
     /// Expects `[String: String]` value containing header keys and values.
-    public static let requestHeaders = "_oo.request_headers"
+    public static let requestHeaders = "_o2.request_headers"
 
     /// Response headers passed from Cross-Platform SDK or captured from native URLSession interception.
     /// Used in RUM resources to transport response headers through the RUM command pipeline.
     /// Expects `[String: String]` value containing header keys and values.
-    public static let responseHeaders = "_oo.response_headers"
+    public static let responseHeaders = "_o2.response_headers"
 }
 
 /// HTTP header names used to pass GraphQL metadata from the application to the SDK.
 /// These headers are read from intercepted requests and mapped to internal attributes.
 public struct GraphQLHeaders {
     /// HTTP header name for GraphQL operation name.
-    public static let operationName: String = "_oo-custom-header-graph-ql-operation-name"
+    public static let operationName: String = "_o2-custom-header-graph-ql-operation-name"
 
     /// HTTP header name for GraphQL operation type.
-    public static let operationType: String = "_oo-custom-header-graph-ql-operation-type"
+    public static let operationType: String = "_o2-custom-header-graph-ql-operation-type"
 
     /// HTTP header name for GraphQL variables.
-    public static let variables: String = "_oo-custom-header-graph-ql-variables"
+    public static let variables: String = "_o2-custom-header-graph-ql-variables"
 
     /// HTTP header name for GraphQL payload.
-    public static let payload: String = "_oo-custom-header-graph-ql-payload"
+    public static let payload: String = "_o2-custom-header-graph-ql-payload"
 }
 
 extension URLRequest {

@@ -136,19 +136,19 @@ internal struct SpanEventEncoder {
 
         case isRootSpan = "metrics._top_level"
         case samplingPriority = "metrics._sampling_priority_v1"
-        case samplingRate = "metrics._oo.agent_psr"
+        case samplingRate = "metrics._o2.agent_psr"
 
         // MARK: - Meta
 
-        case source = "meta._oo.source"
+        case source = "meta._o2.source"
         case applicationVersion = "meta.version"
         case tracerVersion = "meta.tracer.version"
 
-        case origin = "meta._oo.origin"
+        case origin = "meta._o2.origin"
 
-        case ptid = "meta._oo.p.tid"
+        case ptid = "meta._o2.p.tid"
 
-        case decisionMaker = "meta._oo.p.dm"
+        case decisionMaker = "meta._o2.p.dm"
 
         case userId = "meta.usr.id"
         case userName = "meta.usr.name"

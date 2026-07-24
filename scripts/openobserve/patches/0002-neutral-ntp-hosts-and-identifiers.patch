@@ -137,13 +137,13 @@ index 8f090e62e..1d558aadf 100644
          // Then
 -        let expectedTraceIDField = String(span.traceID.idLo)
 -        let expectedSpanIDField = String(span.spanID, representation: .decimal)
--        let expectedTagsField = "_oo.p.tid=\(span.traceID.idHiHex),_oo.p.dm=-1"
+-        let expectedTagsField = "_o2.p.tid=\(span.traceID.idHiHex),_o2.p.dm=-1"
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
 +        let expectedTraceparent = "00-\(String(span.traceID, representation: .hexadecimal32Chars))-\(String(span.spanID, representation: .hexadecimal16Chars))-01"
-+        let expectedTracestate = "oo=p:\(String(span.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        let expectedTracestate = "o2=p:\(String(span.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
      }
@@ -170,13 +170,13 @@ index 8f090e62e..1d558aadf 100644
          // Then
 -        let expectedTraceIDField = String(activeSpan.traceID.idLo)
 -        let expectedSpanIDField = String(urlsessionSpan.spanID, representation: .decimal)
--        let expectedTagsField = "_oo.p.tid=\(activeSpan.traceID.idHiHex),_oo.p.dm=-1"
+-        let expectedTagsField = "_o2.p.tid=\(activeSpan.traceID.idHiHex),_o2.p.dm=-1"
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
 +        let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars))-01"
-+        let expectedTracestate = "oo=p:\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        let expectedTracestate = "o2=p:\(String(urlsessionSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
      }
@@ -225,13 +225,13 @@ index 8f090e62e..1d558aadf 100644
          // Then
 -        let expectedTraceIDField = String(networkSpan.traceID.idLo)
 -        let expectedSpanIDField = String(networkSpan.spanID, representation: .decimal)
--        let expectedTagsField = "_oo.p.tid=\(networkSpan.traceID.idHiHex),_oo.p.dm=-1"
+-        let expectedTagsField = "_o2.p.tid=\(networkSpan.traceID.idHiHex),_o2.p.dm=-1"
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
 +        let expectedTraceparent = "00-\(String(networkSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
-+        let expectedTracestate = "oo=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        let expectedTracestate = "o2=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
      }
@@ -276,13 +276,13 @@ index 8f090e62e..1d558aadf 100644
          // Then
 -        let expectedTraceIDField = String(activeSpan.traceID.idLo)
 -        let expectedSpanIDField = String(networkSpan.spanID, representation: .decimal)
--        let expectedTagsField = "_oo.p.tid=\(activeSpan.traceID.idHiHex),_oo.p.dm=-1"
+-        let expectedTagsField = "_o2.p.tid=\(activeSpan.traceID.idHiHex),_o2.p.dm=-1"
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), expectedTraceIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), expectedSpanIDField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), expectedTagsField)
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
 +        let expectedTraceparent = "00-\(String(activeSpan.traceID, representation: .hexadecimal32Chars))-\(String(networkSpan.spanID, representation: .hexadecimal16Chars))-01"
-+        let expectedTracestate = "oo=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
++        let expectedTracestate = "o2=p:\(String(networkSpan.spanID, representation: .hexadecimal16Chars));s:1;t.dm:-1"
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.traceparent), expectedTraceparent)
 +        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.tracestate), expectedTracestate)
      }
@@ -545,12 +545,12 @@ index 8452d3bf7..349972938 100644
                  "X-B3-TraceId": "000000000000000a0000000000000064",
                  "b3": "000000000000000a0000000000000064-0000000000000064-1",
 -                "x-datadog-trace-id": "100",
--                "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1",
+-                "x-datadog-tags": "_o2.p.tid=a,_o2.p.dm=-1",
                  "baggage": "session.id=\(fakeSessionId.uuidString.lowercased())",
--                "tracestate": "oo=p:0000000000000064;s:1;t.dm:-1",
+-                "tracestate": "o2=p:0000000000000064;s:1;t.dm:-1",
 -                "x-datadog-parent-id": "100",
 -                "x-datadog-sampling-priority": "1"
-+                "tracestate": "oo=p:0000000000000064;s:1;t.dm:-1"
++                "tracestate": "o2=p:0000000000000064;s:1;t.dm:-1"
              ]
          )
      }
@@ -837,7 +837,7 @@ index 23055462e..000000000
 -                    case let tagElements = $0.split(separator: "="),
 -                    tagElements.count == 2,
 -                    let key = tagElements.first,
--                    key == "_oo.p.dm",
+-                    key == "_o2.p.dm",
 -                    case let value = tagElements[1],
 -                    let tagValue = Self.parseDecisionMakerTag(fromValue: value),
 -                    let mechanismType = SamplingMechanismType(rawValue: String(tagValue))
@@ -922,9 +922,9 @@ index 9b8a51142..000000000
 -        ]
 -        traceHeaderFields[TracingHTTPHeaders.traceIDField] = String(traceContext.traceID.idLo)
 -        traceHeaderFields[TracingHTTPHeaders.parentSpanIDField] = String(traceContext.spanID, representation: .decimal)
--        var tags = ["_oo.p.tid=\(traceContext.traceID.idHiHex)"]
+-        var tags = ["_o2.p.tid=\(traceContext.traceID.idHiHex)"]
 -        if traceContext.samplingPriority.isKept {
--            tags.append("_oo.p.dm=-\(traceContext.samplingDecisionMaker.rawValue)")
+-            tags.append("_o2.p.dm=-\(traceContext.samplingDecisionMaker.rawValue)")
 -        }
 -        traceHeaderFields[TracingHTTPHeaders.tagsField] = tags.joined(separator: ",")
 -        var baggageItems: [String] = []
@@ -983,7 +983,7 @@ index 52679b518..000000000
 -    /// Keys for OpenObserve tags.
 -    public enum TagKeys {
 -        /// The OpenObserve tag key for the higher order 64 bits of the trace ID.
--        public static let traceIDHi = "_oo.p.tid"
+-        public static let traceIDHi = "_o2.p.tid"
 -    }
 -}
 diff --git b/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType+objc.swift a/OpenObserveInternal/Sources/NetworkInstrumentation/TracingHeaderType+objc.swift
@@ -1021,7 +1021,7 @@ index a4adb2ba2..586cdffc1 100644
 +/// APM can link the RUM resource to a server-side trace — the reader is never OpenObserve's
 +/// intake, which speaks W3C `traceparent` and never parsed those headers at all. So the
 +/// propagator was only useful against an upstream-instrumented backend, and renaming its
-+/// headers to `oo-*` would not have rebranded it: no APM reads `oo-trace-id`, so it would have
++/// headers to `o2-*` would not have rebranded it: no APM reads `o2-trace-id`, so it would have
 +/// emitted headers nothing understands and silently linked nothing.
 +/// Use `tracecontext` (W3C) — what OpenObserve actually reads — or `b3`.
  public enum TracingHeaderType: Hashable {
@@ -1288,7 +1288,7 @@ index 5c17318f2..000000000
 -        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "1")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
--        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-1")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_o2.p.tid=4d2,_o2.p.dm=-1")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
 -    }
 -
@@ -1328,7 +1328,7 @@ index 5c17318f2..000000000
 -        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "2")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
--        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-4")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_o2.p.tid=4d2,_o2.p.dm=-4")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
 -    }
 -
@@ -1368,7 +1368,7 @@ index 5c17318f2..000000000
 -        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "1")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
--        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-1")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_o2.p.tid=4d2,_o2.p.dm=-1")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
 -    }
 -
@@ -1390,7 +1390,7 @@ index 5c17318f2..000000000
 -        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "1")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
--        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-1")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_o2.p.tid=4d2,_o2.p.dm=-1")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
 -    }
 -
@@ -1452,7 +1452,7 @@ index 5c17318f2..000000000
 -        XCTAssertEqual(headers[TracingHTTPHeaders.samplingPriorityField], "2")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.traceIDField], "1234")
 -        XCTAssertEqual(headers[TracingHTTPHeaders.parentSpanIDField], "2345")
--        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_oo.p.tid=4d2,_oo.p.dm=-4")
+-        XCTAssertEqual(headers[TracingHTTPHeaders.tagsField], "_o2.p.tid=4d2,_o2.p.dm=-4")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
 -    }
 -
@@ -1807,7 +1807,7 @@ index 705fe9007..1ca7fccc7 100644
 -
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.originField), "rum")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
--        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_o2.p.tid=a,_o2.p.dm=-1")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "100")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: W3CHTTPHeaders.baggage), "session.id=abcdef01-2345-6789-abcd-ef0123456789")
@@ -2008,7 +2008,7 @@ index 705fe9007..1ca7fccc7 100644
 -                "x-datadog-parent-id": "100",
 -                "x-datadog-sampling-priority": "1",
 -                "x-datadog-origin": "rum",
--                "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1",
+-                "x-datadog-tags": "_o2.p.tid=a,_o2.p.dm=-1",
                  "baggage": "session.id=abcdef01-2345-6789-abcd-ef0123456789",
              ]
          )
@@ -2305,7 +2305,7 @@ index fa791574a..c7087d714 100644
          )
  
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
--        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_o2.p.tid=a,_o2.p.dm=-1")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "100")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
          XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
@@ -2372,7 +2372,7 @@ index fa791574a..c7087d714 100644
          span.finish()
  
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
--        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-1")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_o2.p.tid=a,_o2.p.dm=-1")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "1")
          XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
@@ -2391,7 +2391,7 @@ index fa791574a..c7087d714 100644
          span.finish()
  
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
--        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a,_oo.p.dm=-4")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_o2.p.tid=a,_o2.p.dm=-4")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "2")
          XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")
@@ -2410,7 +2410,7 @@ index fa791574a..c7087d714 100644
          span.finish()
  
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.traceIDField), "100")
--        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_oo.p.tid=a")
+-        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.tagsField), "_o2.p.tid=a")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.parentSpanIDField), "101")
 -        XCTAssertEqual(request.value(forHTTPHeaderField: TracingHTTPHeaders.samplingPriorityField), "-1")
          XCTAssertEqual(request.value(forHTTPHeaderField: B3HTTPHeaders.Multiple.traceIDField), "000000000000000a0000000000000064")

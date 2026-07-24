@@ -363,7 +363,7 @@ class WebViewTrackingTests: XCTestCase {
               "time_spent": 3120000000,
               "url": "http://localhost:8080/test.html"
             },
-            "_oo": {
+            "_o2": {
               "document_version": 2,
               "drift": 0,
               "format_version": 2,

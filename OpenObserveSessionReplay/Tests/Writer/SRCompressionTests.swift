@@ -44,7 +44,7 @@ class SRCompressionTests: XCTestCase {
         XCTAssertLessThan(compressed.count, data.count)
     }
 
-    /// Following fixtures were recorded from `oo-sdk-android` deflater.
+    /// Following fixtures were recorded from `o2-sdk-android` deflater.
     func testFixtures() throws {
         // Given
         let data1 = "1"

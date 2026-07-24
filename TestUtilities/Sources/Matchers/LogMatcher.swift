@@ -15,7 +15,7 @@ public class LogMatcher: JSONDataMatcher {
         static let status = "status"
         static let message = "message"
         static let service = "service"
-        static let tags = "ootags"
+        static let tags = "o2tags"
 
         // MARK: - Application info
 
@@ -63,7 +63,7 @@ public class LogMatcher: JSONDataMatcher {
         public static let errorFingerprint = "error.fingerprint"
 
         // MARK: - Dd info
-        static let dd = "_oo"
+        static let dd = "_o2"
         static let ooDevice = "device"
         static let ooDeviceArchitecture = "architecture"
     }

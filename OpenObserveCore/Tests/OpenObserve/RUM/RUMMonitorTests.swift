@@ -302,10 +302,10 @@ class RUMMonitorTests: XCTestCase {
         setGlobalAttributes(of: monitor)
         monitor.startView(key: .mockAny())
         monitor.startResource(resourceKey: "/resource/1", httpMethod: .post, urlString: "/some/url/string", attributes: [
-            "_oo.graphql.operation_name": "GetCountry",
-            "_oo.graphql.operation_type": "query",
-            "_oo.graphql.payload": "{country(code:$code){name}}",
-            "_oo.graphql.variables": "{\"code\":\"BE\"}"
+            "_o2.graphql.operation_name": "GetCountry",
+            "_o2.graphql.operation_type": "query",
+            "_o2.graphql.payload": "{country(code:$code){name}}",
+            "_o2.graphql.variables": "{\"code\":\"BE\"}"
         ])
         monitor.stopResource(resourceKey: "/resource/1", response: .mockWith(statusCode: 200, mimeType: "text/json"))
 
@@ -1395,31 +1395,31 @@ class RUMMonitorTests: XCTestCase {
         let viewEvents = rumEventMatchers.filterRUMEvents(ofType: RUMViewEvent.self)
         XCTAssertNotEqual(viewEvents.count, 0)
         for event in viewEvents {
-            XCTAssertEqual(try event.attribute(forKeyPath: "_oo.configuration.session_sample_rate"), config.sessionSampleRate)
+            XCTAssertEqual(try event.attribute(forKeyPath: "_o2.configuration.session_sample_rate"), config.sessionSampleRate)
         }
 
         let actionEvents = rumEventMatchers.filterRUMEvents(ofType: RUMActionEvent.self)
         XCTAssertNotEqual(actionEvents.count, 0)
         for event in actionEvents {
-            XCTAssertEqual(try event.attribute(forKeyPath: "_oo.configuration.session_sample_rate"), config.sessionSampleRate)
+            XCTAssertEqual(try event.attribute(forKeyPath: "_o2.configuration.session_sample_rate"), config.sessionSampleRate)
         }
 
         let resourceEvents = rumEventMatchers.filterRUMEvents(ofType: RUMResourceEvent.self)
         XCTAssertNotEqual(resourceEvents.count, 0)
         for event in resourceEvents {
-            XCTAssertEqual(try event.attribute(forKeyPath: "_oo.configuration.session_sample_rate"), config.sessionSampleRate)
+            XCTAssertEqual(try event.attribute(forKeyPath: "_o2.configuration.session_sample_rate"), config.sessionSampleRate)
         }
 
         let errorEvents = rumEventMatchers.filterRUMEvents(ofType: RUMErrorEvent.self)
         XCTAssertNotEqual(errorEvents.count, 0)
         for event in errorEvents {
-            XCTAssertEqual(try event.attribute(forKeyPath: "_oo.configuration.session_sample_rate"), config.sessionSampleRate)
+            XCTAssertEqual(try event.attribute(forKeyPath: "_o2.configuration.session_sample_rate"), config.sessionSampleRate)
         }
 
         let longTaskEvents = rumEventMatchers.filterRUMEvents(ofType: RUMLongTaskEvent.self)
         XCTAssertNotEqual(longTaskEvents.count, 0)
         for event in longTaskEvents {
-            XCTAssertEqual(try event.attribute(forKeyPath: "_oo.configuration.session_sample_rate"), config.sessionSampleRate)
+            XCTAssertEqual(try event.attribute(forKeyPath: "_o2.configuration.session_sample_rate"), config.sessionSampleRate)
         }
     }
 

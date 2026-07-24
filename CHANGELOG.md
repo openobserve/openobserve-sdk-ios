@@ -117,7 +117,7 @@
 - [FEATURE] Add Start and End Feature Operations APIs. See [#2469][]
 - [FEATURE] Send Accessibility attributes in View Updates. See [#2410][]
 - [IMPROVEMENT] Add missing `versionMajor` property to the `DDLogEventOperatingSystem` definition in Objective-C. See [#2463][]
-- [IMPROVEMENT] Add `ootags` to RUM events. See [#2436][]
+- [IMPROVEMENT] Add `o2tags` to RUM events. See [#2436][]
 - [FIX] Fix `LogEvent` device types. See [#2474][]
 
 # 3.0.0 / 02-09-2025

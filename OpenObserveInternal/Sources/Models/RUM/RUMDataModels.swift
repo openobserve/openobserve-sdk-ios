@@ -272,7 +272,7 @@ public struct RUMActionEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -314,7 +314,7 @@ public struct RUMActionEvent: RUMDataModel {
     public var view: View
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case action = "action"
         case application = "application"
@@ -325,7 +325,7 @@ public struct RUMActionEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -355,7 +355,7 @@ public struct RUMActionEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -380,7 +380,7 @@ public struct RUMActionEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -405,7 +405,7 @@ public struct RUMActionEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.os = os
@@ -1347,7 +1347,7 @@ public struct RUMErrorEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -1398,7 +1398,7 @@ public struct RUMErrorEvent: RUMDataModel {
     public var view: View
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case action = "action"
         case application = "application"
@@ -1409,7 +1409,7 @@ public struct RUMErrorEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case error = "error"
@@ -1442,7 +1442,7 @@ public struct RUMErrorEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - error: Error properties
@@ -1470,7 +1470,7 @@ public struct RUMErrorEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         error: Error,
@@ -1498,7 +1498,7 @@ public struct RUMErrorEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.error = error
@@ -2871,7 +2871,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -2916,7 +2916,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
     public var view: View
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case action = "action"
         case application = "application"
@@ -2927,7 +2927,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case longTask = "long_task"
@@ -2958,7 +2958,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - longTask: Long Task properties
@@ -2984,7 +2984,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         longTask: LongTask,
@@ -3010,7 +3010,7 @@ public struct RUMLongTaskEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.longTask = longTask
@@ -3764,7 +3764,7 @@ public struct RUMResourceEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -3809,7 +3809,7 @@ public struct RUMResourceEvent: RUMDataModel {
     public var view: View
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case action = "action"
         case application = "application"
@@ -3820,7 +3820,7 @@ public struct RUMResourceEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -3851,7 +3851,7 @@ public struct RUMResourceEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -3877,7 +3877,7 @@ public struct RUMResourceEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -3903,7 +3903,7 @@ public struct RUMResourceEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.os = os
@@ -5227,7 +5227,7 @@ public struct RUMViewEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -5275,7 +5275,7 @@ public struct RUMViewEvent: RUMDataModel {
     public var view: View
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case application = "application"
         case buildId = "build_id"
@@ -5285,7 +5285,7 @@ public struct RUMViewEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case featureFlags = "feature_flags"
@@ -5316,7 +5316,7 @@ public struct RUMViewEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - featureFlags: Feature flags properties
@@ -5342,7 +5342,7 @@ public struct RUMViewEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         featureFlags: FeatureFlags? = nil,
@@ -5368,7 +5368,7 @@ public struct RUMViewEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.featureFlags = featureFlags
@@ -7469,7 +7469,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -7517,7 +7517,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
     public var view: View
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case application = "application"
         case buildId = "build_id"
@@ -7527,7 +7527,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case featureFlags = "feature_flags"
@@ -7558,7 +7558,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - featureFlags: Feature flags properties
@@ -7584,7 +7584,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         featureFlags: FeatureFlags? = nil,
@@ -7610,7 +7610,7 @@ public struct RUMViewUpdateEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.featureFlags = featureFlags
@@ -9504,7 +9504,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -9549,7 +9549,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
     public let vital: Vital
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case application = "application"
         case buildId = "build_id"
@@ -9559,7 +9559,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -9589,7 +9589,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -9614,7 +9614,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -9639,7 +9639,7 @@ public struct RUMVitalAppLaunchEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.os = os
@@ -10248,7 +10248,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -10293,7 +10293,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
     public let vital: Vital
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case application = "application"
         case buildId = "build_id"
@@ -10303,7 +10303,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -10333,7 +10333,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -10358,7 +10358,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -10383,7 +10383,7 @@ public struct RUMVitalDurationEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.os = os
@@ -10952,7 +10952,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
     public let date: Int64
 
     /// Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
-    public let ootags: String?
+    public let o2tags: String?
 
     /// Device properties
     public let device: Device?
@@ -10997,7 +10997,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
     public let vital: Vital
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case account = "account"
         case application = "application"
         case buildId = "build_id"
@@ -11007,7 +11007,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
         case container = "container"
         case context = "context"
         case date = "date"
-        case ootags = "ootags"
+        case o2tags = "o2tags"
         case device = "device"
         case display = "display"
         case os = "os"
@@ -11037,7 +11037,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
     ///   - container: View Container properties (view wrapping the current view)
     ///   - context: User provided context
     ///   - date: Start of the event in ms from epoch
-    ///   - ootags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
+    ///   - o2tags: Tags of the event in key:value format, separated by commas (e.g. 'env:prod,version:1.2.3')
     ///   - device: Device properties
     ///   - display: Display properties
     ///   - os: Operating system properties
@@ -11062,7 +11062,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
         container: Container? = nil,
         context: RUMEventAttributes? = nil,
         date: Int64,
-        ootags: String? = nil,
+        o2tags: String? = nil,
         device: Device? = nil,
         display: Display? = nil,
         os: OperatingSystem? = nil,
@@ -11087,7 +11087,7 @@ public struct RUMVitalOperationStepEvent: RUMDataModel {
         self.container = container
         self.context = context
         self.date = date
-        self.ootags = ootags
+        self.o2tags = o2tags
         self.device = device
         self.display = display
         self.os = os
@@ -11694,7 +11694,7 @@ public struct TelemetryConfigurationEvent: RUMDataModel {
     public let view: View?
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case action = "action"
         case application = "application"
         case date = "date"
@@ -12848,7 +12848,7 @@ public struct TelemetryDebugEvent: RUMDataModel {
     public let view: View?
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case action = "action"
         case application = "application"
         case date = "date"
@@ -13138,7 +13138,7 @@ public struct TelemetryErrorEvent: RUMDataModel {
     public let view: View?
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case action = "action"
         case application = "application"
         case date = "date"
@@ -13464,7 +13464,7 @@ public struct TelemetryUsageEvent: RUMDataModel {
     public let view: View?
 
     public enum CodingKeys: String, CodingKey {
-        case dd = "_oo"
+        case dd = "_o2"
         case action = "action"
         case application = "application"
         case date = "date"

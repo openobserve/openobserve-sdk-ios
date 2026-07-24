@@ -14,7 +14,7 @@ let semverRegex = "^\(semverPattern)$"
 
 /// Regex for matching the value of UA header, e.g.: "User-Agent: Example/1.0 CFNetwork (iPhone; iOS/14.5)"
 let userAgentRegex = #"^.*/\d+[.\d]* CFNetwork \([a-zA-Z ]+; iOS/[0-9.]+\)$"#
-/// Regex for matching the value of `OO-REQUEST-ID` header, e.g. "OO-REQUEST-ID: 524A2616-D2AA-4FE5-BBD9-898D173BE658"
+/// Regex for matching the value of `O2-REQUEST-ID` header, e.g. "O2-REQUEST-ID: 524A2616-D2AA-4FE5-BBD9-898D173BE658"
 let ooRequestIDRegex = #"^[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}$"#
 let numberPattern = "[0-9]+$"
 let sha1Regex = "^[0-9a-f]{40}$"

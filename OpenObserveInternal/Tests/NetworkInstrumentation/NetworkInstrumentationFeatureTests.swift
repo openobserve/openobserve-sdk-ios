@@ -1821,7 +1821,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         handler.onInterceptionDidStart = { intercepted.append($0) }
 
         // When - Simulate `OpenObserveSDKTesting`'s CI Visibility upload: it hits citestcycle intake
-        // authenticated with `O2-API-KEY` but without our SDK's internal `OO-REQUEST-ID` header.
+        // authenticated with `O2-API-KEY` but without our SDK's internal `O2-REQUEST-ID` header.
         let citestcycleURL = URL(string: "https://citestcycle-intake.openobserve.ai/api/v2/citestcycle")!
         var request = URLRequest(url: citestcycleURL)
         request.setValue(.mockRandom(), forHTTPHeaderField: "O2-API-KEY")
@@ -1834,7 +1834,7 @@ class NetworkInstrumentationFeatureTests: XCTestCase {
         wait(for: [taskCompleted], timeout: 5)
 
         // Then
-        XCTAssertEqual(intercepted.count, 0, "Should not intercept OpenObserveSDKTesting CI Visibility uploads (O2-API-KEY without OO-REQUEST-ID)")
+        XCTAssertEqual(intercepted.count, 0, "Should not intercept OpenObserveSDKTesting CI Visibility uploads (O2-API-KEY without O2-REQUEST-ID)")
     }
 
     /// Regression test: the resume swizzle is process-global, so foreign URLSession activity in

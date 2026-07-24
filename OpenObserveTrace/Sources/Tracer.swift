@@ -35,13 +35,13 @@ public enum SpanTags {
     internal static let errorStack = "error.stack"
 
     /// Internal tag used to encode the RUM application ID, linking the span to the current RUM session.
-    internal static let rumApplicationID = "_oo.application.id"
+    internal static let rumApplicationID = "_o2.application.id"
     /// Internal tag used to encode the RUM session ID, linking the span to the current RUM session.
-    internal static let rumSessionID = "_oo.session.id"
+    internal static let rumSessionID = "_o2.session.id"
     /// Internal tag used to encode the RUM view ID, linking the span to the current RUM session.
-    internal static let rumViewID = "_oo.view.id"
+    internal static let rumViewID = "_o2.view.id"
     /// Internal tag used to encode the RUM action ID, linking the span to the current RUM session.
-    internal static let rumActionID = "_oo.action.id"
+    internal static let rumActionID = "_o2.action.id"
     /// Internal tag used to encode the span kind. This can be either "client" or "server" for RPC spans,
     /// and "producer" or "consumer" for messaging spans.
     internal static let kind = "span.kind"

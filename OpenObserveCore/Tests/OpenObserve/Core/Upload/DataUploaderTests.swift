@@ -16,7 +16,7 @@ class DataUploaderTests: XCTestCase {
         let randomResponse: HTTPURLResponse = .mockResponseWith(statusCode: (100...599).randomElement()!)
         let randomRequest: URLRequest = oneOf([
             { .mockWith(headers: [:]) },
-            { .mockWith(headers: ["OO-REQUEST-ID": String.mockRandom()]) }
+            { .mockWith(headers: ["O2-REQUEST-ID": String.mockRandom()]) }
         ])
 
         let uploader = DataUploader(
@@ -35,7 +35,7 @@ class DataUploaderTests: XCTestCase {
         // Then
         let expectedUploadStatus = DataUploadStatus(
             httpResponse: randomResponse,
-            ooRequestID: randomRequest.value(forHTTPHeaderField: "OO-REQUEST-ID"),
+            ooRequestID: randomRequest.value(forHTTPHeaderField: "O2-REQUEST-ID"),
             attempt: 0
         )
 

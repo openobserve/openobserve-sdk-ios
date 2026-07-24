@@ -401,7 +401,7 @@ extension OpenObserveCore {
         let bundleType = BundleType(bundle: configuration.bundle)
         let bundleIdentifier = configuration.bundle.bundleIdentifier ?? "unknown"
         let service = configuration.service ?? configuration.bundle.bundleIdentifier ?? "ios"
-        let source = configuration.additionalConfiguration[CrossPlatformAttributes.oosource] as? String ?? "ios"
+        let source = configuration.additionalConfiguration[CrossPlatformAttributes.o2source] as? String ?? "ios"
         let variant = configuration.additionalConfiguration[CrossPlatformAttributes.variant] as? String
         let sdkVersion = configuration.additionalConfiguration[CrossPlatformAttributes.sdkVersion] as? String ?? __sdkVersion
         let buildId = configuration.additionalConfiguration[CrossPlatformAttributes.buildId] as? String

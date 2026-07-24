@@ -213,7 +213,7 @@ class DDTracerTests: XCTestCase {
             "x-datadog-trace-id": "100",
             "x-datadog-parent-id": "200",
             "x-datadog-sampling-priority": "1",
-            "x-datadog-tags": "_oo.p.tid=a,_oo.p.dm=-1"
+            "x-datadog-tags": "_o2.p.tid=a,_o2.p.dm=-1"
         ]
         XCTAssertEqual(objcWriter.traceHeaderFields, expectedHTTPHeaders)
     }
@@ -323,7 +323,7 @@ class DDTracerTests: XCTestCase {
 
         let expectedHTTPHeaders = [
             "traceparent": "00-000000000000000a0000000000000064-00000000000000c8-01",
-            "tracestate": "oo=p:00000000000000c8;s:1;t.dm:-1"
+            "tracestate": "o2=p:00000000000000c8;s:1;t.dm:-1"
         ]
         XCTAssertEqual(objcWriter.traceHeaderFields, expectedHTTPHeaders)
     }
@@ -342,7 +342,7 @@ class DDTracerTests: XCTestCase {
 
         let expectedHTTPHeaders = [
             "traceparent": "00-000000000000000a0000000000000064-00000000000000c8-00",
-            "tracestate": "oo=p:00000000000000c8;s:0"
+            "tracestate": "o2=p:00000000000000c8;s:0"
         ]
         XCTAssertEqual(objcWriter.traceHeaderFields, expectedHTTPHeaders)
     }

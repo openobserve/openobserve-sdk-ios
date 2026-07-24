@@ -9,10 +9,10 @@ import Foundation
 /// Builds `URLRequest` for sending data to OpenObserve.
 public struct URLRequestBuilder {
     public enum QueryItem {
-        /// `oosource={source}` query item
-        case oosource(source: String)
-        /// `ootags={tag1},{tag2},...` query item
-        case ootags(tags: [String])
+        /// `o2source={source}` query item
+        case o2source(source: String)
+        /// `o2tags={tag1},{tag2},...` query item
+        case o2tags(tags: [String])
     }
 
     public struct HTTPHeader {
@@ -20,10 +20,10 @@ public struct URLRequestBuilder {
         public static let contentEncodingHeaderField = "Content-Encoding"
         public static let userAgentHeaderField = "User-Agent"
         public static let o2APIKeyHeaderField = "O2-API-KEY"
-        public static let ooEVPOriginHeaderField = "OO-EVP-ORIGIN"
-        public static let ooEVPOriginVersionHeaderField = "OO-EVP-ORIGIN-VERSION"
-        public static let ooRequestIDHeaderField = "OO-REQUEST-ID"
-        public static let ooIdempotencyKeyHeaderField = "OO-IDEMPOTENCY-KEY"
+        public static let ooEVPOriginHeaderField = "O2-EVP-ORIGIN"
+        public static let ooEVPOriginVersionHeaderField = "O2-EVP-ORIGIN-VERSION"
+        public static let ooRequestIDHeaderField = "O2-REQUEST-ID"
+        public static let ooIdempotencyKeyHeaderField = "O2-IDEMPOTENCY-KEY"
 
         public enum ContentType {
             case applicationJSON
@@ -168,10 +168,10 @@ public struct URLRequestBuilder {
 extension URLQueryItem {
     init(_ query: URLRequestBuilder.QueryItem) {
         switch query {
-        case .oosource(let source):
-            self = URLQueryItem(name: "oosource", value: source)
-        case .ootags(let tags):
-            self = URLQueryItem(name: "ootags", value: tags.joined(separator: ","))
+        case .o2source(let source):
+            self = URLQueryItem(name: "o2source", value: source)
+        case .o2tags(let tags):
+            self = URLQueryItem(name: "o2tags", value: tags.joined(separator: ","))
         }
     }
 }

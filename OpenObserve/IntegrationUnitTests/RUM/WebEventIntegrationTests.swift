@@ -101,7 +101,7 @@ class WebEventIntegrationTests: XCTestCase {
               "time_spent": 3120000000,
               "url": "http://localhost:8080/test.html",
             },
-            "_oo": {
+            "_o2": {
               "document_version": 2,
               "drift": 0,
               "format_version": 2,
@@ -168,7 +168,7 @@ class WebEventIntegrationTests: XCTestCase {
               "time_spent": 3120000000,
               "url": "http://localhost:8080/test.html"
             },
-            "_oo": {
+            "_o2": {
               "document_version": 2,
               "drift": 0,
               "format_version": 2
@@ -200,7 +200,7 @@ class WebEventIntegrationTests: XCTestCase {
               "service": "browser-rum-sdk",
               "version": "5.2.0-b93ed472a4f14fbf2bcd1bc2c9faacb4abbeed82",
               "source": "browser",
-              "_oo": { "format_version": 2 },
+              "_o2": { "format_version": 2 },
               "telemetry":
                 {
                   "type": "configuration",
@@ -250,7 +250,7 @@ class WebEventIntegrationTests: XCTestCase {
           "service": "browser-rum-sdk",
           "version": "5.2.0-b93ed472a4f14fbf2bcd1bc2c9faacb4abbeed82",
           "source": "browser",
-          "_oo": { "format_version": 2 },
+          "_o2": { "format_version": 2 },
           "telemetry":
             {
               "type": "configuration",

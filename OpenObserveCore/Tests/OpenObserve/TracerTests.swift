@@ -101,12 +101,12 @@ class TracerTests: XCTestCase {
                 "version": "15.4.1",
                 "version_major": "15"
               },
-              "meta._oo.source": "abc",
+              "meta._o2.source": "abc",
               "metrics._top_level": 1,
               "metrics._sampling_priority_v1": 1,
-              "metrics._oo.agent_psr": 1,
-              "meta._oo.p.tid": "a",
-              "meta._oo.p.dm": "-1"
+              "metrics._o2.agent_psr": 1,
+              "meta._o2.p.tid": "a",
+              "meta._o2.p.dm": "-1"
             }
           ],
           "env": "custom"

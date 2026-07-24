@@ -199,7 +199,7 @@ extension FlagsRepository: FlagsRepositoryProtocol {
                         return
                     }
                     // State must be updated before calling completion —
-                    // oo-openfeature-provider-swift checks currentState in the callback.
+                    // o2-openfeature-provider-swift checks currentState in the callback.
                     // Only use cached flags if they match the requested context to avoid
                     // serving flags from a different user/context.
                     if hadFlags && cachedContext == context {

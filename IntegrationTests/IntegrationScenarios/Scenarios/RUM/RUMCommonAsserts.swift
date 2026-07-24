@@ -22,19 +22,19 @@ extension RUMCommonAsserts {
         requests.forEach { request in
             XCTAssertEqual(request.httpMethod, "POST")
 
-            // Example path here: `/36882784-420B-494F-910D-CBAC5897A309?oosource=ios`
+            // Example path here: `/36882784-420B-494F-910D-CBAC5897A309?o2source=ios`
             XCTAssertNotNil(request.path, file: file, line: line)
             XCTAssertNotNil(request.queryItems)
             XCTAssertEqual(request.queryItems!.count, 1)
-            XCTAssertEqual(request.queryItems?.value(name: "oosource"), "ios", file: file, line: line)
+            XCTAssertEqual(request.queryItems?.value(name: "o2source"), "ios", file: file, line: line)
 
             XCTAssertEqual(request.httpHeaders["Content-Type"], "text/plain;charset=UTF-8", file: file, line: line)
             XCTAssertEqual(request.httpHeaders["User-Agent"]?.matches(regex: userAgentRegex), true, file: file, line: line)
             XCTAssertEqual(request.httpHeaders["O2-API-KEY"], "ui-tests-client-token", file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-EVP-ORIGIN"], "ios", file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-EVP-ORIGIN-VERSION"]?.matches(regex: semverRegex), true, file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-REQUEST-ID"]?.matches(regex: ooRequestIDRegex), true, file: file, line: line)
-            XCTAssertEqual(request.httpHeaders["OO-IDEMPOTENCY-KEY"]?.matches(regex: sha1Regex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-EVP-ORIGIN"], "ios", file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-EVP-ORIGIN-VERSION"]?.matches(regex: semverRegex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-REQUEST-ID"]?.matches(regex: ooRequestIDRegex), true, file: file, line: line)
+            XCTAssertEqual(request.httpHeaders["O2-IDEMPOTENCY-KEY"]?.matches(regex: sha1Regex), true, file: file, line: line)
         }
     }
 }

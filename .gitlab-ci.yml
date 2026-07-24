@@ -82,9 +82,9 @@ default:
       when: delayed
       start_in: 40 minutes
 
-.oo-octo-sts-id-token: &oo-octo-sts-id-token
+.o2-octo-sts-id-token: &o2-octo-sts-id-token
   DDOCTOSTS_ID_TOKEN:
-    aud: oo-octo-sts
+    aud: o2-octo-sts
 
 ENV check:
   stage: pre
@@ -110,7 +110,7 @@ Build Dependencies:
     expire_in: 4 hours
     when: on_success
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   script:
     - ./tools/runner-setup.sh --xcode "$DEFAULT_XCODE"
     - make clean dependencies
@@ -241,7 +241,7 @@ SR Snapshot Tests:
     - !reference [.test-pipeline-job, rules]
     - !reference [.release-pipeline-job, rules]
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   variables:
     PLATFORM: "iOS Simulator"
     IOS_OS: "17.5"
@@ -285,7 +285,7 @@ Smoke Tests (iOS):
     - !reference [.test-pipeline-job, rules]
     - !reference [.release-pipeline-job, rules]
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   variables:
     PLATFORM: "iOS Simulator"
     DEVICE: "iPhone 17 Pro"
@@ -300,7 +300,7 @@ Smoke Tests (tvOS):
     - !reference [.test-pipeline-job, rules]
     - !reference [.release-pipeline-job, rules]
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   variables:
     PLATFORM: "tvOS Simulator"
     DEVICE: "Apple TV"
@@ -400,7 +400,7 @@ Dogfood (Shopist):
       when: manual
       allow_failure: true
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   script:
     - ./tools/runner-setup.sh --ssh
     - DRY_RUN=0 make dogfood-shopist
@@ -412,7 +412,7 @@ Dogfood (OpenObserve app):
       when: manual
       allow_failure: true
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   script:
     - ./tools/runner-setup.sh --ssh
     - DRY_RUN=0 make dogfood-datadog-app
@@ -438,7 +438,7 @@ Build Artifacts:
   variables:
     XCODE: "16.2.0"
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   artifacts:
     paths:
       - artifacts
@@ -456,7 +456,7 @@ Publish GH Asset:
   rules: 
     - !reference [.release-pipeline-job, rules]
   id_tokens:
-    <<: *oo-octo-sts-id-token
+    <<: *o2-octo-sts-id-token
   before_script:
     - *export_MAKE_release_params
   script:

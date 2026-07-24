@@ -19,10 +19,10 @@ extension URLRequest {
 
         request.setValue("application/vnd.api+json", forHTTPHeaderField: "Content-Type")
         request.setValue("gzip, deflate, br", forHTTPHeaderField: "Accept-Encoding")
-        request.setValue(context.clientToken, forHTTPHeaderField: "oo-client-token")
+        request.setValue(context.clientToken, forHTTPHeaderField: "o2-client-token")
 
         if let applicationId = context.additionalContext(ofType: RUMCoreContext.self)?.applicationID {
-            request.setValue(applicationId, forHTTPHeaderField: "oo-application-id")
+            request.setValue(applicationId, forHTTPHeaderField: "o2-application-id")
         }
 
         if let customHeaders {

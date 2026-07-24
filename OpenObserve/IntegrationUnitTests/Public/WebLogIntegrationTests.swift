@@ -75,7 +75,7 @@ class WebLogIntegrationTests: XCTestCase {
             jsonString: """
         {
             "date": \(1_635_932_927_012 + 123.dd.toInt64Milliseconds),
-            "ootags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
+            "o2tags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
             "message": "message",
             "session_id": "0110cab4-7471-480e-aa4e-7ce039ced355",
             "status": "debug",
@@ -130,7 +130,7 @@ class WebLogIntegrationTests: XCTestCase {
             jsonString: """
         {
             "date": \(1_635_932_927_012 + 123.dd.toInt64Milliseconds),
-            "ootags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
+            "o2tags": "service:abc,version:1.1.1,sdk_version:abc,env:test",
             "message": "message",
             "application_id": "\(randomApplicationID)",
             "session_id": "\(expectedUUID)",

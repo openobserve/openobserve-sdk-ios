@@ -7,7 +7,7 @@
 import XCTest
 @testable import OpenObserveInternal
 
-/// Cross-SDK test vectors for `DeterministicSampler` — derived from oo-trace-go via browser SDK sampler.spec.ts.
+/// Cross-SDK test vectors for `DeterministicSampler` — derived from o2-trace-go via browser SDK sampler.spec.ts.
 final class DeterministicSamplerTests: XCTestCase {
     /// Vectors that must produce `true` (sampled).
     func testCrossSDKVectors_itReturnsSampledTrue() {

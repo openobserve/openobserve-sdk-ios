@@ -91,12 +91,12 @@
     },
     {
       "literal": "ddsource",
-      "to": "oosource",
+      "to": "o2source",
       "why": "REQ#2 wire prefix: the ?ddsource= intake query param + source field (URLRequestBuilder, CrossPlatformAttributes). RN bridge does not pass this key, so native-side rename is safe."
     },
     {
       "literal": "ddtags",
-      "to": "ootags",
+      "to": "o2tags",
       "why": "REQ#2 wire prefix: the ?ddtags= intake query param + tags field. Backend reads ootags/o2tags (doc 02)."
     },
     {
@@ -121,42 +121,42 @@
     },
     {
       "regex": "\\bDD-",
-      "to": "OO-",
+      "to": "O2-",
       "why": "REQ#2 wire prefix: intake HTTP header NAMES (DD-API-KEY, DD-EVP-ORIGIN, DD-EVP-ORIGIN-VERSION, DD-REQUEST-ID, DD-IDEMPOTENCY-KEY). Case-insensitive, so OO-API-KEY matches the backend's oo-api-key. \\b guards ADD-/ODD-."
     },
     {
       "regex": "\\bdd-",
-      "to": "oo-",
+      "to": "o2-",
       "why": "REQ#2 wire prefix: lowercase intake header names dd-client-token, dd-application-id -> oo-*. \\b guards add-/odd-. Does not touch x-datadog-* (datadog-, not dd-)."
     },
     {
       "regex": "\\b_dd\\b",
-      "to": "_oo",
+      "to": "_o2",
       "why": "internal telemetry namespace field (matches the schema fork)"
     },
     {
       "literal": "dd=s:",
-      "to": "oo=s:",
+      "to": "o2=s:",
       "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator — so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
     },
     {
       "literal": "dd=p:",
-      "to": "oo=p:",
+      "to": "o2=p:",
       "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator — so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
     },
     {
       "literal": "\"dd=\"",
-      "to": "\"oo=\"",
+      "to": "\"o2=\"",
       "why": "W3C TRACESTATE vendor key. Wire-visible on EVERY traced request, and on the DEFAULT path since tracecontext became the default propagator — so removing the proprietary propagator swapped one upstream identifier on the wire for another. Invisible to every other rule (bare lowercase, no word boundary), which is the same blind spot that shipped the NTP hosts. All three SDKs had to move together or trace linking breaks between them; the backend stores trace_state opaquely and does not parse the key, so nothing server-side is affected."
     },
     {
       "literal": "'dd='",
-      "to": "'oo='",
+      "to": "'o2='",
       "why": "The same W3C tracestate vendor key as it appears in COMMENTS documenting the wire format (single-quoted in Java prose, parenthesised in Javadoc). The double-quoted \"dd=\" rule reaches the CODE constant but not these, so without them a synced tree carries comments that describe a wire format it no longer emits."
     },
     {
       "literal": "(dd=)",
-      "to": "(oo=)",
+      "to": "(o2=)",
       "why": "The same W3C tracestate vendor key as it appears in COMMENTS documenting the wire format (single-quoted in Java prose, parenthesised in Javadoc). The double-quoted \"dd=\" rule reaches the CODE constant but not these, so without them a synced tree carries comments that describe a wire format it no longer emits."
     }
   ],

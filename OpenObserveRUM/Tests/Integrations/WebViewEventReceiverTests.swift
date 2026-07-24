@@ -67,7 +67,7 @@ class WebViewEventReceiverTests: XCTestCase {
               "time_spent": 3120000000,
               "url": "http://localhost:8080/test.html"
             },
-            "_oo": {
+            "_o2": {
               "document_version": 2,
               "drift": 0,
               "format_version": 2,
@@ -117,10 +117,10 @@ class WebViewEventReceiverTests: XCTestCase {
         XCTAssertEqual(try json.value("view.resource.count"), 3)
         XCTAssertEqual(try json.value("view.time_spent"), 3_120_000_000)
         XCTAssertEqual(try json.value("view.url"), "http://localhost:8080/test.html")
-        XCTAssertEqual(try json.value("_oo.document_version"), 2)
-        XCTAssertEqual(try json.value("_oo.drift"), 0)
-        XCTAssertEqual(try json.value("_oo.format_version"), 2)
-        XCTAssertEqual(try json.value("_oo.session.plan"), 2)
+        XCTAssertEqual(try json.value("_o2.document_version"), 2)
+        XCTAssertEqual(try json.value("_o2.drift"), 0)
+        XCTAssertEqual(try json.value("_o2.format_version"), 2)
+        XCTAssertEqual(try json.value("_o2.session.plan"), 2)
     }
 
     func testParsingTelemetryEvent() throws {
@@ -135,7 +135,7 @@ class WebViewEventReceiverTests: XCTestCase {
               "service": "browser-rum-sdk",
               "version": "5.2.0-b93ed472a4f14fbf2bcd1bc2c9faacb4abbeed82",
               "source": "browser",
-              "_oo": { "format_version": 2 },
+              "_o2": { "format_version": 2 },
               "telemetry":
                 {
                   "type": "configuration",
@@ -184,7 +184,7 @@ class WebViewEventReceiverTests: XCTestCase {
         XCTAssertEqual(try json.value("service"), "browser-rum-sdk")
         XCTAssertEqual(try json.value("session.id"), "00000000-aaaa-0000-aaaa-000000000000")
         XCTAssertEqual(try json.value("telemetry.type"), "configuration")
-        XCTAssertEqual(try json.value("_oo.format_version"), 2)
+        XCTAssertEqual(try json.value("_o2.format_version"), 2)
     }
 
     func testWhenReceivingWebViewTrackingMessageWithValidEvent_itAcknowledgesTheMessageAndKeepsRUMSessionAlive() throws {
@@ -247,7 +247,7 @@ class WebViewEventReceiverTests: XCTestCase {
         let random = mockRandomAttributes() // because below we only mock partial web event, we use this random to make the test fuzzy
         let webEventMock: JSON = [
             // Known properties:
-            "_oo": ["browser_sdk_version": "5.2.0"],
+            "_o2": ["browser_sdk_version": "5.2.0"],
             "application": ["id": String.mockRandom()],
             "session": [
                 "id": String.mockRandom(),
@@ -263,7 +263,7 @@ class WebViewEventReceiverTests: XCTestCase {
         // Then
         let expectedWebEventWritten: JSON = [
             // Known properties:
-            "_oo": [
+            "_o2": [
                 "browser_sdk_version": "5.2.0"
             ] as [String: Any],
             "application": ["id": rumContext.applicationID],
@@ -331,7 +331,7 @@ class WebViewEventReceiverTests: XCTestCase {
         let webHasReplay: Bool = .mockRandom()
         let webEventMock: JSON = [
             // Known properties:
-            "_oo": [
+            "_o2": [
                 "browser_sdk_version": "5.2.0",
                 "replay_stats": RUMViewEvent.DD.ReplayStats(
                     recordsCount: 10,
@@ -354,7 +354,7 @@ class WebViewEventReceiverTests: XCTestCase {
         // Then
         let expectedWebEventWritten: JSON = [
             // Known properties:
-            "_oo": [
+            "_o2": [
                 "browser_sdk_version": "5.2.0",
                 "replay_stats": [
                     "records_count": 10,
@@ -412,7 +412,7 @@ class WebViewEventReceiverTests: XCTestCase {
         let random = mockRandomAttributes() // because below we only mock partial web event, we use this random to make the test fuzzy
         let webEventMock: JSON = [
             // Known properties:
-            "_oo": [
+            "_o2": [
                 "browser_sdk_version": "5.2.0",
                 "replay_stats": RUMViewEvent.DD.ReplayStats(
                     recordsCount: .mockRandom(),
@@ -435,7 +435,7 @@ class WebViewEventReceiverTests: XCTestCase {
         // Then
         let expectedWebEventWritten: JSON = [
             // Known properties:
-            "_oo": [
+            "_o2": [
                 "browser_sdk_version": "5.2.0"
             ] as [String: Any],
             "container": [

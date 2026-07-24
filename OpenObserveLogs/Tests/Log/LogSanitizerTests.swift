@@ -44,7 +44,7 @@ class LogSanitizerTests: XCTestCase {
                     "service": mockValue(),
                     "build_id": mockValue(),
                     "source": mockValue(),
-                    "ootags": mockValue(),
+                    "o2tags": mockValue(),
 
                     // valid attributes:
                     "error.kind": mockValue(),

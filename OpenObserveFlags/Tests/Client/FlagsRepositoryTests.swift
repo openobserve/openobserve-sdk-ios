@@ -447,7 +447,7 @@ final class FlagsRepositoryTests: XCTestCase {
         }
 
         // Then — state must already be .ready when completion is called
-        // (oo-openfeature-provider-swift depends on this ordering)
+        // (o2-openfeature-provider-swift depends on this ordering)
         waitForExpectations(timeout: 0)
         XCTAssertEqual(stateInCompletion, .ready)
     }
@@ -472,7 +472,7 @@ final class FlagsRepositoryTests: XCTestCase {
         }
 
         // Then — state must already be .error when completion is called (no cached flags)
-        // (oo-openfeature-provider-swift depends on this ordering)
+        // (o2-openfeature-provider-swift depends on this ordering)
         waitForExpectations(timeout: 0)
         XCTAssertEqual(stateInCompletion, .error)
     }

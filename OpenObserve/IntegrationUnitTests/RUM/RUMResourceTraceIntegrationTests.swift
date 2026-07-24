@@ -162,11 +162,11 @@ class RUMResourceTraceIntegrationTests: RUMSessionTestsBase {
             return
         }
 
-        let spanIDString: String = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_oo.span_id"))
+        let spanIDString: String = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_o2.span_id"))
         let spanID = SpanID(spanIDString, representation: .decimal)
-        let traceIDString: String = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_oo.trace_id"))
+        let traceIDString: String = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_o2.trace_id"))
         let traceID = TraceID(traceIDString, representation: .hexadecimal)
-        let sessionSampleRate: Float = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_oo.configuration.session_sample_rate"))
+        let sessionSampleRate: Float = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_o2.configuration.session_sample_rate"))
         let spanDD = try XCTUnwrap(span.context.dd)
 
         XCTAssertNotEqual(spanID, spanDD.spanID)
@@ -180,7 +180,7 @@ class RUMResourceTraceIntegrationTests: RUMSessionTestsBase {
             XCTAssertNotNil(request.value(forHTTPHeaderField: "traceparent"))
             XCTAssertEqual(sessionSampleRate, 80)
         } else { // expectation == .activeSpan
-            let parentSpanIDString: String = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_oo.parent_span_id"))
+            let parentSpanIDString: String = try XCTUnwrap(resourceMatcher.attribute(forKeyPath: "_o2.parent_span_id"))
             let parentSpanID = SpanID(parentSpanIDString, representation: .decimal)
             XCTAssertEqual(traceID, spanDD.traceID)
             XCTAssertEqual(parentSpanID, spanDD.spanID)

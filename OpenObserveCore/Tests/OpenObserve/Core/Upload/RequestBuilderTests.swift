@@ -15,22 +15,22 @@ class RequestBuilderTests: XCTestCase {
         let randomURL: URL = .mockRandom()
         let builder = URLRequestBuilder(
             url: randomURL,
-            queryItems: [.oosource(source: "abc"), .ootags(tags: ["abc:def"])],
+            queryItems: [.o2source(source: "abc"), .o2tags(tags: ["abc:def"])],
             headers: .mockRandom()
         )
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?oosource=abc&ootags=abc:def")
+        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?o2source=abc&o2tags=abc:def")
     }
 
     func testWhenBuildingRequestWithURLAndQueryItems_itEscapesWhitespacesInQuery() throws {
         let randomURL: URL = .mockRandom()
         let builder = URLRequestBuilder(
             url: randomURL,
-            queryItems: [.oosource(source: "source with whitespace"), .ootags(tags: ["tag with whitespace"])],
+            queryItems: [.o2source(source: "source with whitespace"), .o2tags(tags: ["tag with whitespace"])],
             headers: .mockRandom()
         )
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?oosource=source%20with%20whitespace&ootags=tag%20with%20whitespace")
+        XCTAssertEqual(request.url?.absoluteString, "\(randomURL.absoluteString)?o2source=source%20with%20whitespace&o2tags=tag%20with%20whitespace")
     }
 
     // MARK: - Request Headers
@@ -104,14 +104,14 @@ class RequestBuilderTests: XCTestCase {
         let randomSource: String = .mockRandom()
         let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooEVPOriginHeader(source: randomSource)])
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomSource)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN"], randomSource)
     }
 
     func testBuildingRequestWithDDEVPOriginVersionHeader() {
         let randomSDKVersion: String = .mockRandom()
         let builder = URLRequestBuilder(url: .mockRandom(), queryItems: .mockRandom(), headers: [.ooEVPOriginVersionHeader(sdkVersion: randomSDKVersion)])
         let request = builder.uploadRequest(with: .mockRandom())
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN-VERSION"], randomSDKVersion)
     }
 
     func testBuildingRequestWithDDRequestIDHeader() throws {
@@ -121,14 +121,14 @@ class RequestBuilderTests: XCTestCase {
         let request2 = builder.uploadRequest(with: .mockRandom())
         let request3 = builder.uploadRequest(with: .mockRandom())
 
-        let requestID1 = try XCTUnwrap(request1.allHTTPHeaderFields?["OO-REQUEST-ID"])
-        let requestID2 = try XCTUnwrap(request2.allHTTPHeaderFields?["OO-REQUEST-ID"])
-        let requestID3 = try XCTUnwrap(request3.allHTTPHeaderFields?["OO-REQUEST-ID"])
+        let requestID1 = try XCTUnwrap(request1.allHTTPHeaderFields?["O2-REQUEST-ID"])
+        let requestID2 = try XCTUnwrap(request2.allHTTPHeaderFields?["O2-REQUEST-ID"])
+        let requestID3 = try XCTUnwrap(request3.allHTTPHeaderFields?["O2-REQUEST-ID"])
 
         let allIDs = Set([requestID1, requestID2, requestID3])
-        XCTAssertEqual(allIDs.count, 3, "Each `OO-REQUEST-ID` must produce unique ID")
+        XCTAssertEqual(allIDs.count, 3, "Each `O2-REQUEST-ID` must produce unique ID")
         allIDs.forEach { id in
-            XCTAssertTrue(id.matches(regex: .uuidRegex), "Each `OO-REQUEST-ID` must be an UUID string")
+            XCTAssertTrue(id.matches(regex: .uuidRegex), "Each `O2-REQUEST-ID` must be an UUID string")
         }
     }
 
@@ -151,9 +151,9 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertNotNil(request.allHTTPHeaderFields?["Content-Encoding"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["User-Agent"])
         XCTAssertNotNil(request.allHTTPHeaderFields?["O2-API-KEY"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"])
-        XCTAssertNotNil(request.allHTTPHeaderFields?["OO-REQUEST-ID"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["O2-EVP-ORIGIN"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["O2-EVP-ORIGIN-VERSION"])
+        XCTAssertNotNil(request.allHTTPHeaderFields?["O2-REQUEST-ID"])
         XCTAssertEqual(request.allHTTPHeaderFields?.count, 7)
     }
 

@@ -65,6 +65,6 @@ extension RUM {
     public struct Attributes {
         /// Add a custom fingerprint to the RUM error.
         /// The value of this attribute must be a `String`.
-        public static let errorFingerprint = "_oo.error.fingerprint"
+        public static let errorFingerprint = "_o2.error.fingerprint"
     }
 }

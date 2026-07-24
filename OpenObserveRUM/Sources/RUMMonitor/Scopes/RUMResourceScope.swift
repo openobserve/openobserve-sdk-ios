@@ -195,7 +195,7 @@ internal class RUMResourceScope: RUMScope {
             container: nil,
             context: .init(contextInfo: command.globalAttributes.merging(parent.attributes) { $1 }.merging(attributes) { $1 }),
             date: resourceStartTime.addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             os: context.os,
@@ -320,7 +320,7 @@ internal class RUMResourceScope: RUMScope {
             container: nil,
             context: .init(contextInfo: command.globalAttributes.merging(parent.attributes) { $1 }.merging(attributes) { $1 }),
             date: command.time.addingTimeInterval(serverTimeOffset).timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             display: nil,
             error: .init(
@@ -429,7 +429,7 @@ internal class RUMResourceScope: RUMScope {
 
     /// Decodes GraphQL errors JSON string into intermediate response error models.
     ///
-    /// Note: The cross-platform attribute `_oo.graphql.errors` contains a JSON array of error objects
+    /// Note: The cross-platform attribute `_o2.graphql.errors` contains a JSON array of error objects
     /// (e.g. `[{"message": "...", "locations": [...]}]`), not a full GraphQL response body.
     /// This is why we decode `[GraphQLResponseError]` directly rather than using the `GraphQLResponse`
     /// wrapper struct, which is used elsewhere for full response body parsing.

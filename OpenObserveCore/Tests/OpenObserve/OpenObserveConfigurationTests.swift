@@ -98,7 +98,7 @@ class OpenObserveConfigurationTests: XCTestCase {
         configuration.serverDateProvider = ServerDateProviderMock()
         configuration._internal_mutation {
             $0.additionalConfiguration = [
-                CrossPlatformAttributes.oosource: "cp-source",
+                CrossPlatformAttributes.o2source: "cp-source",
                 CrossPlatformAttributes.variant: "cp-variant",
                 CrossPlatformAttributes.sdkVersion: "cp-version"
             ]

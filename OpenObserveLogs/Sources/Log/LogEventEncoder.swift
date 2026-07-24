@@ -178,7 +178,7 @@ internal struct LogEventEncoder {
         case message
         case serviceName = "service"
         case environment = "env"
-        case tags = "ootags"
+        case tags = "o2tags"
 
         // MARK: - Error
 
@@ -197,7 +197,7 @@ internal struct LogEventEncoder {
 
         // MARK: - Dd info
 
-        case dd = "_oo"
+        case dd = "_o2"
 
         // MARK: - Device info
         case device

@@ -661,7 +661,7 @@ class SpanEventBuilderTests: XCTestCase {
         // Then
         XCTAssertEqual(span.tags.count, 1)
         let expectedTags = "[{\"attributes\":{\"foo\":\"bar\"},\"flags\":1,\"span_id\":\"0000000000000067\",\"trace_id\":\"00000000000000650000000000000066\",\"tracestate\":\"foo=bar,bar=baz\"}]"
-        let actualTags = span.tags["_oo.span_links"]
+        let actualTags = span.tags["_o2.span_links"]
 
         DDAssertJSONEqual(expectedTags, actualTags!)
     }

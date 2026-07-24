@@ -68,14 +68,14 @@ public struct FailingRequestBuilderMock: FeatureRequestBuilder {
 extension URLRequestBuilder.QueryItem: RandomMockable, AnyMockable {
     public static func mockRandom() -> Self {
         let all: [URLRequestBuilder.QueryItem] = [
-            .oosource(source: .mockRandom()),
-            .ootags(tags: .mockRandom()),
+            .o2source(source: .mockRandom()),
+            .o2tags(tags: .mockRandom()),
         ]
         return all.randomElement()!
     }
 
     public static func mockAny() -> Self {
-        return .oosource(source: .mockRandom(among: .alphanumerics))
+        return .o2source(source: .mockRandom(among: .alphanumerics))
     }
 }
 

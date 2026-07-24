@@ -349,7 +349,7 @@ internal struct CrashReportReceiver: FeatureMessageReceiver {
             // See https://github.com/openobserve/openobserve-sdk-ios/pull/1834 for more context.
             context: context.lastRUMAttributes,
             date: startDate.timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.device,
             display: nil,
             // RUMM-2197: In very rare cases, the OS info computed below might not be exactly the one

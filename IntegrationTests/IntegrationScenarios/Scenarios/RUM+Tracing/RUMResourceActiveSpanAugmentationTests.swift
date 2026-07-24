@@ -196,7 +196,7 @@ class RUMResourceActiveSpanAugmentationTests: IntegrationTests, RUMCommonAsserts
     private func getDecisionMaker(from request: Request) -> SamplingMechanismType? {
         let tags = getRequestTags(request)
 
-        guard let value = tags["_oo.p.dm"]?.replacingOccurrences(of: "-", with: "") else {
+        guard let value = tags["_o2.p.dm"]?.replacingOccurrences(of: "-", with: "") else {
             return nil
         }
 

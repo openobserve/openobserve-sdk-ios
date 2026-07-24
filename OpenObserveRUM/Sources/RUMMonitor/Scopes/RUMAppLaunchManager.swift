@@ -192,7 +192,7 @@ private extension RUMAppLaunchManager {
             connectivity: .init(context: context),
             context: RUMEventAttributes(contextInfo: attributes),
             date: context.launchInfo.processLaunchDate.timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: context.normalizedDevice(),
             os: context.os,
             service: context.service,

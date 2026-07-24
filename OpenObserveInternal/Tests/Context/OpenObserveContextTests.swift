@@ -9,7 +9,7 @@ import TestUtilities
 import XCTest
 
 final class OpenObserveContextTests: XCTestCase {
-    // MARK: - Test ootags
+    // MARK: - Test o2tags
 
     func testOpenObserveDDTags() throws {
         // Given

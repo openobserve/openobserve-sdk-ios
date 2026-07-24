@@ -85,7 +85,7 @@ internal struct FatalErrorBuilder {
                 contextInfo: contextInfo
             ),
             date: errorDate.timeIntervalSince1970.dd.toInt64Milliseconds,
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: lastRUMView.device,
             display: nil,
             error: .init(
@@ -165,7 +165,7 @@ internal struct FatalErrorBuilder {
             container: original.container,
             context: original.context,
             date: errorDate.timeIntervalSince1970.dd.toInt64Milliseconds - 1, // -1ms to put the fatal error after view in RUM session
-            ootags: context.ooTags,
+            o2tags: context.ooTags,
             device: original.device,
             display: original.display,
             featureFlags: original.featureFlags,

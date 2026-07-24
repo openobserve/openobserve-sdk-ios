@@ -111,7 +111,7 @@ class RequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: execution)
 
         // Then
-        let expextedQuery = "oosource=\(randomSource)&ootags=retry_count:\(randomAttempt),retry_after:\(randomStatus)"
+        let expextedQuery = "o2source=\(randomSource)&o2tags=retry_count:\(randomAttempt),retry_after:\(randomStatus)"
         XCTAssertEqual(request.url?.query, expextedQuery)
     }
 
@@ -163,9 +163,9 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Type"], "text/plain;charset=UTF-8")
         XCTAssertEqual(request.allHTTPHeaderFields?["Content-Encoding"], "deflate")
         XCTAssertEqual(request.allHTTPHeaderFields?["O2-API-KEY"], randomClientToken)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN"], randomOrigin)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-EVP-ORIGIN-VERSION"], randomSDKVersion)
-        XCTAssertEqual(request.allHTTPHeaderFields?["OO-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN"], randomOrigin)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-EVP-ORIGIN-VERSION"], randomSDKVersion)
+        XCTAssertEqual(request.allHTTPHeaderFields?["O2-REQUEST-ID"]?.matches(regex: .uuidRegex), true)
     }
 
     func testItSetsHTTPBodyInExpectedFormat() throws {
@@ -201,7 +201,7 @@ class RequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: execution)
 
         // Then
-        XCTAssertEqual(request.url?.query, "oosource=\(randomSource)") // no ootags on first request
+        XCTAssertEqual(request.url?.query, "o2source=\(randomSource)") // no o2tags on first request
     }
 
     func testItSetsRetryQueryParametersOnNetworkErrorRetry() throws {
@@ -215,6 +215,6 @@ class RequestBuilderTests: XCTestCase {
         let request = try builder.request(for: mockEvents, with: context, execution: execution)
 
         // Then
-        XCTAssertEqual(request.url?.query, "oosource=\(randomSource)&ootags=retry_count:1") // no retry_after without response code
+        XCTAssertEqual(request.url?.query, "o2source=\(randomSource)&o2tags=retry_count:1") // no retry_after without response code
     }
 }

@@ -76,7 +76,7 @@ class WebViewLogReceiverTests: XCTestCase {
         waitForExpectations(timeout: 0.5, handler: nil)
         let received: AnyEncodable = try XCTUnwrap(core.events().last, "It should send event")
         let expected: [String: Any] = [
-            "ootags": "service:abc,version:abc,sdk_version:abc,env:abc",
+            "o2tags": "service:abc,version:abc,sdk_version:abc,env:abc",
             "test": value
         ]
 
@@ -132,7 +132,7 @@ class WebViewLogReceiverTests: XCTestCase {
             "application_id": "123456",
             "session_id": mockSessionID.uuidString.lowercased(),
             "status": "error",
-            "ootags": "service:abc,version:\(applicationVersion),sdk_version:abc,env:\(environment)",
+            "o2tags": "service:abc,version:\(applicationVersion),sdk_version:abc,env:\(environment)",
             "view": ["referrer": "", "url": "https://openobserve.dev/browser-sdk-test-playground"]
         ]
 

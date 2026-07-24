@@ -16,7 +16,7 @@ Branch names follow: `<author>/<JIRA-TICKET>/<descriptive-slug>`
 **Examples from the repo:**
 - `maxep/RUM-14622/visionos-integration-test`
 - `bplasovska/RUM-14563/lowercase-header-keys`
-- `kelvin/RUM-13420/cache-ootags`
+- `kelvin/RUM-13420/cache-o2tags`
 
 ## Branch Model
 

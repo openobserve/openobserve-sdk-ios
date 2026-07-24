@@ -18,7 +18,7 @@ import Foundation
 /// APM can link the RUM resource to a server-side trace — the reader is never OpenObserve's
 /// intake, which speaks W3C `traceparent` and never parsed those headers at all. So the
 /// propagator was only useful against an upstream-instrumented backend, and renaming its
-/// headers to `oo-*` would not have rebranded it: no APM reads `oo-trace-id`, so it would have
+/// headers to `o2-*` would not have rebranded it: no APM reads `o2-trace-id`, so it would have
 /// emitted headers nothing understands and silently linked nothing.
 /// Use `tracecontext` (W3C) — what OpenObserve actually reads — or `b3`.
 public enum TracingHeaderType: Hashable {

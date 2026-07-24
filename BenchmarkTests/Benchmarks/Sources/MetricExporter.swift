@@ -144,9 +144,9 @@ final class MetricExporter: OpenTelemetrySdk.MetricExporter {
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json",
             "O2-API-KEY": configuration.apiKey,
-            "OO-EVP-ORIGIN": "ios",
-            "OO-EVP-ORIGIN-VERSION": configuration.version,
-            "OO-REQUEST-ID": UUID().uuidString,
+            "O2-EVP-ORIGIN": "ios",
+            "O2-EVP-ORIGIN-VERSION": configuration.version,
+            "O2-REQUEST-ID": UUID().uuidString,
         ]
 
         request.httpBody = prefix + data + suffix

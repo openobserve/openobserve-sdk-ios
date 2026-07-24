@@ -165,6 +165,6 @@ class TracingURLSessionScenarioTests: IntegrationTests, TracingCommonAsserts {
         XCTAssertEqual(firstPartyRequest.httpHeaders["x-datadog-sampling-priority"], "1")
         XCTAssertNil(firstPartyRequest.httpHeaders["x-datadog-origin"])
         let tid = try taskWithRequest.meta.tid()
-        XCTAssertEqual(firstPartyRequest.httpHeaders["x-datadog-tags"], "_oo.p.tid=\(tid),_oo.p.dm=-1")
+        XCTAssertEqual(firstPartyRequest.httpHeaders["x-datadog-tags"], "_o2.p.tid=\(tid),_o2.p.dm=-1")
     }
 }

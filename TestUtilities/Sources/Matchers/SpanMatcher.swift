@@ -116,7 +116,7 @@ public class SpanMatcher {
 
         public func isRootSpan()       throws -> Int { try matcher.metric(forKeyPath: "metrics._top_level") }
         public func samplingPriority() throws -> Int { try matcher.metric(forKeyPath: "metrics._sampling_priority_v1") }
-        public func samplingRate() throws -> Double { try matcher.metric(forKeyPath: "metrics._oo.agent_psr") }
+        public func samplingRate() throws -> Double { try matcher.metric(forKeyPath: "metrics._o2.agent_psr") }
     }
 
     // MARK: - Meta matching
@@ -126,8 +126,8 @@ public class SpanMatcher {
     public struct Meta {
         fileprivate let matcher: SpanMatcher
 
-        public func tid()                  throws -> String { try matcher.meta(forKeyPath: "meta._oo.p.tid") }
-        public func source()               throws -> String { try matcher.meta(forKeyPath: "meta._oo.source") }
+        public func tid()                  throws -> String { try matcher.meta(forKeyPath: "meta._o2.p.tid") }
+        public func source()               throws -> String { try matcher.meta(forKeyPath: "meta._o2.source") }
         public func applicationVersion()   throws -> String { try matcher.meta(forKeyPath: "meta.version") }
         public func tracerVersion()        throws -> String { try matcher.meta(forKeyPath: "meta.tracer.version") }
 
@@ -151,7 +151,7 @@ public class SpanMatcher {
         public func mobileNetworkCarrierRadioTechnology() throws -> String { try matcher.meta(forKeyPath: "meta.network.client.sim_carrier.technology") }
         public func mobileNetworkCarrierAllowsVoIP()      throws -> String { try matcher.meta(forKeyPath: "meta.network.client.sim_carrier.allows_voip") }
 
-        public func samplingDecisionMechanism() throws -> String { try matcher.meta(forKeyPath: "meta._oo.p.dm") }
+        public func samplingDecisionMechanism() throws -> String { try matcher.meta(forKeyPath: "meta._o2.p.dm") }
 
         public func custom(keyPath: String) throws -> String { try matcher.meta(forKeyPath: keyPath) }
     }

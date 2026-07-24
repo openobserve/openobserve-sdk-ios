@@ -10,9 +10,9 @@ import Foundation
 import ArgumentParser
 
 /// Git clone ssh for snapshots repo.
-private let ssh = "git@github.com:DataDog/oo-mobile-session-replay-snapshots.git"
+private let ssh = "git@github.com:DataDog/o2-mobile-session-replay-snapshots.git"
 /// GitHub owner/repo identifier (used with token authentication on CI via gh CLI over HTTPS).
-private let repo = "DataDog/oo-mobile-session-replay-snapshots"
+private let repo = "DataDog/o2-mobile-session-replay-snapshots"
 /// Default branch in snapshots repo.
 private let defaultBranch = "main"
 

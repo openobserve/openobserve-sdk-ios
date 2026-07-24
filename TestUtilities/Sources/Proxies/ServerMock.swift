@@ -13,7 +13,7 @@ import OpenObserveInternal
 /// installed in `ServerMockProtocol`, to ensure that the request completion is delivered to the right instance of `ServerMock`.
 ///
 /// Added in RUMM-1381 to fix a range of flakiness caused by leaking asynchronous upload tasks.
-private let ooURLSessionUUIDHeaderField = "oo-urlsession-uuid"
+private let ooURLSessionUUIDHeaderField = "o2-urlsession-uuid"
 
 #if os(watchOS)
 /// On watchOS, `URLProtocol` subclasses (https://developer.apple.com/documentation/foundation/urlprotocol)

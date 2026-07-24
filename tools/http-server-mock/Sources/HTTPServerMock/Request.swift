@@ -21,14 +21,14 @@ public struct Request {
 }
 
 extension Array where Element == URLQueryItem {
-    /// Returns the `ootags` query item as a dictionary.
-    /// The `ootags` query item is expected to be in the format `key:value,key:value`.
-    /// - Returns: The `ootags` query item as a dictionary.
-    public func ootags() -> [String: String]? {
-        guard let ootags = first(where: { $0.name == "ootags" })?.value else {
+    /// Returns the `o2tags` query item as a dictionary.
+    /// The `o2tags` query item is expected to be in the format `key:value,key:value`.
+    /// - Returns: The `o2tags` query item as a dictionary.
+    public func o2tags() -> [String: String]? {
+        guard let o2tags = first(where: { $0.name == "o2tags" })?.value else {
             return nil
         }
-        return ootags.split(separator: ",", keyValueSeparator: ":")
+        return o2tags.split(separator: ",", keyValueSeparator: ":")
     }
 
     /// Returns the value of the first query item with the given name.

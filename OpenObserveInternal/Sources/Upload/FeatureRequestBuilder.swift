@@ -56,7 +56,7 @@ public struct ExecutionContext {
     /// Query items to include in the request when this is a retry attempt.
     /// Returns an empty array on the first request (`attempt == 0`).
     public var retryQueryItems: [URLRequestBuilder.QueryItem] {
-        retryTags.map { [.ootags(tags: $0)] } ?? []
+        retryTags.map { [.o2tags(tags: $0)] } ?? []
     }
 
     /// Initializes the execution context.
