@@ -43,7 +43,7 @@ index c854c00b4..a0a2d187a 100644
 -        // tags are comma separated key=value pairs
 -        return request.httpHeaders[TracingHTTPHeaders.tagsField]?.split(separator: ",")
 -            .map { $0.split(separator: "=") }
-+        // tags live in the `oo` list-member of `tracestate`, formatted as `oo=key1:value1;key2:value2`
++        // tags live in the `o2` list-member of `tracestate`, formatted as `o2=key1:value1;key2:value2`
 +        guard let tracestate = request.httpHeaders[W3CHTTPHeaders.tracestate] else {
 +            return [:]
 +        }
@@ -1068,7 +1068,7 @@ index d41e9d76b..f6faf1bcb 100644
  
          // MARK: - OpenObserve specific tracestate keys
 -        public static let dd = "dd"
-+        public static let oo = "oo"
++        public static let oo = "o2"
          public static let sampling = "s"
          public static let samplingDecisionMaker = "t.dm"
          public static let origin = "o"
@@ -1583,7 +1583,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:1;t.dm:-1")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:1;t.dm:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:1;t.dm:-1")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1592,7 +1592,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-00")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:0")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:0")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:0")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1601,7 +1601,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:2;t.dm:-4")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:2;t.dm:-4")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:2;t.dm:-4")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1610,7 +1610,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-00")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:-1")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:-1")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1619,7 +1619,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:1;t.dm:-1")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:1;t.dm:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:1;t.dm:-1")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1628,7 +1628,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:2;t.dm:-4")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:2;t.dm:-4")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:2;t.dm:-4")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1637,7 +1637,7 @@ index 77eaec3ab..769b4ce66 100644
          let headers = writer.traceHeaderFields
          XCTAssertEqual(headers[W3CHTTPHeaders.traceparent], "00-00000000000004d200000000000004d2-0000000000000929-01")
 -        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "dd=o:rum;p:0000000000000929;s:1;t.dm:-1")
-+        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "oo=o:rum;p:0000000000000929;s:1;t.dm:-1")
++        XCTAssertEqual(headers[W3CHTTPHeaders.tracestate], "o2=o:rum;p:0000000000000929;s:1;t.dm:-1")
          XCTAssertEqual(headers[W3CHTTPHeaders.baggage], "session.id=abcdef01-2345-6789-abcd-ef0123456789")
      }
  
@@ -1998,7 +1998,7 @@ index 705fe9007..1ca7fccc7 100644
              modifiedRequest.allHTTPHeaderFields,
              [
 -                "tracestate": "dd=o:rum;p:0000000000000064;s:1;t.dm:-1",
-+                "tracestate": "oo=o:rum;p:0000000000000064;s:1;t.dm:-1",
++                "tracestate": "o2=o:rum;p:0000000000000064;s:1;t.dm:-1",
                  "traceparent": "00-000000000000000a0000000000000064-0000000000000064-01",
                  "X-B3-SpanId": "0000000000000064",
                  "X-B3-Sampled": "1",
