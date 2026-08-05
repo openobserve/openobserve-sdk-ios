@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "OpenObserveCrashReporting"
-  s.version      = "0.1.0-alpha.5"
+  s.version      = "0.1.0"
   s.summary      = "Official OpenObserve Crash Reporting SDK for iOS."
 
   s.homepage     = "https://www.openobserve.ai"

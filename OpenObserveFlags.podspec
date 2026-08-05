@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "OpenObserveFlags"
-  s.version      = "0.1.0-alpha.5"
+  s.version      = "0.1.0"
   s.summary      = "Official OpenObserve Feature Flags module of the Swift SDK."
 
   s.homepage     = "https://www.openobserve.ai"
