@@ -1,0 +1,36 @@
+name: Notify OpenObserve mobile E2E
+
+# When this SDK is released, ask openobserve/openobserve to run its mobile RUM E2E suite against
+# the new version (repository_dispatch → the `decide` job there maps sdk=ios to that platform).
+#
+# SETUP (one-time): add a repo secret OO_E2E_DISPATCH_TOKEN = a token that can dispatch on
+# openobserve/openobserve — a classic PAT with `repo` scope, or a fine-grained PAT scoped to
+# openobserve/openobserve with "Contents: read" + "Actions: write". Until it is set, this is a no-op.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: SDK version to test against (defaults to the release tag)
+        required: false
+        default: ""
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch mobile-sdk-release to openobserve/openobserve
+        env:
+          GH_TOKEN: ${{ secrets.OO_E2E_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "OO_E2E_DISPATCH_TOKEN not set — skipping dispatch (configure it to enable E2E on release)"
+            exit 0
+          fi
+          VER='${{ github.event.release.tag_name || inputs.version }}'
+          VER="${VER#v}"
+          echo "{\"event_type\":\"mobile-sdk-release\",\"client_payload\":{\"sdk\":\"ios\",\"version\":\"$VER\"}}" \
+            | gh api repos/openobserve/openobserve/dispatches --input -
+          echo "Dispatched mobile-sdk-release sdk=ios version=$VER"
